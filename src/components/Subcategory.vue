@@ -12,6 +12,11 @@ const props = defineProps({
   subcategory: Object,
 })
 
+// events
+const emit = defineEmits([
+    'subcategoryDeleted'
+])
+
 // whether or not this subcategory is in edit mode (editable name)
 const isEditMode = ref(false)
 
@@ -23,8 +28,24 @@ const errorMessage = ref(null)
 
 // delete this subcategory
 function deleteSubcategory() {
-    console.log('delete')
+    console.log('delete subcategory ' + props.subcategory.name  + ' (ID=' + props.subcategory.id + ')')
+    gqlDeleteSubcategory({ 
+        subcategoryId: props.subcategory.id
+    })
 }
+
+// gql mutation for deleting a subcategory
+const { mutate: gqlDeleteSubcategory, onDone: onDeleteDone } = 
+useMutation(gql`
+      mutation deleteSubcategory ($subcategoryId: ID!) {
+        deleteSubcategory (subcategoryId: $subcategoryId)
+      }
+    `)
+
+    // hook: subcategory deleted successfully
+onDeleteDone(() => {
+    emit('subcategoryDeleted')
+})
 
 // rename this subcategory
 function renameSubcategory() {

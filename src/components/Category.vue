@@ -32,6 +32,12 @@ function onSubcategoryCreated() {
   showCreateSubcategory.value = false
 }
 
+// handle a subcategory created event
+function onSubcategoryDeleted() {
+  // notify the parent component that something changed in this category
+  emit('categoryChanged', props.category.id)
+}
+
 </script>
 
 <template>
@@ -42,7 +48,7 @@ function onSubcategoryCreated() {
 </div>
 <ul v-if="props.category.subcategories">
   <li v-for="s of props.category.subcategories" :key="s.id">
-    <Subcategory :categoryId="props.category.id" :subcategory="s" />
+    <Subcategory :categoryId="props.category.id" :subcategory="s" @subcategoryDeleted="onSubcategoryDeleted"/>
   </li>
 </ul>
 

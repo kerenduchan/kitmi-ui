@@ -1,5 +1,5 @@
 <script setup>
-import { useQuery, useMutation } from '@vue/apollo-composable'
+import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import Category from '../components/Category.vue'
 
@@ -16,19 +16,8 @@ const { result, loading, error, refetch } = useQuery(gql`
         }
     `)
 
-    const { mutate: gqlCreateSubcategory } = useMutation(gql`
-      mutation createSubcategory ($categoryId: ID!, $name: String!) {
-        createSubcategory (categoryId: $categoryId, name: $name) {
-          id
-          name
-        }
-      }
-    `)
-
-
-function createSubcategory(categoryId, name) {
-    console.log('create subcategory in view. category ID=' + categoryId + " subcategory name=" + name)
-    gqlCreateSubcategory({ categoryId, name})
+function onCategoryChanged(categoryId) {
+    console.log('Category changed (ID=' + categoryId + '). Refetching.')
     refetch()
 }
 
@@ -39,7 +28,7 @@ function createSubcategory(categoryId, name) {
     <div v-if="loading">Loading...</div>
     <ul v-else-if="result && result.categories">
         <li v-for="c of result.categories" :key="c.id">
-            <Category :category="c" @createSubcategory="createSubcategory"/>
+            <Category :category="c" @categoryChanged="onCategoryChanged"/>
         </li>
     </ul>
 </template>

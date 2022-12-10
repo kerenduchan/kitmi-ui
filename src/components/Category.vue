@@ -2,37 +2,48 @@
 import { ref } from 'vue'
 import CreateSubcategory from './CreateSubcategory.vue'
 
+// This component represents one category and its subcategories in the 
+// Categories view.
+
+// props 
 const props = defineProps({
   category: Object
 })
 
-// declare emitted events
-const emit = defineEmits(['createSubcategory'])
+// events 
+const emit = defineEmits([
+  'categoryChanged'
+])
 
-const showAddSubcategory = ref(false)
+// controls whether to show or hide the Create Subcategory component
+const showCreateSubcategory = ref(false)
 
+// toggle show/hide for the Create Subcategory component
 function toggleShowAddSubcategory() {
-    showAddSubcategory.value = !showAddSubcategory.value
+    showCreateSubcategory.value = !showCreateSubcategory.value
 }
 
-function createSubcategory(name) {
-  showAddSubcategory.value = false
-
-  // emit event to parent component
-  emit('createSubcategory', props.category.id, name)
-
+// handle a subcategory created event
+function onSubcategoryCreated() {
+  // notify the parent component that something changed in this category
+  emit('categoryChanged', props.category.id)
+  // hide the Create Subcategory component
+  showCreateSubcategory.value = false
 }
 
 </script>
 
 <template>
-            ({{ props.category.id }}) {{ props.category.name }} <a @click="toggleShowAddSubcategory()">+</a>
-            <CreateSubcategory :categoryId=props.category.id v-if="showAddSubcategory" @createSubcategory="createSubcategory"/>
-            <ul v-if="props.category.subcategories">
-                <li v-for="s of props.category.subcategories" :key="s.id">
-                  ({{ s.id }}) {{ s.name }}
-                </li>
-            </ul>
+
+({{ props.category.id }}) {{ props.category.name }} <a @click="toggleShowAddSubcategory()">+</a>
+<div v-show="showCreateSubcategory">
+  <CreateSubcategory :categoryId=props.category.id @subcategoryCreated="onSubcategoryCreated" />
+</div>
+<ul v-if="props.category.subcategories">
+  <li v-for="s of props.category.subcategories" :key="s.id">
+    ({{ s.id }}) {{ s.name }}
+  </li>
+</ul>
 
 </template>
 

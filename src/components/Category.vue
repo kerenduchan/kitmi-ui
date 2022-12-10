@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+import { useMutation } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
 import CreateSubcategory from './CreateSubcategory.vue'
 import Subcategory from './Subcategory.vue'
 
@@ -47,6 +49,38 @@ function onSubcategoryDeleted() {
   emit('categoryChanged', props.category.id)
 }
 
+// rename this category
+function renameCategory() {
+    console.log('rename category from ' + props.category.name + ' to ' + newName.value)
+    gqlRenameCategory({ 
+        categoryId: props.category.id, 
+        name: newName.value
+    })
+}
+
+// gql mutation for renaming a category
+const { mutate: gqlRenameCategory, onDone: onRenameDone, onError:onRenameError } = 
+useMutation(gql`
+      mutation renameCategory ($categoryId: ID!, $name: String!) {
+        renameCategory (categoryId: $categoryId, name: $name) {
+          id
+          name
+        }
+      }
+    `)
+
+// hook: category renamed successfully
+onRenameDone(() => {
+    exitEditMode()
+})
+
+// hook: rename category failed
+onRenameError(error => {
+    console.error('Error: ' + error.message)
+    errorMessage.value = error.message
+})
+
+
 // enter edit mode
 function enterEditMode() {
     isEditMode.value = true
@@ -57,11 +91,6 @@ function enterEditMode() {
 function exitEditMode() {
     isEditMode.value = false
     errorMessage.value = null
-}
-
-// rename this category
-function renameCategory() {
-  console.log('rename category')
 }
 
 </script>

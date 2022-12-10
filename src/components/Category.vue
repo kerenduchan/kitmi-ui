@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import CreateSubcategory from './CreateSubcategory.vue'
+import Subcategory from './Subcategory.vue'
 
 // This component represents one category and its subcategories in the 
 // Categories view.
@@ -41,7 +42,7 @@ function onSubcategoryCreated() {
 </div>
 <ul v-if="props.category.subcategories">
   <li v-for="s of props.category.subcategories" :key="s.id">
-    ({{ s.id }}) {{ s.name }}
+    <Subcategory :categoryId="props.category.id" :subcategory="s" />
   </li>
 </ul>
 

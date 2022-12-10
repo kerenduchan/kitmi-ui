@@ -19,6 +19,15 @@ const emit = defineEmits([
 // controls whether to show or hide the Create Subcategory component
 const showCreateSubcategory = ref(false)
 
+// whether or not this category is in edit mode (editable name)
+const isEditMode = ref(false)
+
+// the new category name (user input, in edit mode)
+const newName = ref(props.category.name)
+
+// any error message when attempting to rename a category
+const errorMessage = ref(null)
+
 // toggle show/hide for the Create Subcategory component
 function toggleShowAddSubcategory() {
     showCreateSubcategory.value = !showCreateSubcategory.value
@@ -38,19 +47,46 @@ function onSubcategoryDeleted() {
   emit('categoryChanged', props.category.id)
 }
 
+// enter edit mode
+function enterEditMode() {
+    isEditMode.value = true
+    newName.value = props.category.name
+}
+
+// exit edit mode
+function exitEditMode() {
+    isEditMode.value = false
+    errorMessage.value = null
+}
+
+// rename this category
+function renameCategory() {
+  console.log('rename category')
+}
+
 </script>
 
 <template>
 
-({{ props.category.id }}) {{ props.category.name }} <a @click="toggleShowAddSubcategory()">+</a>
-<div v-show="showCreateSubcategory">
-  <CreateSubcategory :categoryId=props.category.id @subcategoryCreated="onSubcategoryCreated" />
-</div>
-<ul v-if="props.category.subcategories">
-  <li v-for="s of props.category.subcategories" :key="s.id">
-    <Subcategory :categoryId="props.category.id" :subcategory="s" @subcategoryDeleted="onSubcategoryDeleted"/>
-  </li>
-</ul>
+<span>({{ props.category.id }}) </span>
+    <span v-if="!isEditMode">
+        <span  @click="enterEditMode">{{ props.category.name }}</span>
+        <a @click="toggleShowAddSubcategory()"> +</a>
+        <div v-show="showCreateSubcategory">
+          <CreateSubcategory :categoryId=props.category.id @subcategoryCreated="onSubcategoryCreated" />
+        </div>
+    </span>
+    <span v-else>
+            <input type="text" @keyup.escape="exitEditMode" v-model="newName" />
+            <button @click="renameCategory">Save</button>
+            <button @click="exitEditMode">Cancel</button>
+            <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
+    </span>
+    <ul v-if="props.category.subcategories">
+      <li v-for="s of props.category.subcategories" :key="s.id">
+        <Subcategory :categoryId="props.category.id" :subcategory="s" @subcategoryDeleted="onSubcategoryDeleted"/>
+      </li>
+    </ul>
 
 </template>
 

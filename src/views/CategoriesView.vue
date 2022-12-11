@@ -4,7 +4,7 @@ import gql from 'graphql-tag'
 import { ref } from 'vue'
 import CategoriesList from '../components/CategoriesList.vue'
 
-const { result, loading, onResult, refetch } = useQuery(gql`
+const { onResult, refetch } = useQuery(gql`
         query getCategories {
             categories {
                 id

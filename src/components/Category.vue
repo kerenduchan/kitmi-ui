@@ -76,23 +76,23 @@ function exitEditMode() {
 </script>
 
 <template>
-
-<span>({{ props.category.id }}) </span>
     <span v-if="!isEditMode">
         <span  @click="enterEditMode">{{ props.category.name }}</span>        
     </span>
     <span v-else>
-      <TextCell 
-        :text="props.category.name"
-        @cancel="exitEditMode"
-        @submit="renameCategory"/>
-      <ErrorLine :text="errorMessage" />
+        <TextCell 
+            :text="props.category.name"
+            @cancel="exitEditMode"
+            @submit="renameCategory"
+        />
+        <ErrorLine :text="errorMessage" />
     </span>
 
     <SubcategoriesList 
-      :subcategories="props.category.subcategories"
-      :categoryId="props.category.id"
-      @change="onChange"/>
+        :subcategories="props.category.subcategories"
+        :categoryId="props.category.id"
+        @change="onChange"
+    />
 
 </template>
 

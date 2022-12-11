@@ -93,7 +93,6 @@ function exitEditMode() {
 <template>
 
 <div>
-    <span>({{ props.subcategory.id }}) </span>
     <span v-if="!isEditMode">
         <span  @click="enterEditMode">{{ props.subcategory.name }}</span>   
         <span @click="deleteSubcategory"> - </span>

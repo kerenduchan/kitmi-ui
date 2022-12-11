@@ -13,8 +13,7 @@ const props = defineProps({
 
 // events
 const emit = defineEmits([
-    'subcategoryCreated',
-    'cancelled'
+    'subcategoryCreated'
 ])
 
 
@@ -58,16 +57,30 @@ onError(error => {
     errorMessage.value = error.message
 })
 
+// controls whether to show or hide the form
+const show = ref(false)
+
 function cancel() {
   name.value = ""
   errorMessage.value = ""
-  emit('cancelled')
+  show.value = false
+}
+
+function toggleShow() {
+  if(show.value === true) {
+    cancel()
+  } else {
+    show.value = true
+  }
 }
 
 </script>
 
 <template>
-    <form @submit.prevent="createSubcategory">
+
+  <a @click="toggleShow"> +</a>
+
+    <form v-if="show" @submit.prevent="createSubcategory">
         <label>Create Subcategory:</label>
         <input @keyup.escape="cancel" v-model="name">
         <button type="submit">Create</button>

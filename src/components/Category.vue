@@ -18,9 +18,6 @@ const emit = defineEmits([
   'categoryChanged'
 ])
 
-// controls whether to show or hide the Create Subcategory component
-const showCreateSubcategory = ref(false)
-
 // whether or not this category is in edit mode (editable name)
 const isEditMode = ref(false)
 
@@ -30,17 +27,11 @@ const newName = ref(props.category.name)
 // any error message when attempting to rename a category
 const errorMessage = ref(null)
 
-// toggle show/hide for the Create Subcategory component
-function toggleShowCreateSubcategory() {
-    showCreateSubcategory.value = !showCreateSubcategory.value
-}
-
 // handle a subcategory created event
 function onSubcategoryCreated() {
   // notify the parent component that something changed in this category
   emit('categoryChanged', props.category.id)
   // hide the Create Subcategory component
-  showCreateSubcategory.value = false
 }
 
 // handle a subcategory created event
@@ -100,15 +91,10 @@ function exitEditMode() {
 <span>({{ props.category.id }}) </span>
     <span v-if="!isEditMode">
         <span  @click="enterEditMode">{{ props.category.name }}</span>
-        <a @click="toggleShowCreateSubcategory()"> +</a>
-
-        <div v-show="showCreateSubcategory">
-          <CreateSubcategory 
-            :categoryId=props.category.id 
-            @subcategoryCreated="onSubcategoryCreated" 
-            @cancelled="showCreateSubcategory=false"
-          />
-        </div>
+        <CreateSubcategory 
+          :categoryId=props.category.id 
+          @subcategoryCreated="onSubcategoryCreated" 
+        />
         
     </span>
     <span v-else>

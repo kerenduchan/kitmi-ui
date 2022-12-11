@@ -8,6 +8,7 @@ function getPayees() {
             payees {
                 id
                 name
+                subcategoryId
                 subcategory {
                     id
                     name

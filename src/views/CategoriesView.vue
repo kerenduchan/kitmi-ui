@@ -1,32 +1,8 @@
 <script setup>
-import { useQuery } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { ref } from 'vue'
 import CategoriesList from '../components/CategoriesList.vue'
+import getCategories from '../composables/getCategories'
 
-const { onResult, refetch } = useQuery(gql`
-        query getCategories {
-            categories {
-                id
-                name
-                isExpense
-                subcategories {
-                    id
-                    name
-                }
-            }
-        }
-    `)
-
-const incomeCategories = ref(null)
-const expenseCategories = ref(null)
-const isReady = ref(false)
-
-onResult(queryResult => {
-  incomeCategories.value = queryResult.data.categories.filter(c => !c.isExpense)
-  expenseCategories.value = queryResult.data.categories.filter(c => c.isExpense)
-  isReady.value = true
-})
+const { incomeCategories, expenseCategories, isReady, onResult, refetch } = getCategories()
 
 function onChange() {
     console.log('A change ocurred. Refetching.')

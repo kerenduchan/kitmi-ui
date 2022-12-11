@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import TextCell from './TextCell.vue'
+import ErrorLine from './ErrorLine.vue'
 
 // This component represents the "Create Subcategory" form for one category
 // in the Categories view.
@@ -74,10 +75,10 @@ function toggleShow() {
 
 <template>
 
-  <a @click="toggleShow"> +</a>
-    <div v-if="show">
+  <a v-if="!show" @click="toggleShow"> +</a>
+    <span v-if="show">
       <TextCell text="" @cancel="cancel" @submit="createSubcategory"/>
-    </div>
-  <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
+    </span>
+    <ErrorLine :text="errorMessage" />
 </template>
 

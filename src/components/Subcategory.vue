@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import RenameForm from './RenameForm.vue'
+import TextCell from './TextCell.vue'
+import ErrorLine from './ErrorLine.vue'
 
 // This component represents one subcategory of one category in the 
 // Categories view.
@@ -98,11 +99,12 @@ function exitEditMode() {
         <span @click="deleteSubcategory"> - </span>
     </span>
     <span v-else>
-        <RenameForm 
-            :name="props.subcategory.name"
-            @cancel="exitEditMode" 
-            @submit="renameSubcategory" 
-            :error="errorMessage"/>
+        <TextCell 
+            :text="props.subcategory.name"
+            @cancel="exitEditMode"
+            @submit="renameSubcategory"
+        />
+        <ErrorLine :text="errorMessage" />
     </span>
 </div>
 

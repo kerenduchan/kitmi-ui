@@ -4,7 +4,8 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import CreateSubcategory from './CreateSubcategory.vue'
 import Subcategory from './Subcategory.vue'
-import RenameForm from './RenameForm.vue'
+import TextCell from './TextCell.vue'
+import ErrorLine from './ErrorLine.vue'
 
 // This component represents one category and its subcategories in the 
 // Categories view.
@@ -87,19 +88,14 @@ function exitEditMode() {
 
 <span>({{ props.category.id }}) </span>
     <span v-if="!isEditMode">
-        <span  @click="enterEditMode">{{ props.category.name }}</span>
-        <CreateSubcategory 
-          :categoryId=props.category.id 
-          @subcategoryCreated="onSubcategoryCreated" 
-        />
-        
+        <span  @click="enterEditMode">{{ props.category.name }}</span>        
     </span>
     <span v-else>
-      <RenameForm 
-        :name="props.category.name"
-        :error="errorMessage"
-        @cancel="exitEditMode" 
+      <TextCell 
+        :text="props.category.name"
+        @cancel="exitEditMode"
         @submit="renameCategory"/>
+      <ErrorLine :text="errorMessage" />
     </span>
 
     <ul v-if="props.category.subcategories">
@@ -107,6 +103,10 @@ function exitEditMode() {
         <Subcategory :categoryId="props.category.id" :subcategory="s" @subcategoryDeleted="onSubcategoryDeleted"/>
       </li>
     </ul>
+    <CreateSubcategory 
+          :categoryId=props.category.id 
+          @subcategoryCreated="onSubcategoryCreated" 
+        />
 
 </template>
 

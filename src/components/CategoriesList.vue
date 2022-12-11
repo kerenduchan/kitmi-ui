@@ -15,7 +15,7 @@ const emit = defineEmits([
 
 function onCategoryChanged(categoryId) {
   // notify the parent component that something changed in this category
-  emit('categoryChanged', props.category.id)
+  emit('categoryChanged', categoryId)
 }
 
 const title = props.isExpense ? "Expense" : "Income"

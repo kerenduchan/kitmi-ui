@@ -101,10 +101,12 @@ function exitEditMode() {
         <span @click="deleteSubcategory"> - </span>
     </span>
     <span v-else>
+        <form @submit.prevent="renameSubcategory">
             <input type="text" @keyup.escape="exitEditMode" v-model="newName" />
-            <button @click="renameSubcategory">Save</button>
-            <button @click="exitEditMode">Cancel</button>
+            <button type="submit">Save</button>
+            <button type="button" @click="exitEditMode">Cancel</button>
             <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
+        </form>
     </span>
 </div>
 

@@ -4,6 +4,12 @@ import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core
 import App from './App.vue'
 import router from './router'
 
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
 import './assets/main.css'
 
 // HTTP connection to the API
@@ -21,6 +27,10 @@ const apolloClient = new ApolloClient({
   cache,
 })
 
+const vuetify = createVuetify({
+  components,
+  directives,
+})
 
 const app = createApp({
     setup () {
@@ -31,6 +41,7 @@ const app = createApp({
   })
 
 app.use(router)
+app.use(vuetify)
 
 app.mount('#app')
 

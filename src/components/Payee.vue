@@ -25,16 +25,12 @@ const categories = computed(() => {
 })
 
 const selectedCategory = computed(() => {
-    console.log('selected category id=' + selectedCategoryId.value)
     const found = categories.value.find((c) => c.id == selectedCategoryId.value)
-    console.log('found ' + found)
     return found
 })
 
 const subcategories = computed(() => {
-    console.log('subcategories')
     if(selectedCategory.value) {
-        console.log(selectedCategory.value.subcategories)
         return selectedCategory.value.subcategories
     }
     return null

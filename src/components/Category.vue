@@ -16,7 +16,7 @@ const props = defineProps({
 
 // events 
 const emit = defineEmits([
-  'categoryChanged'
+  'change'
 ])
 
 // whether or not this category is in edit mode (editable name)
@@ -26,8 +26,8 @@ const isEditMode = ref(false)
 const errorMessage = ref(null)
 
 function onChange() {
-  // notify the parent component that something changed in this category
-  emit('categoryChanged', props.category.id)
+  // notify the parent component that something changed
+  emit('change')
 }
 
 // rename this category

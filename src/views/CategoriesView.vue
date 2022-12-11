@@ -28,8 +28,8 @@ onResult(queryResult => {
   isReady.value = true
 })
 
-function onCategoryChanged(categoryId) {
-    console.log('Category changed (ID=' + categoryId + '). Refetching.')
+function onChange() {
+    console.log('A change ocurred. Refetching.')
     refetch()
 }
 
@@ -38,7 +38,7 @@ function onCategoryChanged(categoryId) {
 <template>
     <div v-if="!isReady">Loading...</div>
     <div v-else>
-        <CategoriesList :isExpense=false :categories="incomeCategories" @categoryChanged="onCategoryChanged"/>
-        <CategoriesList :isExpense=true :categories="expenseCategories" @categoryChanged="onCategoryChanged"/>
+        <CategoriesList :isExpense=false :categories="incomeCategories" @change="onChange"/>
+        <CategoriesList :isExpense=true :categories="expenseCategories" @change="onChange"/>
     </div>
 </template>

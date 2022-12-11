@@ -4,6 +4,7 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import CreateSubcategory from './CreateSubcategory.vue'
 import Subcategory from './Subcategory.vue'
+import RenameForm from './RenameForm.vue'
 
 // This component represents one category and its subcategories in the 
 // Categories view.
@@ -20,9 +21,6 @@ const emit = defineEmits([
 
 // whether or not this category is in edit mode (editable name)
 const isEditMode = ref(false)
-
-// the new category name (user input, in edit mode)
-const newName = ref(props.category.name)
 
 // any error message when attempting to rename a category
 const errorMessage = ref(null)
@@ -41,11 +39,11 @@ function onSubcategoryDeleted() {
 }
 
 // rename this category
-function renameCategory() {
-    console.log('rename category from ' + props.category.name + ' to ' + newName.value)
+function renameCategory(newName) {
+    console.log('rename category from ' + props.category.name + ' to ' + newName)
     gqlRenameCategory({ 
         categoryId: props.category.id, 
-        name: newName.value
+        name: newName
     })
 }
 
@@ -75,7 +73,6 @@ onRenameError(error => {
 // enter edit mode
 function enterEditMode() {
     isEditMode.value = true
-    newName.value = props.category.name
 }
 
 // exit edit mode
@@ -97,12 +94,14 @@ function exitEditMode() {
         />
         
     </span>
-    <form class="flat-form" v-else @submit.prevent="renameCategory">
-            <input type="text" @keyup.escape="exitEditMode" v-model="newName" />
-            <button type="submit">Save</button>
-            <button type="button" @click="exitEditMode">Cancel</button>
-            <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
-    </form>
+    <span v-else>
+      <RenameForm 
+        :name="props.category.name"
+        :error="errorMessage"
+        @cancel="exitEditMode" 
+        @submit="renameCategory"/>
+    </span>
+
     <ul v-if="props.category.subcategories">
       <li v-for="s of props.category.subcategories" :key="s.id">
         <Subcategory :categoryId="props.category.id" :subcategory="s" @subcategoryDeleted="onSubcategoryDeleted"/>

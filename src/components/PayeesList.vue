@@ -4,6 +4,8 @@ import Payee from '../components/Payee.vue'
 // props 
 const props = defineProps({
   payees: Object,
+  incomeCategories: Object,
+  expenseCategories: Object
 })
 
 // events 
@@ -22,11 +24,13 @@ function onChange() {
     <h2>Payees</h2>
 
     <ul>
-        <li v-for="p of props.payees" :key="p.id">
+        <div v-for="p of props.payees" :key="p.id">
             <Payee 
                 :payee="p" 
+                :incomeCategories="incomeCategories"
+                :expenseCategories="expenseCategories" 
                 @change="onChange" 
             />
-        </li>
+        </div>
     </ul>
 </template>

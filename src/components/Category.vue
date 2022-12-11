@@ -2,10 +2,9 @@
 import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import CreateSubcategory from './CreateSubcategory.vue'
-import Subcategory from './Subcategory.vue'
 import TextCell from './TextCell.vue'
 import ErrorLine from './ErrorLine.vue'
+import SubcategoriesList from './SubcategoriesList.vue'
 
 // This component represents one category and its subcategories in the 
 // Categories view.
@@ -26,15 +25,7 @@ const isEditMode = ref(false)
 // any error message when attempting to rename a category
 const errorMessage = ref(null)
 
-// handle a subcategory created event
-function onSubcategoryCreated() {
-  // notify the parent component that something changed in this category
-  emit('categoryChanged', props.category.id)
-  // hide the Create Subcategory component
-}
-
-// handle a subcategory created event
-function onSubcategoryDeleted() {
+function onChange() {
   // notify the parent component that something changed in this category
   emit('categoryChanged', props.category.id)
 }
@@ -98,15 +89,10 @@ function exitEditMode() {
       <ErrorLine :text="errorMessage" />
     </span>
 
-    <ul v-if="props.category.subcategories">
-      <li v-for="s of props.category.subcategories" :key="s.id">
-        <Subcategory :categoryId="props.category.id" :subcategory="s" @subcategoryDeleted="onSubcategoryDeleted"/>
-      </li>
-    </ul>
-    <CreateSubcategory 
-          :categoryId=props.category.id 
-          @subcategoryCreated="onSubcategoryCreated" 
-        />
+    <SubcategoriesList 
+      :subcategories="props.category.subcategories"
+      :categoryId="props.category.id"
+      @change="onChange"/>
 
 </template>
 

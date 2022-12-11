@@ -73,11 +73,33 @@ function exitEditMode() {
     errorMessage.value = null
 }
 
+// delete this category
+function deleteCategory() {
+    console.log('delete Category ' + props.category.name  + ' (ID=' + props.category.id + ')')
+    gqlDeleteCategory({ 
+        categoryId: props.category.id
+    })
+}
+
+// gql mutation for deleting a category
+const { mutate: gqlDeleteCategory, onDone: onDeleteDone } = 
+useMutation(gql`
+      mutation deleteCategory ($categoryId: ID!) {
+        deleteCategory (categoryId: $categoryId)
+      }
+    `)
+
+    // hook: subcategory deleted successfully
+onDeleteDone(() => {
+    emit('change')
+})
+
 </script>
 
 <template>
     <span v-if="!isEditMode">
-        <span  @click="enterEditMode">{{ props.category.name }}</span>        
+        <span  @click="enterEditMode">{{ props.category.name }}</span>
+        <a v-if="props.category.subcategories.length == 0" @click="deleteCategory"> -</a>       
     </span>
     <span v-else>
         <TextCell 

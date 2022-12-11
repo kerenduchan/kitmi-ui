@@ -97,12 +97,12 @@ function exitEditMode() {
         />
         
     </span>
-    <span v-else>
+    <form class="flat-form" v-else @submit.prevent="renameCategory">
             <input type="text" @keyup.escape="exitEditMode" v-model="newName" />
-            <button @click="renameCategory">Save</button>
-            <button @click="exitEditMode">Cancel</button>
+            <button type="submit">Save</button>
+            <button type="button" @click="exitEditMode">Cancel</button>
             <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
-    </span>
+    </form>
     <ul v-if="props.category.subcategories">
       <li v-for="s of props.category.subcategories" :key="s.id">
         <Subcategory :categoryId="props.category.id" :subcategory="s" @subcategoryDeleted="onSubcategoryDeleted"/>

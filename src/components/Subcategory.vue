@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
+import RenameForm from './RenameForm.vue'
 
 // This component represents one subcategory of one category in the 
 // Categories view.
@@ -19,9 +20,6 @@ const emit = defineEmits([
 
 // whether or not this subcategory is in edit mode (editable name)
 const isEditMode = ref(false)
-
-// the new subcategory name (user input, in edit mode)
-const newName = ref(props.subcategory.name)
 
 // any error message when attempting to rename a subcategory
 const errorMessage = ref(null)
@@ -48,11 +46,11 @@ onDeleteDone(() => {
 })
 
 // rename this subcategory
-function renameSubcategory() {
-    console.log('rename subcategory from ' + props.subcategory.name + ' to ' + newName.value)
+function renameSubcategory(newName) {
+    console.log('rename subcategory from ' + props.subcategory.name + ' to ' + newName)
     gqlRenameSubcategory({ 
         subcategoryId: props.subcategory.id, 
-        name: newName.value
+        name: newName
     })
 }
 
@@ -81,7 +79,6 @@ onRenameError(error => {
 // enter edit mode
 function enterEditMode() {
     isEditMode.value = true
-    newName.value = props.subcategory.name
 }
 
 // exit edit mode
@@ -101,12 +98,7 @@ function exitEditMode() {
         <span @click="deleteSubcategory"> - </span>
     </span>
     <span v-else>
-        <form @submit.prevent="renameSubcategory">
-            <input type="text" @keyup.escape="exitEditMode" v-model="newName" />
-            <button type="submit">Save</button>
-            <button type="button" @click="exitEditMode">Cancel</button>
-            <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
-        </form>
+        <RenameForm @cancel="exitEditMode" @submit="renameSubcategory" :error="errorMessage"/>
     </span>
 </div>
 

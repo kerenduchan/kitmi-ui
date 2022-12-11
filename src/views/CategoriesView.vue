@@ -2,7 +2,7 @@
 import CategoriesList from '../components/CategoriesList.vue'
 import getCategories from '../composables/getCategories'
 
-const { incomeCategories, expenseCategories, isReady, onResult, refetch } = getCategories()
+const { incomeCategories, expenseCategories, isReady, refetch } = getCategories()
 
 function onChange() {
     console.log('A change ocurred. Refetching.')

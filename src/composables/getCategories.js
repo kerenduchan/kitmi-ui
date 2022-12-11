@@ -27,7 +27,7 @@ function getCategories() {
         isReady.value = true
     })
 
-    return { incomeCategories, expenseCategories, isReady, onResult, refetch }
+    return { incomeCategories, expenseCategories, isReady, refetch }
 }
 
 export default getCategories

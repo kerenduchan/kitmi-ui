@@ -1,5 +1,4 @@
 <script setup>
-import { isExact } from 'ts-essentials';
 import Category from '../components/Category.vue'
 import CreateCategory from '../components/CreateCategory.vue'
 

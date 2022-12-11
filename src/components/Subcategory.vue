@@ -98,7 +98,11 @@ function exitEditMode() {
         <span @click="deleteSubcategory"> - </span>
     </span>
     <span v-else>
-        <RenameForm @cancel="exitEditMode" @submit="renameSubcategory" :error="errorMessage"/>
+        <RenameForm 
+            :name="props.subcategory.name"
+            @cancel="exitEditMode" 
+            @submit="renameSubcategory" 
+            :error="errorMessage"/>
     </span>
 </div>
 

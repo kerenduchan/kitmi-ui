@@ -31,7 +31,7 @@ const newName = ref(props.category.name)
 const errorMessage = ref(null)
 
 // toggle show/hide for the Create Subcategory component
-function toggleShowAddSubcategory() {
+function toggleShowCreateSubcategory() {
     showCreateSubcategory.value = !showCreateSubcategory.value
 }
 
@@ -100,10 +100,16 @@ function exitEditMode() {
 <span>({{ props.category.id }}) </span>
     <span v-if="!isEditMode">
         <span  @click="enterEditMode">{{ props.category.name }}</span>
-        <a @click="toggleShowAddSubcategory()"> +</a>
+        <a @click="toggleShowCreateSubcategory()"> +</a>
+
         <div v-show="showCreateSubcategory">
-          <CreateSubcategory :categoryId=props.category.id @subcategoryCreated="onSubcategoryCreated" />
+          <CreateSubcategory 
+            :categoryId=props.category.id 
+            @subcategoryCreated="onSubcategoryCreated" 
+            @cancelled="showCreateSubcategory=false"
+          />
         </div>
+        
     </span>
     <span v-else>
             <input type="text" @keyup.escape="exitEditMode" v-model="newName" />

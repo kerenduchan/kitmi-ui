@@ -13,7 +13,8 @@ const props = defineProps({
 
 // events
 const emit = defineEmits([
-    'subcategoryCreated'
+    'subcategoryCreated',
+    'cancelled'
 ])
 
 
@@ -47,6 +48,7 @@ function createSubcategory() {
 
 // hook: subcategory created successfully
 onDone(() => {
+  name.value = ""
   emit('subcategoryCreated')
 })
 
@@ -56,13 +58,21 @@ onError(error => {
     errorMessage.value = error.message
 })
 
+function cancel() {
+  name.value = ""
+  errorMessage.value = ""
+  emit('cancelled')
+}
+
 </script>
 
 <template>
     <form @submit.prevent="createSubcategory">
         <label>Create Subcategory:</label>
-        <input v-model="name">
+        <input @keyup.escape="cancel" v-model="name">
         <button type="submit">Create</button>
+        <button type="button" @click="cancel">Cancel</button>
+
     </form>
     <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
 </template>

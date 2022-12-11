@@ -1,9 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import { useMutation } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
 import TextCell from './TextCell.vue'
 import ErrorLine from './ErrorLine.vue'
+import createCategory from '../composables/createCategory'
 
 // This component represents the "Create Category" form
 // in the Categories view.
@@ -18,25 +17,19 @@ const emit = defineEmits([
     'created'
 ])
 
+const { gqlCreateCategory, onDone, onError } = createCategory()
+
 // any error message when attempting to create a category
 const errorMessage = ref(null)
 
-// gql mutation for creating a category
-const { mutate: gqlCreateCategory, onDone, onError } = useMutation(gql`
-      mutation createCategory ($name: String!, $isExpense: Boolean!) {
-        createCategory (name: $name, isExpense: $isExpense) {
-          id
-          name
-          isExpense
-        }
-      }
-    `)
+// controls whether to show or hide the form
+const show = ref(false)
 
 // create a new category
-function createCategory(name) {
+function doCreateCategory(name) {
     console.log('creating category: ' + name)
     errorMessage.value = null
-    gqlCreateCategory({ 
+    gqlCreateCategory({
         name: name,
         isExpense: props.isExpense
     })
@@ -44,8 +37,8 @@ function createCategory(name) {
 
 // hook: category created successfully
 onDone(() => {
-  show.value = false
-  emit('created')
+    show.value = false
+    emit('created')
 })
 
 // hook: create subcategory failed
@@ -53,9 +46,6 @@ onError(error => {
     console.error('Error: ' + error.message)
     errorMessage.value = error.message
 })
-
-// controls whether to show or hide the form
-const show = ref(false)
 
 function cancel() {
   errorMessage.value = ""
@@ -76,7 +66,7 @@ function toggleShow() {
 
   <a v-if="!show" @click="toggleShow"> +</a>
     <span v-if="show">
-      <TextCell text="" @cancel="cancel" @submit="createCategory"/>
+      <TextCell text="" @cancel="cancel" @submit="doCreateCategory"/>
     </span>
     <ErrorLine :text="errorMessage" />
 </template>

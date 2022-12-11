@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import updatePayeeSubcategory from '../composables/updatePayeeSubcategory'
 
 // This component represents one payee in the Payees view
 
@@ -14,6 +15,8 @@ const props = defineProps({
 const emit = defineEmits([
   'change'
 ])
+
+const { gqlUpdatePayeeSubcategory, onDone, onError } = updatePayeeSubcategory()
 
 const isExpense = ref(true)
 
@@ -36,13 +39,16 @@ const subcategories = computed(() => {
     return null
 })
 
-const selectedSubcategory = computed(() => {
-    if(selectedCategory) {
-        return selectedCategory.subcategories.find((s) => s.id == selectedSubcategoryId.value)
+function save() {
+    if(selectedSubcategoryId.value === null) {
+        return
     }
-    return null
-})
-
+    
+    gqlUpdatePayeeSubcategory({
+        payeeId: props.payee.id,
+        subcategoryId: selectedSubcategoryId.value
+    }) 
+}
 
 </script>
 
@@ -65,6 +71,7 @@ const selectedSubcategory = computed(() => {
             <option v-for="s in subcategories" :value="s.id">{{s.name}}</option>
         </select>
     </div>
+    <button @click="save">Save</button>
     <br/>
 </template>
 

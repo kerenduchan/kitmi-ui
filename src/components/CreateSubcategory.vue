@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
+import TextCell from './TextCell.vue'
 
 // This component represents the "Create Subcategory" form for one category
 // in the Categories view.
@@ -15,10 +16,6 @@ const props = defineProps({
 const emit = defineEmits([
     'subcategoryCreated'
 ])
-
-
-// the name of the subcategory about to be created (entered by the user)
-const name = ref("")
 
 // any error message when attempting to create a subcategory
 const errorMessage = ref(null)
@@ -34,20 +31,20 @@ const { mutate: gqlCreateSubcategory, onDone, onError } = useMutation(gql`
     `)
 
 // create a new subcategory for this category
-function createSubcategory() {
+function createSubcategory(name) {
     console.log('creating subcategory for category ID=' + props.categoryId
-        + ": " + name.value)
+        + ": " + name)
 
     errorMessage.value = null
     gqlCreateSubcategory({ 
         categoryId: props.categoryId, 
-        name: name.value
+        name: name
     })
 }
 
 // hook: subcategory created successfully
 onDone(() => {
-  name.value = ""
+  show.value = false
   emit('subcategoryCreated')
 })
 
@@ -61,7 +58,6 @@ onError(error => {
 const show = ref(false)
 
 function cancel() {
-  name.value = ""
   errorMessage.value = ""
   show.value = false
 }
@@ -79,14 +75,9 @@ function toggleShow() {
 <template>
 
   <a @click="toggleShow"> +</a>
-
-    <form v-if="show" @submit.prevent="createSubcategory">
-        <label>Create Subcategory:</label>
-        <input @keyup.escape="cancel" v-model="name">
-        <button type="submit">Create</button>
-        <button type="button" @click="cancel">Cancel</button>
-
-    </form>
-    <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
+    <div v-if="show">
+      <TextCell text="" @cancel="cancel" @submit="createSubcategory"/>
+    </div>
+  <div class="error" v-if="errorMessage">Error: {{ errorMessage }}</div>
 </template>
 

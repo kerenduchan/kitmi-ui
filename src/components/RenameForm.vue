@@ -21,13 +21,11 @@ const newName = ref(props.name)
 const isDone = ref(false)
 
 function cancel() {
-    console.log('cancel')
     isDone.value = true
     emit('cancel')
 }
 
 function submit() {
-    console.log('submit')
      if(newName.value != props.name) {
         emit('submit', newName.value)
     } else {
@@ -38,7 +36,6 @@ function submit() {
 }
 
 function onFocusOut() {
-    console.log('onFocusOut')
     if(!isDone.value) {
         submit()
     }

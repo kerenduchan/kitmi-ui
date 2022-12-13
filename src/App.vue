@@ -50,6 +50,11 @@ const links = ref([
         value: 'payees',
         to: '/payees'
     },
+    {
+        title: 'Transactions',
+        value: 'transactions',
+        to: '/transactions'
+    },
 ])
 
 watch(group, () => {

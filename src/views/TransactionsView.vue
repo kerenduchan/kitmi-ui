@@ -1,35 +1,18 @@
 <script setup>
-import getTransactions from '../composables/getTransactions'
-import getCategories from '../composables/getCategories'
 import TransactionsList from '../components/TransactionsList.vue'
+import getTransactions from '../composables/getTransactions'
 
-const { 
-    transactions, 
-    isReady: isTransactionsReady, 
-    refetch: refetchTransactions 
-    } = getTransactions()
-
-const { 
-    incomeCategories, 
-    expenseCategories, 
-    isReady: isCategoriesReady
-} = getCategories()
-
-
-function onChange() {
-    console.log('A change ocurred. Refetching.')
-    refetchTransactions()
-}
+const {
+    transactions,
+    isReady: isTransactionsReady,
+    refetch: refetchTransactions
+} = getTransactions()
 
 </script>
 
 <template>
-    <div v-if="!isTransactionsReady || !isCategoriesReady">Loading...</div>
+    <div v-if="!isTransactionsReady">Loading...</div>
     <div v-else>
-        <TransactionsList
-            :transactions="transactions" 
-            :incomeCategories="incomeCategories" 
-            :expenseCategories="expenseCategories" 
-            @change="onChange"/>
+        <TransactionsList :transactions="transactions" />
     </div>
 </template>

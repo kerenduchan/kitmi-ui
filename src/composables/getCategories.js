@@ -1,6 +1,7 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { ref } from 'vue'
+import Category from './Category'
 
 function getCategories() {
     const { onResult, refetch } = useQuery(gql`
@@ -17,17 +18,15 @@ function getCategories() {
         }
     `)
 
-    const incomeCategories = ref(null)
-    const expenseCategories = ref(null)
+    const categories = ref(null)
     const isReady = ref(false)
 
     onResult(queryResult => {
-        incomeCategories.value = queryResult.data.categories.filter(c => !c.isExpense)
-        expenseCategories.value = queryResult.data.categories.filter(c => c.isExpense)
+        categories.value = queryResult.data.categories.map((p) => new Category(p))
         isReady.value = true
     })
 
-    return { incomeCategories, expenseCategories, isReady, refetch }
+    return { categories, isReady, refetch }
 }
 
 export default getCategories

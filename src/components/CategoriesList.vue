@@ -1,41 +1,26 @@
 <script setup>
-import Category from '../components/Category.vue'
-import CreateCategory from '../components/CreateCategory.vue'
+import { ref } from 'vue'
 
 // props 
 const props = defineProps({
-  categories: Object,
-  isExpense: Boolean
+    categories: Object
 })
 
-// events 
-const emit = defineEmits([
-  'change'
-])
-
-function onChange() {
-  // notify the parent component that something changed
-  emit('change')
-}
-
-const title = props.isExpense ? "Expense" : "Income"
+const headers = ref(['Type', 'Name'])
 
 </script>
 
 <template>
-    <h2>{{ title }} Categories</h2>
+    <h2>Categories</h2>
 
-    <CreateCategory 
-        :isExpense="props.isExpense" 
-        @created="onChange" 
-    />
-
-    <ul>
-        <li v-for="c of props.categories" :key="c.id">
-            <Category 
-                :category="c" 
-                @change="onChange" 
-            />
-        </li>
-    </ul>
+    <v-expansion-panels multiple>
+        <v-expansion-panel v-for="c in props.categories" :key="c.id">
+            <v-expansion-panel-title> {{ c.name }} </v-expansion-panel-title>
+            <v-expansion-panel-text>
+                <v-list>
+                    <v-list-item v-for="s in c.subcategories" :key="s.id" :title="s.name" />
+                </v-list>
+            </v-expansion-panel-text>
+        </v-expansion-panel>
+    </v-expansion-panels>
 </template>

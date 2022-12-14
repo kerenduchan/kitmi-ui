@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { formatNumber, formatDate } from '@/composables/utils'
+import { formatNumber } from '@/composables/utils'
 
 // props 
 const props = defineProps({
@@ -17,8 +17,6 @@ const sum = computed(() => {
 </script>
 
 <template>
-    <h2>Transactions</h2>
-
     <v-table density="compact" height="550px" fixed-header>
         <thead>
             <tr>

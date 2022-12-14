@@ -53,6 +53,10 @@ class Transaction {
     get formattedDate() {
         return formatDate(this.date)
     }
+
+    get isUncategorized() {
+        return this.subcategory === null
+    }
 }
 
 export default Transaction

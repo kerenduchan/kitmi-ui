@@ -34,20 +34,16 @@ const filteredPayees = computed(() => {
 })
 
 const filteredSelectedPayee = computed(() => {
-    console.log('computing filteredSelectedPayee')
     if(showOnlyUncategorized.value === true && 
         selectedPayee.value !== null && 
         selectedPayee.value.isCategorized) {
-            console.log('filteredSelectedPayee = null')
         return null
     }
-    console.log('filteredSelectedPayee = selectedPayee')
     return selectedPayee.value
 })
 
 // handle click on a row in the table
 function onRowClicked(payee) {
-    console.log('row clicked')
     selectedPayee.value = payee
 }
 
@@ -58,8 +54,6 @@ function getClassForPayeeRow(payee) {
 // filteredSelectedPayee changes either as a result of a click on a row
 // or a change in the filtering criteria
 watch(filteredSelectedPayee, () => {
-    console.log('emitting')
-    console.log(filteredSelectedPayee.value)
     emit('selectedPayeeChanged', filteredSelectedPayee.value)
 })
 

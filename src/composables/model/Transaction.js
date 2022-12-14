@@ -12,6 +12,7 @@ import { formatNumber, formatDate } from '@/composables/utils'
 class Transaction {
 
     constructor(gqlTransaction) {
+        this.id = gqlTransaction.id
         this.date = new Date(gqlTransaction.date)
         this.amount = gqlTransaction.amount
         this.payee = new Payee(gqlTransaction.payee)

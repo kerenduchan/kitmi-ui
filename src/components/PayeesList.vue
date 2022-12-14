@@ -34,12 +34,11 @@ const filteredPayees = computed(() => {
 })
 
 const filteredSelectedPayee = computed(() => {
-    if(showOnlyUncategorized.value === true && 
-        selectedPayee.value !== null && 
-        selectedPayee.value.isCategorized) {
+    if(selectedPayee.value === null) {
         return null
     }
-    return selectedPayee.value
+    const found = filteredPayees.value.find(p => p.id === selectedPayee.value.id)
+    return found ? selectedPayee.value : null
 })
 
 // handle click on a row in the table
@@ -47,7 +46,7 @@ function onRowClicked(payee) {
     selectedPayee.value = payee
 }
 
-function getClassForPayeeRow(payee) {
+function getClassForRow(payee) {
     return selectedPayee.value?.id === payee.id ? 'selected-row' : ''
 }
 
@@ -71,7 +70,7 @@ watch(filteredSelectedPayee, () => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="p in filteredPayees" :key="p.id" :class="getClassForPayeeRow(p)" @click="onRowClicked(p)">
+            <tr v-for="p in filteredPayees" :key="p.id" :class="getClassForRow(p)" @click="onRowClicked(p)">
                 <td>{{ p.name}}</td>
                 <td>{{ p.type }}</td>
                 <td>{{ p.categoryName }}</td>
@@ -80,9 +79,3 @@ watch(filteredSelectedPayee, () => {
         </tbody>
     </v-table>
 </template>
-
-<style scoped>
-    .selected-row {
-        background-color: #D6DBDF;
-    }
-</style>

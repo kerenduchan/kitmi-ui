@@ -10,15 +10,6 @@ const {
     refetch: refetchTransactions
 } = getTransactions()
 
-const showOnlyUncategorized = ref(false)
-
-const filteredTransactions = computed(() => {
-    if (showOnlyUncategorized.value) {
-        return transactions.value.filter(t => t.isUncategorized)
-    }
-    return transactions.value
-})
-
 </script>
 
 <template>
@@ -27,8 +18,6 @@ const filteredTransactions = computed(() => {
 
     <div v-if="!isTransactionsReady">Loading...</div>
     <div v-else>
-        <v-checkbox label="Show Only Uncategorized" v-model="showOnlyUncategorized"></v-checkbox>
-
-        <TransactionsList :transactions="filteredTransactions" />
+        <TransactionsList :transactions="transactions" />
     </div>
 </template>

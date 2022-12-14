@@ -50,3 +50,9 @@ const links = ref([
 ])
 
 </script>
+
+<style>
+    .selected-row {
+        background-color: #D6DBDF;
+    }
+</style>

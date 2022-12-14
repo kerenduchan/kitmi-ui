@@ -94,7 +94,6 @@ const isSaveDisabled = computed(() => {
 })
 
 function save() {
-    console.log('save')
     gqlUpdatePayeeSubcategory({
         payeeId: props.payee.id, 
         subcategoryId: subcategoryId.value

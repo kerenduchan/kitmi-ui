@@ -11,9 +11,7 @@ const headers = ref(['Name', 'Type', 'Category', 'Subcategory'])
 </script>
 
 <template>
-    <h2>Payees</h2>
-
-    <v-table>
+    <v-table density="compact" height="550px" fixed-header>
         <thead>
             <tr>
                 <th v-for="header in headers" class="text-left">

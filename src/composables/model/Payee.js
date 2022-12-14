@@ -24,6 +24,10 @@ class Payee {
     get type() {
         return this.subcategory ? this.subcategory.type : ''
     }
+
+    get isUncategorized() {
+        return this.subcategory === null
+    }
 }
 
 export default Payee

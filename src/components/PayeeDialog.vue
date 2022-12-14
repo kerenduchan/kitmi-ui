@@ -63,7 +63,7 @@ watchEffect(() => {
 })
 
 // handle a change in the selected categoryId
-watch(categoryId, () => {
+watchEffect(() => {
     if(categoryId.value === null) {
         // No category is selected. Clear subcategoryId and subcategories.
         subcategoryId.value = null

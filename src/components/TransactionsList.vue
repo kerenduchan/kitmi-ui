@@ -1,11 +1,16 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { formatNumber } from '@/composables/utils'
 
 // props 
 const props = defineProps({
     transactions: Object
 })
+
+// emits
+const emit = defineEmits([
+    'selectedTransactionChanged'
+])
 
 const headers = ref([
     'Date', 
@@ -23,6 +28,14 @@ const filteredTransactions = computed(() => {
         return props.transactions.filter(t => t.isUncategorized)
     }
     return props.transactions
+})
+
+const filteredSelectedTransaction = computed(() => {
+    if(selectedTransaction.value === null) {
+        return null
+    }
+    const found = filteredTransactions.value.find(p => p.id === selectedTransaction.value.id)
+    return found ? selectedTransaction.value : null
 })
 
 const sum = computed(() => {
@@ -43,6 +56,12 @@ function getClassForRow(transaction) {
 function onRowClicked(transaction) {
     selectedTransaction.value = transaction
 }
+
+// filteredSelectedTransaction changes either as a result of a click on a row
+// or a change in the filtering criteria
+watch(filteredSelectedTransaction, () => {
+    emit('selectedTransactionChanged', filteredSelectedTransaction.value)
+})
 
 </script>
 

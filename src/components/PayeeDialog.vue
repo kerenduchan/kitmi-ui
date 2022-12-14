@@ -9,7 +9,7 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'save'
+    'update'
 ])
 
 // The selected type (Income/Expense)  (v-model for the radio group element)
@@ -82,6 +82,24 @@ watch(categoryId, () => {
     }
 })
 
+const isSaveDisabled = computed(() => {
+    return (categoryId === null || subcategoryId.value === null)
+})
+
+function save() {
+    const data = {
+        payeeId: props.payee.id,
+        isExpense: (type.value === 'Expense'),
+        categoryId: categoryId.value,
+        subcategoryId: subcategoryId.value
+    }
+    emit('update', data)
+}
+
+function close() {
+    emit('close')
+}
+
 </script>
 
 <template>
@@ -111,7 +129,9 @@ watch(categoryId, () => {
             </v-form>
         </v-card-text>
         <v-card-actions>
-            <v-btn color="primary" block @click="emit('close')">Close</v-btn>
+            <v-btn color="primary" :disabled="isSaveDisabled" @click="save">Save</v-btn>
+            <v-btn color="primary" @click="close">Close</v-btn>
+            
         </v-card-actions>
     </v-card>
 </template>

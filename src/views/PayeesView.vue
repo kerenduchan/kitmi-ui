@@ -34,6 +34,10 @@ function onPayeeClicked(p) {
     payee.value = p
 }
 
+function updatePayee(data) {
+    console.log('update payee')
+    console.log(data)
+}
 </script>
 
 <template>
@@ -46,7 +50,9 @@ function onPayeeClicked(p) {
             <PayeeDialog 
                 :payee="payee" 
                 :categories="categories" 
-                @close="showPayeeDialog=false"/>
+                @close="showPayeeDialog=false"
+                @update="updatePayee"
+            />
         </v-dialog>
     </div>
 </template>

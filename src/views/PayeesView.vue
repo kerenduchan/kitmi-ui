@@ -45,24 +45,20 @@ function isPayeeSelected() {
 
 <template>
     <v-container height="100px">
-                <v-btn icon="mdi-pencil" :disabled="!isPayeeSelected()" @click="edit"></v-btn>
-            </v-container>
-            <v-divider></v-divider>
+        <v-btn icon="mdi-pencil" :disabled="!isPayeeSelected()" @click="edit"></v-btn>
+    </v-container>
+    <v-divider></v-divider>
 
     <div v-if="!isPayeesReady || !isCategoriesReady">
         Loading...
     </div>
 
     <div v-else>
-        <PayeesList :payees="payees" @selectedPayeeChanged="onSelectedPayeeChanged"/>
+        <PayeesList :payees="payees" @selectedPayeeChanged="onSelectedPayeeChanged" />
 
         <v-dialog v-model="showPayeeDialog">
-            <PayeeDialog 
-                :payee="selectedPayee" 
-                :categories="categories" 
-                @close="closePayeeDialog"
-                @change="handlePayeeChange"
-            />
+            <PayeeDialog :payee="selectedPayee" :categories="categories" @close="closePayeeDialog"
+                @change="handlePayeeChange" />
         </v-dialog>
     </div>
 </template>

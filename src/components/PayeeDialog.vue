@@ -23,9 +23,10 @@ const subcategoryName = ref(props.payee.subcategoryName)
 
 // The list of possible categories shown in the select.
 // Depends on the selected type (Income/Expense).
+// Also, filter out categories with no subcategories.
 const categories = computed(() => {
     const isExpense = (type.value === 'Expense')
-    return props.categories.filter(c => c.isExpense === isExpense)
+    return props.categories.filter(c => c.isExpense === isExpense && c.hasSubcategories)
 })
 
 // The list of possible subcategories shown in the select.

@@ -17,6 +17,11 @@ class Category {
     get type() {
         return this.isExpense ? 'Expense' : 'Income'
     }
+
+    get hasSubcategories() {
+        return this.subcategories && this.subcategories.length > 0
+    }
+
 }
 
 export default Category

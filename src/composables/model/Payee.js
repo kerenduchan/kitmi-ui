@@ -13,6 +13,10 @@ class Payee {
         this.subcategory = gqlPayee.subcategory ? new Subcategory(gqlPayee.subcategory) : null
     }
 
+    get category() {
+        return this.subcategory ? this.subcategory.category : null
+    }
+
     get categoryName() {
         return this.subcategory ? this.subcategory.categoryName : ''
     }

@@ -15,11 +15,11 @@ const emit = defineEmits([
 // The selected type (Income/Expense)  (v-model for the radio group element)
 const type = ref(props.payee.type ? props.payee.type : 'Expense')
 
-// The selected category name (v-model for the v-select element)
-const categoryName = ref(props.payee.categoryName)
+// The selected category ID (v-model for the v-select element)
+const categoryId = ref(props.payee.categoryId)
 
-// The selected subcategory name (v-model for the select element)
-const subcategoryName = ref(props.payee.subcategoryName)
+// The selected subcategory ID (v-model for the select element)
+const subcategoryId = ref(props.payee.subcategoryId)
 
 // The list of possible categories shown in the select.
 // Depends on the selected type (Income/Expense).
@@ -33,57 +33,52 @@ const categories = computed(() => {
 // Depends on the selected category.
 const subcategories = ref([])
 
-// just the names of the categories, to be listed in the select
-const categoryNames = computed(() => {
-    return categories.value.map(c => c.name)
-})
 
-// just the names of the subcategories, to be listed in the select
-const subcategoryNames = computed(() => {
-    return subcategories.value.map(s => s.name)
-})
-
-function findCategoryByName(name) {
+function findCategoryById(id) {
     let c = null
-    if(props.payee.categoryName !== '') {
-        c = categories.value.find(c => c.name === name)
+    if(id !== null) {
+        c = categories.value.find(c => c.id === id)
     }
     return c
+}
+
+function findSubcategoryById(id) {
+    let s = null
+    if(id !== null) {
+        s = subcategories.value.find(s => s.id === id)
+    }
+    return s
 }
 
 // handle a change in categories, and also run intially.
 // this will happen as a result of type change (Income/Expense)
 watchEffect(() => {
-    const c = findCategoryByName(props.payee.categoryName)
+    const c = findCategoryById(props.payee.categoryId)
     if(c) {
-        // The payee's categoryName appears in the list of categories 
-        // for this type
-        categoryName.value = props.payee.categoryName
+        // The payee's categoryId appears in the list of categories
+        categoryId.value = props.payee.categoryId
     } else {
-        // The payee's categoryName does not appear in the list of categories 
-        // for this type
-        categoryName.value = ''
+        categoryId.value = null
     }
 })
 
-// handle a change in categories, and also run intially.
-// this will happen as a result of type change (Income/Expense)
-watch(categoryName, () => {
-    if(categoryName.value === '') {
-        // categoryName is empty. Clear subcategoryName and categories.
-        subcategoryName.value = ''
+// handle a change in the selected categoryId
+watch(categoryId, () => {
+    if(categoryId.value === null) {
+        // No category is selected. Clear subcategoryId and subcategories.
+        subcategoryId.value = null
         subcategories.value = []
     } else {
-        // a categoryName is selected. Set subcategories accordingly.
-        const c = findCategoryByName(categoryName.value)
+        // A category is selected. Set subcategories accordingly.
+        const c = findCategoryById(categoryId.value)
         if(c === null) {
             return
         }
         subcategories.value = c.subcategories
 
-        // And set subcategoryName accordingly.
-        const s = c.subcategories.find(s => s.name === props.payee.subcategoryName)
-        subcategoryName.value = s ? props.payee.subcategoryName : ''
+        // And set subcategoryId accordingly.
+        const s = findSubcategoryById(props.payee.subcategoryId)
+        subcategoryId.value = s ? props.payee.subcategoryId : null
     }
 })
 
@@ -98,8 +93,21 @@ watch(categoryName, () => {
                     <v-radio label="Expense" value="Expense"></v-radio>
                     <v-radio label="Income" value="Income"></v-radio>
                 </v-radio-group>
-                <v-select label="Category" :items="categoryNames" v-model="categoryName"/>
-                <v-select label="Subcategory" :items="subcategoryNames" v-model="subcategoryName"/>
+
+                <v-select 
+                    label="Category" 
+                    :items="categories" 
+                    item-title="name" 
+                    item-value="id" 
+                    v-model="categoryId"
+                />
+
+                <v-select 
+                    label="Subcategory" 
+                    :items="subcategories" 
+                    item-title="name" 
+                    item-value="id" 
+                    v-model="subcategoryId"/>
             </v-form>
         </v-card-text>
         <v-card-actions>

@@ -21,8 +21,16 @@ class Payee {
         return this.subcategory ? this.subcategory.categoryName : ''
     }
 
+    get categoryId() {
+        return this.category ? this.category.id : null
+    }
+
     get subcategoryName() {
         return this.subcategory ? this.subcategory.name : ''
+    }
+
+    get subcategoryId() {
+        return this.subcategory ? this.subcategory.id : null
     }
 
     get type() {

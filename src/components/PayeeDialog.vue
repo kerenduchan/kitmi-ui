@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, watch, watchEffect, onMounted } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
+import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 
 // props 
 const props = defineProps({
@@ -9,8 +10,14 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'update'
+    'change'
 ])
+
+const { 
+    gqlUpdatePayeeSubcategory, 
+    onDone: onUpdatePayeeDone, 
+    onError: onUpdatePayeeError 
+} = updatePayeeSubcategory()
 
 // The selected type (Income/Expense)  (v-model for the radio group element)
 const type = ref(props.payee.type ? props.payee.type : 'Expense')
@@ -87,14 +94,21 @@ const isSaveDisabled = computed(() => {
 })
 
 function save() {
-    const data = {
-        payeeId: props.payee.id,
-        isExpense: (type.value === 'Expense'),
-        categoryId: categoryId.value,
+    console.log('save')
+    gqlUpdatePayeeSubcategory({
+        payeeId: props.payee.id, 
         subcategoryId: subcategoryId.value
-    }
-    emit('update', data)
+    })
 }
+
+onUpdatePayeeDone(() => {
+    emit('change')
+})
+
+onUpdatePayeeError((e) => {
+    console.error('failed to update payee')
+    console.error(e)
+})
 
 function close() {
     emit('close')

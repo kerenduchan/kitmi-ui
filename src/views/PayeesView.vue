@@ -34,14 +34,19 @@ function onPayeeClicked(p) {
     payee.value = p
 }
 
-function updatePayee(data) {
-    console.log('update payee')
-    console.log(data)
+function closePayeeDialog() {
+    showPayeeDialog.value = false
 }
+
+function handlePayeeChange() {
+    refetchPayees()
+    closePayeeDialog()
+}
+
 </script>
 
 <template>
-    <div v-if="!isPayeesReady">Loading...</div>
+    <div v-if="!isPayeesReady || !isCategoriesReady">Loading...</div>
     <div v-else>
         <v-checkbox label="Show Only Uncategorized" v-model="showOnlyUncategorized"></v-checkbox>
 
@@ -50,8 +55,8 @@ function updatePayee(data) {
             <PayeeDialog 
                 :payee="payee" 
                 :categories="categories" 
-                @close="showPayeeDialog=false"
-                @update="updatePayee"
+                @close="closePayeeDialog"
+                @change="handlePayeeChange"
             />
         </v-dialog>
     </div>

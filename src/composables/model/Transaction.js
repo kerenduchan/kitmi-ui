@@ -1,57 +1,48 @@
 
 
+import Subcategory from './Subcategory'
+import Payee from './Payee'
+import Account from './Account'
+
 // Represents one transaction. 
 // Wraps the transaction received from the server and exposes useful UI-specific 
 // getters on it.
 
 class Transaction {
+
     constructor(gqlTransaction) {
-        this.gqlTransaction = gqlTransaction;
+        this.date = gqlTransaction.date
+        this.amount = gqlTransaction.amount
+        this.payee = new Payee(gqlTransaction.payee)
+        this.account = new Account(gqlTransaction.account)
+        this.#initSubcategory(gqlTransaction)
     }
 
-    get date() {
-        return this.gqlTransaction.date
-    }
-
-    get amount() {
-        return this.gqlTransaction.date
+    #initSubcategory(gqlTransaction) {
+        // the subcategory of the transaction overrides the subcategory
+        // of the payee of the transaction
+        if(gqlTransaction.subcategory) {
+            this.subcategory = new Subcategory(gqlTransaction.subcategory)
+        } else {
+            // assumes this.payee has already been initialized
+            this.subcategory = this.payee.subcategory;
+        }
     }
 
     get payeeName() {
-        return this.gqlTransaction.payee.name
-    }
-
-    get subcategory() {
-        // the subcategory of the transaction overrides the subcategory
-        // of the payee of the transaction
-        const t = this.gqlTransaction
-        if (t.subcategory) {
-            return t.subcategory
-        }
-        return t.payee.subcategory
-    }
-    
-    get category() {
-        const s = this.subcategory
-        return s ? s.category : null
+        return this.payee.name
     }
 
     get subcategoryName() {
-        const s = this.subcategory
-        return s ? s.name : ''
+        return this.subcategory ? this.subcategory.name : ''
     }
 
     get categoryName() {
-        const c = this.category
-        return c ? c.name : ''
+        return this.subcategory ? this.subcategory.categoryName : ''
     }
 
     get type() {
-        const c = this.category
-        if(c === null) {
-            return ''
-        }
-        return c.isExpense ? "Expense" : "Income"
+        return this.subcategory ? this.subcategory.type : ''
     }
 }
 

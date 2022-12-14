@@ -1,4 +1,4 @@
-
+import Subcategory from "./Subcategory"
 
 // Represents one category and its subcategories. 
 // Wraps the category received from the server and exposes useful UI-specific 
@@ -6,22 +6,16 @@
 
 class Category {
     constructor(gqlCategory) {
-        this.gqlCategory = gqlCategory
-    }
-
-    get id() {
-        return this.gqlCategory.id
-    }
-    get name() {
-        return this.gqlCategory.name
+        this.id = gqlCategory.id
+        this.name = gqlCategory.name
+        this.isExpense = gqlCategory.isExpense
+        this.subcategories = null
+        if (gqlCategory.subcategories)
+            this.subcategories = gqlCategory.subcategories.map(s => new Subcategory(s))
     }
 
     get type() {
-        return  this.gqlCategory.isExpense ? 'Expense' : 'Income'
-    }
-
-    get subcategories() {
-        return this.gqlCategory.subcategories
+        return this.isExpense ? 'Expense' : 'Income'
     }
 }
 

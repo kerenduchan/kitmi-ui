@@ -4,34 +4,25 @@
 // Wraps the payee received from the server and exposes useful UI-specific 
 // getters on it.
 
+import Subcategory from "./Subcategory";
+
 class Payee {
     constructor(gqlPayee) {
-        this.gqlPayee = gqlPayee;
-    }
-
-    get name() {
-        return this.gqlPayee.name
+        this.id = gqlPayee.id
+        this.name = gqlPayee.name
+        this.subcategory = gqlPayee.subcategory ? new Subcategory(gqlPayee.subcategory) : null
     }
 
     get categoryName() {
-        if(this.gqlPayee.subcategory) {
-            return this.gqlPayee.subcategory.category.name
-        } 
-        return ''
+        return this.subcategory ? this.subcategory.categoryName : ''
     }
 
     get subcategoryName() {
-        if(this.gqlPayee.subcategory) {
-            return this.gqlPayee.subcategory.name
-        } 
-        return ''
+        return this.subcategory ? this.subcategory.name : ''
     }
 
     get type() {
-        if(this.gqlPayee.subcategory === null) {
-            return ''
-        }
-        return this.gqlPayee.subcategory.category.isExpense ? "Expense" : "Income"
+        return this.subcategory ? this.subcategory.type : ''
     }
 }
 

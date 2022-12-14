@@ -6,8 +6,13 @@ const props = defineProps({
     payees: Object
 })
 
+const emit = defineEmits(['click'])
+
 const headers = ref(['Name', 'Type', 'Category', 'Subcategory'])
 
+function clicked(payee) {
+    emit('click', payee)
+}
 </script>
 
 <template>
@@ -20,7 +25,7 @@ const headers = ref(['Name', 'Type', 'Category', 'Subcategory'])
             </tr>
         </thead>
         <tbody>
-            <tr v-for="p in props.payees" :key="p.id">
+            <tr v-for="p in props.payees" :key="p.id" @click="clicked(p)">
                 <td>{{ p.name}}</td>
                 <td>{{ p.type }}</td>
                 <td>{{ p.categoryName }}</td>

@@ -13,8 +13,6 @@ class Transaction {
 
     constructor(gqlTransaction) {
         this.date = new Date(gqlTransaction.date)
-        console.log(this.date)
-        console.log(formatDate(this.date))
         this.amount = gqlTransaction.amount
         this.payee = new Payee(gqlTransaction.payee)
         this.account = new Account(gqlTransaction.account)

@@ -17,21 +17,11 @@ const {
     refetch: refetchCategories
 } = getCategories()
 
-const showOnlyUncategorized = ref(false)
-
-const filteredPayees = computed(() => {
-    if(showOnlyUncategorized.value) {
-        return payees.value.filter(p => p.isUncategorized)
-    }
-    return payees.value
-})
-
 const showPayeeDialog = ref(false)
-const payee = ref(null)
+const selectedPayee = ref(null)
 
-function onPayeeClicked(p) {
-    showPayeeDialog.value = true
-    payee.value = p
+function onSelectedPayeeChanged(p) {
+    selectedPayee.value = p
 }
 
 function closePayeeDialog() {
@@ -43,17 +33,32 @@ function handlePayeeChange() {
     closePayeeDialog()
 }
 
+function edit() {
+    showPayeeDialog.value = true
+}
+
+function isPayeeSelected() {
+    return selectedPayee.value !== null
+}
+
 </script>
 
 <template>
-    <div v-if="!isPayeesReady || !isCategoriesReady">Loading...</div>
-    <div v-else>
-        <v-checkbox label="Show Only Uncategorized" v-model="showOnlyUncategorized"></v-checkbox>
+    <v-container height="100px">
+                <v-btn icon="mdi-pencil" :disabled="!isPayeeSelected()" @click="edit"></v-btn>
+            </v-container>
+            <v-divider></v-divider>
 
-        <PayeesList :payees="filteredPayees" @click="onPayeeClicked"/>
+    <div v-if="!isPayeesReady || !isCategoriesReady">
+        Loading...
+    </div>
+
+    <div v-else>
+        <PayeesList :payees="payees" @selectedPayeeChanged="onSelectedPayeeChanged"/>
+
         <v-dialog v-model="showPayeeDialog">
             <PayeeDialog 
-                :payee="payee" 
+                :payee="selectedPayee" 
                 :categories="categories" 
                 @close="closePayeeDialog"
                 @change="handlePayeeChange"

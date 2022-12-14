@@ -1,21 +1,73 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed, watchEffect } from 'vue'
 
 // props 
 const props = defineProps({
     payees: Object
 })
 
-const emit = defineEmits(['click'])
+// emits
+const emit = defineEmits([
+    'selectedPayeeChanged'
+])
 
-const headers = ref(['Name', 'Type', 'Category', 'Subcategory'])
+// headers for the payees table
+const headers = ref([
+    'Name', 
+    'Type', 
+    'Category', 
+    'Subcategory'
+])
 
-function clicked(payee) {
-    emit('click', payee)
+// whether to show only uncategorized payees (v-model for the checkbox)
+const showOnlyUncategorized = ref(false)
+
+// the last payee that the user selected (clicked on the row in the table)
+const selectedPayee = ref(null)
+
+// filtered payees to display in the table
+const filteredPayees = computed(() => {
+    if(showOnlyUncategorized.value === true) {
+        return props.payees.filter(p => !p.isCategorized)
+    }
+    return props.payees
+})
+
+const filteredSelectedPayee = computed(() => {
+    console.log('computing filteredSelectedPayee')
+    if(showOnlyUncategorized.value === true && 
+        selectedPayee.value !== null && 
+        selectedPayee.value.isCategorized) {
+            console.log('filteredSelectedPayee = null')
+        return null
+    }
+    console.log('filteredSelectedPayee = selectedPayee')
+    return selectedPayee.value
+})
+
+// handle click on a row in the table
+function onRowClicked(payee) {
+    console.log('row clicked')
+    selectedPayee.value = payee
 }
+
+function getClassForPayeeRow(payee) {
+    return selectedPayee.value?.id === payee.id ? 'selected-row' : ''
+}
+
+// filteredSelectedPayee changes either as a result of a click on a row
+// or a change in the filtering criteria
+watch(filteredSelectedPayee, () => {
+    console.log('emitting')
+    console.log(filteredSelectedPayee.value)
+    emit('selectedPayeeChanged', filteredSelectedPayee.value)
+})
+
 </script>
 
 <template>
+    <v-checkbox label="Show Only Uncategorized" v-model="showOnlyUncategorized"></v-checkbox>
+
     <v-table density="compact" height="550px" fixed-header>
         <thead>
             <tr>
@@ -25,7 +77,7 @@ function clicked(payee) {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="p in props.payees" :key="p.id" @click="clicked(p)">
+            <tr v-for="p in filteredPayees" :key="p.id" :class="getClassForPayeeRow(p)" @click="onRowClicked(p)">
                 <td>{{ p.name}}</td>
                 <td>{{ p.type }}</td>
                 <td>{{ p.categoryName }}</td>
@@ -34,3 +86,9 @@ function clicked(payee) {
         </tbody>
     </v-table>
 </template>
+
+<style scoped>
+    .selected-row {
+        background-color: #D6DBDF;
+    }
+</style>

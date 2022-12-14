@@ -1,63 +1,52 @@
 <template>
-    <v-app>
-        <v-app-bar flat>
-            <!-- Top bar for the app -->
-            <v-container class="fill-height d-flex align-center">
-                <v-btn v-for="link in links" :key="link.key" variant="text" router :to="link.to">
-                    {{ link.title }}
-                </v-btn>
+    <v-app id="inspire">
+        <v-navigation-drawer permanent>
+            <v-list>
+                <v-list-item v-for="link in links" :key="link.key" router :to="link.to">
+                    <template v-slot:prepend>
+                        <v-icon>{{ link.icon }}</v-icon>
+                    </template>
 
-                <v-spacer></v-spacer>
+                    <v-list-item-title>{{ link.title }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
 
-                <v-responsive max-width="260">
-                    <v-text-field density="compact" hide-details variant="solo"></v-text-field>
-                </v-responsive>
-            </v-container>
-        </v-app-bar>
-        <v-main class="bg-grey-lighten-3">
+        <v-main>
             <!-- Main window for the app -->
-            <v-container>
-                <v-row>
-                    <v-col>
-                        <v-sheet min-height="70vh" rounded="lg">
-                            <!--  -->
-                            <RouterView />
-                        </v-sheet>
-                    </v-col>
-                </v-row>
-            </v-container>
+            <RouterView />
         </v-main>
     </v-app>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-const drawer = ref(false)
-const group = ref(null)
+import { ref } from 'vue'
+
 const links = ref([
     {
         title: 'Home',
         value: 'home',
-        to: '/'
+        to: '/',
+        icon: 'mdi-home'
     },
     {
         title: 'Categories',
         value: 'categories',
-        to: '/categories'
+        to: '/categories',
+        icon: 'mdi-folder'
     },
     {
         title: 'Payees',
         value: 'payees',
-        to: '/payees'
+        to: '/payees',
+        icon: 'mdi-account'
     },
     {
         title: 'Transactions',
         value: 'transactions',
-        to: '/transactions'
+        to: '/transactions',
+        icon: 'mdi-currency-usd'
     },
 ])
 
-watch(group, () => {
-    drawer.value = false
-})
 </script>

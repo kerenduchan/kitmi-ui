@@ -37,8 +37,8 @@ class Payee {
         return this.subcategory ? this.subcategory.type : ''
     }
 
-    get isUncategorized() {
-        return this.subcategory === null
+    get isCategorized() {
+        return this.subcategory !== null
     }
 }
 

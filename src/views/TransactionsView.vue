@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import TopBar from '@/components/TopBar.vue'
 import TransactionsList from '@/components/TransactionsList.vue'
 import getTransactions from '@/composables/queries/getTransactions'
 
@@ -12,7 +13,7 @@ const {
 const showOnlyUncategorized = ref(false)
 
 const filteredTransactions = computed(() => {
-    if(showOnlyUncategorized.value) {
+    if (showOnlyUncategorized.value) {
         return transactions.value.filter(t => t.isUncategorized)
     }
     return transactions.value
@@ -21,6 +22,9 @@ const filteredTransactions = computed(() => {
 </script>
 
 <template>
+    <TopBar>
+    </TopBar>
+
     <div v-if="!isTransactionsReady">Loading...</div>
     <div v-else>
         <v-checkbox label="Show Only Uncategorized" v-model="showOnlyUncategorized"></v-checkbox>

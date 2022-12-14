@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import TopBar from '@/components/TopBar.vue'
 import PayeesList from '@/components/PayeesList.vue'
 import PayeeDialog from '@/components/PayeeDialog.vue'
 import getPayees from '@/composables/queries/getPayees'
@@ -44,10 +45,9 @@ function isPayeeSelected() {
 </script>
 
 <template>
-    <v-container height="100px">
+    <TopBar>
         <v-btn icon="mdi-pencil" :disabled="!isPayeeSelected()" @click="edit"></v-btn>
-    </v-container>
-    <v-divider></v-divider>
+    </TopBar>
 
     <div v-if="!isPayeesReady || !isCategoriesReady">
         Loading...

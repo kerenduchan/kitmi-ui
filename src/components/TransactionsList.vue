@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { formatNumber, formatDate } from '@/composables/utils'
 
 // props 
 const props = defineProps({
@@ -8,12 +9,17 @@ const props = defineProps({
 
 const headers = ref(['Date', 'Amount', 'Payee', 'Type', 'Category', 'Subcategory'])
 
+const sum = computed(() => {
+    const tmp = props.transactions.reduce((partialSum, t) => partialSum + t.amount, 0)
+    return formatNumber(tmp)
+})
+
 </script>
 
 <template>
     <h2>Transactions</h2>
 
-    <v-table>
+    <v-table density="compact" height="550px" fixed-header>
         <thead>
             <tr>
                 <th v-for="header in headers" class="text-left">
@@ -23,14 +29,24 @@ const headers = ref(['Date', 'Amount', 'Payee', 'Type', 'Category', 'Subcategory
         </thead>
         <tbody>
             <tr v-for="t in props.transactions" :key="t.id">
-                <td>{{ t.date }}</td>
-                <td>{{ t.amount }}</td>
+                <td>{{ t.formattedDate }}</td>
+                <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>
                 <td>{{ t.type }}</td>
                 <td>{{ t.categoryName }}</td>
                 <td>{{ t.subcategoryName }}</td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <td>Total</td>
+                <td class="text-right">{{ sum }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
     </v-table>
 
 </template>

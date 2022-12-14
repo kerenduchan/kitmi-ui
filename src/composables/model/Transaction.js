@@ -3,6 +3,7 @@
 import Subcategory from './Subcategory'
 import Payee from './Payee'
 import Account from './Account'
+import { formatNumber, formatDate } from '@/composables/utils'
 
 // Represents one transaction. 
 // Wraps the transaction received from the server and exposes useful UI-specific 
@@ -11,7 +12,9 @@ import Account from './Account'
 class Transaction {
 
     constructor(gqlTransaction) {
-        this.date = gqlTransaction.date
+        this.date = new Date(gqlTransaction.date)
+        console.log(this.date)
+        console.log(formatDate(this.date))
         this.amount = gqlTransaction.amount
         this.payee = new Payee(gqlTransaction.payee)
         this.account = new Account(gqlTransaction.account)
@@ -43,6 +46,14 @@ class Transaction {
 
     get type() {
         return this.subcategory ? this.subcategory.type : ''
+    }
+
+    get formattedAmount() {
+          return formatNumber(this.amount)        
+    }
+
+    get formattedDate() {
+        return formatDate(this.date)
     }
 }
 

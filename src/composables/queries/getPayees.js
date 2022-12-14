@@ -1,7 +1,7 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { ref } from 'vue'
-import Payee from '../composables/Payee'
+import Payee from '@/composables/model/Payee'
 
 function getPayees() {
     const { onResult, refetch } = useQuery(gql`

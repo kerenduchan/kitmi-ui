@@ -1,6 +1,6 @@
 <script setup>
-import PayeesList from '../components/PayeesList.vue'
-import getPayees from '../composables/getPayees'
+import PayeesList from '@/components/PayeesList.vue'
+import getPayees from '@/composables/queries/getPayees'
 
 const {
     payees,

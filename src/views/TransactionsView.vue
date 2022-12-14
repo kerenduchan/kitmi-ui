@@ -1,6 +1,6 @@
 <script setup>
-import TransactionsList from '../components/TransactionsList.vue'
-import getTransactions from '../composables/getTransactions'
+import TransactionsList from '@/components/TransactionsList.vue'
+import getTransactions from '@/composables/queries/getTransactions'
 
 const {
     transactions,

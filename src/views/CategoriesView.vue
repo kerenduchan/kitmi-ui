@@ -1,6 +1,6 @@
 <script setup>
-import CategoriesList from '../components/CategoriesList.vue'
-import getCategories from '../composables/getCategories'
+import CategoriesList from '@/components/CategoriesList.vue'
+import getCategories from '@/composables/queries/getCategories'
 
 const { categories, isReady, refetch } = getCategories()
 

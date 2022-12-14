@@ -1,7 +1,7 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { ref } from 'vue'
-import Category from './Category'
+import Category from '@/composables/model/Category'
 
 function getCategories() {
     const { onResult, refetch } = useQuery(gql`

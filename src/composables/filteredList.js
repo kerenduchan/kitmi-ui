@@ -1,4 +1,4 @@
-import { ref, computed, watch, watchEffect } from 'vue'
+import { ref, computed, watch } from 'vue'
     
 // Reusable code for a list that can be filtered and where also one row can be selected at a time.
 // When the selected row is filtered out, the selected item changes to null.

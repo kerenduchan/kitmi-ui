@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { formatNumber } from '@/composables/utils'
 
 // props 
 const props = defineProps({
@@ -7,11 +8,11 @@ const props = defineProps({
 })
 
 const headers = ref([
-    'Category', 
-    'Subcategory', 
-    'January', 
-    'February', 
-    'March', 
+    'Category',
+    'Subcategory',
+    'January',
+    'February',
+    'March',
     'April',
     'May',
     'June',
@@ -23,6 +24,24 @@ const headers = ref([
     'December',
     'Total',
 ])
+
+const monthlySumTotals = computed(() => {
+    let res = []
+    for (let i = 0; i < 12; i++) {
+        res.push(0)
+    }
+    props.rows.forEach(row => {
+        for (let i = 0; i < 12; i++) {
+            res[i] += row.monthlySums[i]
+        }
+    })
+
+    return res
+})
+
+const yearlySumTotal = computed(() => {
+    return props.rows.reduce((sum, row) => sum + row.totalSum, 0)
+})
 
 </script>
 
@@ -39,11 +58,17 @@ const headers = ref([
             <tr v-for="r in props.rows">
                 <td>{{ r.subcategory.category.name }}</td>
                 <td>{{ r.subcategory.name }}</td>
-                <td v-for="sum in r.monthlySums" class="text-right">{{ sum }}</td>
-                <td class="text-right">{{ r.formattedTotalSum }}</td>
+                <td v-for="sum in r.monthlySums" class="text-right">{{ formatNumber(sum) }}</td>
+                <td class="text-right">{{ formatNumber(r.totalSum) }}</td>
             </tr>
         </tbody>
         <tfoot>
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td v-for="sum in monthlySumTotals" class="text-right">{{ formatNumber(sum) }}</td>
+                <td class="text-right">{{ formatNumber(yearlySumTotal) }}</td>
+            </tr>
         </tfoot>
     </v-table>
 

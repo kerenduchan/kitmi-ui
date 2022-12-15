@@ -37,7 +37,7 @@ const headers = ref([
         </thead>
         <tbody>
             <tr v-for="r in props.rows">
-                <td>{{ r.category.name }}</td>
+                <td>{{ r.subcategory.category.name }}</td>
                 <td>{{ r.subcategory.name }}</td>
                 <td v-for="sum in r.monthlySums">{{ sum }}</td>
                 <td>{{ r.totalSum }}</td>

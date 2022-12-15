@@ -8,28 +8,22 @@ function getYearlySummary(year) {
         query getYearlySummary($year: Int!) {
             yearlySummary(year: $year) {
                 year
-                incomeRows {
-                    ...rowFields
-                }
-                expenseRows {
-                    ...rowFields
+                rows {
+                    subcategory {
+                        id
+                        name
+                        category {
+                            id
+                            name
+                            isExpense
+                        }
+                    }
+                    monthlySums
+                    totalSum
                 }
             }
         }
-        
-        fragment rowFields on YearlySummaryRow {
-            category {
-                name
-                id
-            }
-            subcategory {
-                name
-                id
-            }
-            monthlySums
-            totalSum
-        }
-    `, 
+    `,
     {
         year
     }

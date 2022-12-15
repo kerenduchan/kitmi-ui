@@ -14,7 +14,11 @@
 
         <v-main>
             <!-- Main window for the app -->
-            <RouterView />
+            <router-view v-slot="{ Component }">
+                    <keep-alive>
+                        <component :is="Component" />
+                    </keep-alive>
+            </router-view>
         </v-main>
     </v-app>
 </template>
@@ -52,7 +56,7 @@ const links = ref([
 </script>
 
 <style>
-    .selected-row {
-        background-color: #D6DBDF;
-    }
+.selected-row {
+    background-color: #D6DBDF;
+}
 </style>

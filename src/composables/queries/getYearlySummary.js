@@ -1,50 +1,35 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { ref } from 'vue'
-import Transaction from '@/composables/model/Transaction'
+import YearlySummary from '@/composables/model/YearlySummary'
 
 function getYearlySummary() {
     const { onResult, refetch } = useQuery(gql`
-        query getTransactions {
-            transactions {
-                id
-                date
-                amount
-                account {
-                    id
-                    name
-                }
-                payee {
-                    id
-                    name
-                    subcategory {
-                        id
-                        name
-                        category {
-                            id
-                            name
-                            isExpense
-                        }
-                    }
-                }
-                subcategory {
-                    id
-                    name
-                    category {
-                        id
-                        name
-                        isExpense
-                    }
-                }
-            }
+    query getYearlySummary {
+        yearlySummary(year: 2020) {
+        year
+        incomeRows {
+          categoryId
+          subcategoryId
+          monthlySums
+          totalSum
         }
+        expenseRows {
+          categoryId
+          subcategoryId
+          monthlySums
+          totalSum      
+        }
+      }
+    }
     `)
 
     const summary = ref(null)
     const isReady = ref(false)
 
     onResult(queryResult => {
-        summary.value = queryResult.data.transactions.map((p) => new Transaction(p))
+        summary.value = new YearlySummary(queryResult.data.yearlySummary)
+        console.log(summary.value)
         isReady.value = true
     })
 

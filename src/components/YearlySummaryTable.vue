@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 // props 
 const props = defineProps({
-    summary: Object
+    rows: Object
 })
 
 const headers = ref([
@@ -27,8 +27,7 @@ const headers = ref([
 </script>
 
 <template>
-
-    <v-table density="compact" height="550px" fixed-header>
+    <v-table density="compact">
         <thead>
             <tr>
                 <th v-for="header in headers" class="text-left">
@@ -37,6 +36,12 @@ const headers = ref([
             </tr>
         </thead>
         <tbody>
+            <tr v-for="r in props.rows">
+                <td>{{ r.categoryId }}</td>
+                <td>{{ r.subcategoryId }}</td>
+                <td v-for="sum in r.monthlySums">{{ sum }}</td>
+                <td>{{ r.totalSum }}</td>
+            </tr>
         </tbody>
         <tfoot>
         </tfoot>

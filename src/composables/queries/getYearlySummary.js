@@ -29,7 +29,6 @@ function getYearlySummary() {
 
     onResult(queryResult => {
         summary.value = new YearlySummary(queryResult.data.yearlySummary)
-        console.log(summary.value)
         isReady.value = true
     })
 

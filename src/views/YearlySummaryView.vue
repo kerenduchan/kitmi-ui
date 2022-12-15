@@ -18,8 +18,18 @@ const {
 
     <div v-if="!isReady">Loading...</div>
     <div v-else>
+
+        <h2>Year {{ summary.year }}</h2>
+
+        <h3>Income</h3>
         <YearlySummaryTable 
-            :summary="summary" 
+            :rows="summary.incomeRows" 
         />
-    </div>
+        
+        <h3>Expenses</h3>
+        <YearlySummaryTable 
+            :rows="summary.expenseRows" 
+        />
+
+</div>
 </template>

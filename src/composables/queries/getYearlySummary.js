@@ -3,26 +3,37 @@ import gql from 'graphql-tag'
 import { ref } from 'vue'
 import YearlySummary from '@/composables/model/YearlySummary'
 
-function getYearlySummary() {
+function getYearlySummary(year) {
     const { onResult, refetch } = useQuery(gql`
-    query getYearlySummary {
-        yearlySummary(year: 2020) {
+        query getYearlySummary($year: Int!) {
+            yearlySummary(year: $year) {
+                year
+                incomeRows {
+                    ...rowFields
+                }
+                expenseRows {
+                    ...rowFields
+                }
+            }
+        }
+        
+        fragment rowFields on YearlySummaryRow {
+            category {
+                name
+                id
+            }
+            subcategory {
+                name
+                id
+            }
+            monthlySums
+            totalSum
+        }
+    `, 
+    {
         year
-        incomeRows {
-          categoryId
-          subcategoryId
-          monthlySums
-          totalSum
-        }
-        expenseRows {
-          categoryId
-          subcategoryId
-          monthlySums
-          totalSum      
-        }
-      }
     }
-    `)
+    )
 
     const summary = ref(null)
     const isReady = ref(false)

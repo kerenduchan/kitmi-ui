@@ -1,7 +1,10 @@
+import Category from './Category'
+import Subcategory from './Subcategory'
+
 class YearlySummaryRow {
     constructor(gqlYearlySummaryRow) {
-        this.categoryId = gqlYearlySummaryRow.categoryId
-        this.subcategoryId = gqlYearlySummaryRow.subcategoryId
+        this.category = new Category(gqlYearlySummaryRow.category)
+        this.subcategory = new Subcategory(gqlYearlySummaryRow.subcategory)
         this.monthlySums = gqlYearlySummaryRow.monthlySums
         this.totalSum = gqlYearlySummaryRow.totalSum
     }

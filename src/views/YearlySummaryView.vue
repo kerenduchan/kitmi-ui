@@ -8,7 +8,7 @@ const {
     summary,
     isReady,
     refetch
-} = getYearlySummary()
+} = getYearlySummary(2020)
 
 </script>
 
@@ -25,7 +25,7 @@ const {
         <YearlySummaryTable 
             :rows="summary.incomeRows" 
         />
-        
+
         <h3>Expenses</h3>
         <YearlySummaryTable 
             :rows="summary.expenseRows" 

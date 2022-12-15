@@ -51,6 +51,12 @@ const links = ref([
         to: '/transactions',
         icon: 'mdi-currency-usd'
     },
+    {
+        title: 'Summary',
+        value: 'summary',
+        to: '/summary',
+        icon: 'mdi-star'
+    },
 ])
 
 </script>

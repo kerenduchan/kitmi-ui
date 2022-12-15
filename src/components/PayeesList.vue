@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { initFilteredList, getClassForRow, selectItem, filteredList } from '@/composables/filteredList'
+import FilteredList from '@/composables/FilteredList'
 
 // props 
 const props = defineProps({
@@ -30,7 +30,7 @@ function filter() {
     return props.payees
 }
 
-initFilteredList(filter, emit)
+let filteredList = new FilteredList(filter, emit)
 
 </script>
 
@@ -46,7 +46,11 @@ initFilteredList(filter, emit)
             </tr>
         </thead>
         <tbody>
-            <tr v-for="p in filteredList" :key="p.id" :class="getClassForRow(p)" @click="selectItem(p)">
+            <tr v-for="p in filteredList.filteredItems.value" 
+                :key="p.id" 
+                :class="filteredList.getClassForRow(p)" 
+                @click="filteredList.selectItem(p)"
+            >
                 <td>{{ p.name}}</td>
                 <td>{{ p.type }}</td>
                 <td>{{ p.categoryName }}</td>

@@ -1,58 +1,53 @@
 import { ref, computed, watch } from 'vue'
-    
+
 // Reusable code for a list that can be filtered and where also one row can be selected at a time.
 // When the selected row is filtered out, the selected item changes to null.
 // When the selected row is filtered back in, the selected item is reselected.
 // Used in TransactionsList and PayeesList.
+class FilteredList {
 
-// the function that filters the list
-const filterFunc = ref(null)
+    constructor(filter, emit) {
 
-// the emitter
-let emit = null
+        // the function that filters the list
+        this.filter = ref(filter)
 
-// init the filter function
-function initFilteredList(filter, iEmit) {
-    filterFunc.value = filter
-    emit = iEmit
-}
+        // the emitter
+        this.emit = emit
 
-// the filtered list
-const filteredList = computed(() => {
-    return filterFunc.value()
-})
+        // the filtered list
+        this.filteredItems = computed(() => {
+            return this.filter.value()
+        })
 
-// the selected item
-const selectedItem = ref(null)
+        // the selected item
+        this.selectedItem = ref(null)
 
-// the selected item, after filtering (may be filtered out or back in)
-const filteredSelectedItem = computed(() => {
-    if(selectedItem.value === null) {
-        return null
+        // the selected item, after filtering (may be filtered out or back in)
+        this.filteredSelectedItem = computed(() => {
+            if (this.selectedItem.value === null) {
+                return null
+            }
+            const found = this.filteredItems.value.find(item => item.id === this.selectedItem.value.id)
+            return found ? this.selectedItem.value : null
+        })
+
+        // filteredSelectedItem changes either as a result of selectItem(...)
+        // or a change in the filtering criteria
+        watch(this.filteredSelectedItem, () => {
+            emit('selectedItemChanged', this.filteredSelectedItem.value)
+        })
+
     }
-    const found = filteredList.value.find(item => item.id === selectedItem.value.id)
-    return found ? selectedItem.value : null
-})
 
-// get the class for a selected row in the table
-function getClassForRow(item) {
-    return selectedItem.value?.id === item.id ? 'selected-row' : ''
+    // get the class for a selected row in the table
+    getClassForRow(item) {
+        return this.selectedItem.value?.id === item.id ? 'selected-row' : ''
+    }
+    
+    // handle click on a row in the table (select the item)
+    selectItem(item) {
+        this.selectedItem.value = item
+    }
 }
 
-// handle click on a row in the table (select the item)
-function selectItem(item) {
-    selectedItem.value = item
-}
-
-// filteredSelectedItem changes either as a result of selectItem(...)
-// or a change in the filtering criteria
-watch(filteredSelectedItem, () => {
-    emit('selectedItemChanged', filteredSelectedItem.value)
-})
-
-export {
-    initFilteredList,
-    getClassForRow,
-    selectItem,
-    filteredList
-}
+export default FilteredList

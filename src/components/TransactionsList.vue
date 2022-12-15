@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { formatNumber } from '@/composables/utils'
-import { initFilteredList, getClassForRow, selectItem, filteredList } from '@/composables/filteredList'
+import FilteredList from '@/composables/FilteredList'
 
 // props 
 const props = defineProps({
@@ -32,8 +32,7 @@ function filter() {
     return props.transactions
 }
 
-// init the filtered list (see filteredList.js)
-initFilteredList(filter, emit)
+let filteredList = new FilteredList(filter, emit)
 
 // the computed sum of the rows
 const sum = computed(() => {
@@ -56,7 +55,11 @@ const sum = computed(() => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="t in filteredList" :key="t.id" :class="getClassForRow(t)" @click="selectItem(t)">
+            <tr v-for="t in filteredList.filteredItems.value" 
+                :key="t.id" 
+                :class="filteredList.getClassForRow(t)" 
+                @click="filteredList.selectItem(t)"
+            >
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>

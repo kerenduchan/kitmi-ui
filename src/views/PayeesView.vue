@@ -19,6 +19,7 @@ const {
 } = getCategories()
 
 const showPayeeDialog = ref(false)
+const payeeForDialog = ref(null)
 const selectedPayee = ref(null)
 
 function onSelectedPayeeChanged(p) {
@@ -35,7 +36,12 @@ function handlePayeeChange() {
 }
 
 function edit() {
+    // "freeze" the payee for the dialog so it doesn't get filtered out
+    // in case the payee went from being uncategorized to categorized
+    // and "Show Only Uncategorized" is checked
+    payeeForDialog.value = selectedPayee.value
     showPayeeDialog.value = true
+    
 }
 
 function isPayeeSelected() {
@@ -57,7 +63,7 @@ function isPayeeSelected() {
         <PayeesList :payees="payees" @selectedItemChanged="onSelectedPayeeChanged" />
 
         <v-dialog v-model="showPayeeDialog">
-            <PayeeDialog :payee="selectedPayee" :categories="categories" @close="closePayeeDialog"
+            <PayeeDialog :payee="payeeForDialog" :categories="categories" @close="closePayeeDialog"
                 @change="handlePayeeChange" />
         </v-dialog>
     </div>

@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch, computed, watchEffect } from 'vue'
+import { ref } from 'vue'
+import { initFilteredList, getClassForRow, selectItem, filteredList } from '@/composables/filteredList'
 
 // props 
 const props = defineProps({
@@ -8,7 +9,7 @@ const props = defineProps({
 
 // emits
 const emit = defineEmits([
-    'selectedPayeeChanged'
+    'selectedItemChanged'
 ])
 
 // headers for the payees table
@@ -22,39 +23,14 @@ const headers = ref([
 // whether to show only uncategorized payees (v-model for the checkbox)
 const showOnlyUncategorized = ref(false)
 
-// the last payee that the user selected (clicked on the row in the table)
-const selectedPayee = ref(null)
-
-// filtered payees to display in the table
-const filteredPayees = computed(() => {
-    if(showOnlyUncategorized.value === true) {
+function filter() {
+    if (showOnlyUncategorized.value) {
         return props.payees.filter(p => !p.isCategorized)
     }
     return props.payees
-})
-
-const filteredSelectedPayee = computed(() => {
-    if(selectedPayee.value === null) {
-        return null
-    }
-    const found = filteredPayees.value.find(p => p.id === selectedPayee.value.id)
-    return found ? selectedPayee.value : null
-})
-
-// handle click on a row in the table
-function onRowClicked(payee) {
-    selectedPayee.value = payee
 }
 
-function getClassForRow(payee) {
-    return selectedPayee.value?.id === payee.id ? 'selected-row' : ''
-}
-
-// filteredSelectedPayee changes either as a result of a click on a row
-// or a change in the filtering criteria
-watch(filteredSelectedPayee, () => {
-    emit('selectedPayeeChanged', filteredSelectedPayee.value)
-})
+initFilteredList(filter, emit)
 
 </script>
 
@@ -70,7 +46,7 @@ watch(filteredSelectedPayee, () => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="p in filteredPayees" :key="p.id" :class="getClassForRow(p)" @click="onRowClicked(p)">
+            <tr v-for="p in filteredList" :key="p.id" :class="getClassForRow(p)" @click="selectItem(p)">
                 <td>{{ p.name}}</td>
                 <td>{{ p.type }}</td>
                 <td>{{ p.categoryName }}</td>

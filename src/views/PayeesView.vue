@@ -54,7 +54,7 @@ function isPayeeSelected() {
     </div>
 
     <div v-else>
-        <PayeesList :payees="payees" @selectedPayeeChanged="onSelectedPayeeChanged" />
+        <PayeesList :payees="payees" @selectedItemChanged="onSelectedPayeeChanged" />
 
         <v-dialog v-model="showPayeeDialog">
             <PayeeDialog :payee="selectedPayee" :categories="categories" @close="closePayeeDialog"

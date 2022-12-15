@@ -55,8 +55,8 @@ class Transaction {
         return formatDate(this.date)
     }
 
-    get isUncategorized() {
-        return this.subcategory === null
+    get isCategorized() {
+        return this.subcategory !== null
     }
 }
 

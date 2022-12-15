@@ -35,6 +35,6 @@ function isTransactionSelected() {
     <div v-else>
         <TransactionsList 
             :transactions="transactions" 
-            @selectedTransactionChanged="onSelectedTransactionChanged"/>
+            @selectedItemChanged="onSelectedTransactionChanged"/>
     </div>
 </template>

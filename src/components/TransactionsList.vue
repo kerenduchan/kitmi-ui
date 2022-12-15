@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { formatNumber } from '@/composables/utils'
+import { initFilteredList, getClassForRow, selectItem, filteredList } from '@/composables/filteredList'
 
 // props 
 const props = defineProps({
@@ -9,7 +10,7 @@ const props = defineProps({
 
 // emits
 const emit = defineEmits([
-    'selectedTransactionChanged'
+    'selectedItemChanged'
 ])
 
 const headers = ref([
@@ -23,44 +24,21 @@ const headers = ref([
 
 const showOnlyUncategorized = ref(false)
 
-const filteredTransactions = computed(() => {
+// logic for filtering the list
+function filter() {
     if (showOnlyUncategorized.value) {
-        return props.transactions.filter(t => t.isUncategorized)
+        return props.transactions.filter(t => !t.isCategorized)
     }
     return props.transactions
-})
+}
 
-const filteredSelectedTransaction = computed(() => {
-    if(selectedTransaction.value === null) {
-        return null
-    }
-    const found = filteredTransactions.value.find(p => p.id === selectedTransaction.value.id)
-    return found ? selectedTransaction.value : null
-})
+// init the filtered list (see filteredList.js)
+initFilteredList(filter, emit)
 
+// the computed sum of the rows
 const sum = computed(() => {
     const tmp = props.transactions.reduce((partialSum, t) => partialSum + t.amount, 0)
     return formatNumber(tmp)
-})
-
-const selectedTransaction = ref(null)
-
-function getClassForRow(transaction) {
-    if(selectedTransaction.value === null) {
-        return ''
-    }
-    return selectedTransaction.value.id === transaction.id ? 'selected-row' : ''
-}
-
-// handle click on a row in the table
-function onRowClicked(transaction) {
-    selectedTransaction.value = transaction
-}
-
-// filteredSelectedTransaction changes either as a result of a click on a row
-// or a change in the filtering criteria
-watch(filteredSelectedTransaction, () => {
-    emit('selectedTransactionChanged', filteredSelectedTransaction.value)
 })
 
 </script>
@@ -78,7 +56,7 @@ watch(filteredSelectedTransaction, () => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="t in filteredTransactions" :key="t.id" :class="getClassForRow(t)" @click="onRowClicked(t)">
+            <tr v-for="t in filteredList" :key="t.id" :class="getClassForRow(t)" @click="selectItem(t)">
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>

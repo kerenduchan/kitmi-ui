@@ -5,6 +5,7 @@ import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
 import getTransactions from '@/composables/queries/getTransactions'
 import getCategories from '@/composables/queries/getCategories'
+import dialog from '@/composables/dialog'
 
 const {
     transactions: items,
@@ -18,33 +19,28 @@ const {
     refetch: refetchCategories
 } = getCategories()
 
-const showEditDialog = ref(false)
-const itemForEditDialog = ref(null)
+// logic for selected item
 const selectedItem = ref(null)
+
+function isItemSelected() {
+    return selectedItem.value !== null
+}
 
 function handleSelectedItemChanged(t) {
     selectedItem.value = t
 }
 
-function openEditDialog() {
-    // "freeze" the item for the dialog so it doesn't get filtered out
-    // in case the item went from being uncategorized to categorized
-    // and "Show Only Uncategorized" is checked
-    itemForEditDialog.value = selectedItem.value
-    showEditDialog.value = true
-}
-
-function closeEditDialog() {
-    showEditDialog.value = false
-}
+// logic for the edit dialog
+const {
+    show: showEditDialog,
+    item: itemForEditDialog,
+    open: openEditDialog,
+    close: closeEditDialog
+} = dialog(selectedItem)
 
 function handleChange() {
     closeEditDialog()
     refetchItems()
-}
-
-function isItemSelected() {
-    return selectedItem.value !== null
 }
 
 </script>

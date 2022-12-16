@@ -4,29 +4,29 @@ import { ref, computed, watchEffect, watch } from 'vue'
 // props 
 const props = defineProps({
     item: Object,
-    categories: Object
+    categories: Object,
+    refs: Object
 })
 
-// emits
-const emit = defineEmits([
-    'change'
-])
+const { type, categoryId, subcategoryId } = props.refs
 
 // The selected type (Income/Expense)  (v-model for the radio group element)
-const type = ref(props.item.type ? props.item.type : 'Expense')
+type.value = props.item.type ? props.item.type : 'Expense'
 
 // The selected category ID (v-model for the v-select element)
-const categoryId = ref(props.item.categoryId)
+categoryId.value = props.item.categoryId
 
 // The selected subcategory ID (v-model for the select element)
-const subcategoryId = ref(props.item.subcategoryId)
+subcategoryId.value = props.item.subcategoryId
 
 // The list of possible categories shown in the select.
 // Depends on the selected type (Income/Expense).
 // Also, filter out categories with no subcategories.
 const categories = computed(() => {
     const isExpense = (type.value === 'Expense')
-    return props.categories.filter(c => c.isExpense === isExpense && c.hasSubcategories)
+    return props.categories.filter(c => 
+        c.isExpense === isExpense && 
+        c.hasSubcategories)
 })
 
 // The list of possible subcategories shown in the select.
@@ -79,14 +79,6 @@ watchEffect(() => {
         const s = findSubcategoryById(props.item.subcategoryId)
         subcategoryId.value = s ? props.item.subcategoryId : null
     }
-})
-
-watch(subcategoryId, () => {
-    emit("change", {
-        type: type.value,
-        categoryId: categoryId.value,
-        subcategoryId: subcategoryId.value
-    })
 })
 
 </script>

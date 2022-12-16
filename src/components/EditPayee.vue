@@ -22,10 +22,10 @@ const {
 } = updatePayeeSubcategory()
 
 const subcategoryRefs = subcategorySelect()
-const { categoryId, subcategoryId } = subcategoryRefs
+const { subcategoryId } = subcategoryRefs
 
 const isSaveDisabled = computed(() => {
-    return (categoryId === null || subcategoryId.value === null)
+    return subcategoryId.value === null
 })
 
 function save() {

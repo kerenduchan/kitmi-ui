@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 import getRef from '@/composables/getRef';
@@ -48,13 +48,37 @@ function close() {
     emit('close')
 }
 
+const fields = ref([
+    {
+        label: 'Payee',
+        value: props.item.payee.name
+    },
+    {
+        label: 'Amount',
+        value: props.item.formattedAmount
+    },
+    {
+        label: 'Date',
+        value: props.item.formattedDate
+    }
+])
+
 console.log(props.item)
 </script>
 
 <template>
     <v-card>
-        <v-card-title>{{ props.item.name }}</v-card-title>
+        <v-card-title>Edit Transaction</v-card-title>
         <v-card-text>
+            <v-table>
+                <tbody>
+                    <tr v-for="f in fields">
+                        <td>{{ f.label }}</td>
+                        <td>{{ f.value }}</td>
+                    </tr>
+                </tbody>
+            </v-table>
+
             <v-form>
                 <SubcategorySelect 
                     :defaults="item" 

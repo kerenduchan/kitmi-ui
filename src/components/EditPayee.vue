@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 import subcategorySelect from '@/composables/subcategorySelect';
@@ -22,7 +22,7 @@ const {
 } = updatePayeeSubcategory()
 
 const subcategoryRefs = subcategorySelect()
-const { type, categoryId, subcategoryId } = subcategoryRefs
+const { categoryId, subcategoryId } = subcategoryRefs
 
 const isSaveDisabled = computed(() => {
     return (categoryId === null || subcategoryId.value === null)

@@ -4,7 +4,7 @@ import FilteredList from '@/composables/FilteredList'
 
 // props 
 const props = defineProps({
-    payees: Object
+    items: Object
 })
 
 // emits
@@ -25,9 +25,9 @@ const showOnlyUncategorized = ref(false)
 
 function filter() {
     if (showOnlyUncategorized.value) {
-        return props.payees.filter(p => !p.isCategorized)
+        return props.items.filter(p => !p.isCategorized)
     }
-    return props.payees
+    return props.items
 }
 
 let filteredList = new FilteredList(filter, emit)

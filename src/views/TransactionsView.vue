@@ -30,7 +30,7 @@ function openEditDialog() {
     // "freeze" the item for the dialog so it doesn't get filtered out
     // in case the item went from being uncategorized to categorized
     // and "Show Only Uncategorized" is checked
-    itemForEditDialog.value = itemForEditDialog.value
+    itemForEditDialog.value = selectedItem.value
     showEditDialog.value = true
 }
 

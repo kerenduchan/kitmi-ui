@@ -7,9 +7,9 @@ import getPayees from '@/composables/queries/getPayees'
 import getCategories from '@/composables/queries/getCategories'
 
 const {
-    payees,
-    isReady: isPayeesReady,
-    refetch: refetchPayees
+    payees: items,
+    isReady: isItemsReady,
+    refetch: refetchItems
 } = getPayees()
 
 const {
@@ -18,53 +18,55 @@ const {
     refetch: refetchCategories
 } = getCategories()
 
-const showPayeeDialog = ref(false)
-const payeeForDialog = ref(null)
-const selectedPayee = ref(null)
+const selectedItem = ref(null)
+const showEditDialog = ref(false)
+const itemForEditDialog = ref(null)
 
-function onSelectedPayeeChanged(p) {
-    selectedPayee.value = p
+function isItemSelected() {
+    return selectedItem.value !== null
 }
 
-function closePayeeDialog() {
-    showPayeeDialog.value = false
-}
-
-function handlePayeeChange() {
-    refetchPayees()
-    closePayeeDialog()
-}
-
-function edit() {
-    // "freeze" the payee for the dialog so it doesn't get filtered out
-    // in case the payee went from being uncategorized to categorized
+function openEditDialog() {
+    // "freeze" the item for the dialog so it doesn't get filtered out
+    // in case the item went from being uncategorized to categorized
     // and "Show Only Uncategorized" is checked
-    payeeForDialog.value = selectedPayee.value
-    showPayeeDialog.value = true
-    
+    itemForEditDialog.value = selectedItem.value
+    showEditDialog.value = true
 }
 
-function isPayeeSelected() {
-    return selectedPayee.value !== null
+function closeEditDialog() {
+    showEditDialog.value = false
+}
+
+function handleSelectedItemChanged(t) {
+    selectedItem.value = t
+}
+
+function handleChange() {
+    closeEditDialog()
+    refetchItems()
 }
 
 </script>
 
 <template>
     <TopBar>
-        <v-btn icon="mdi-pencil" :disabled="!isPayeeSelected()" @click="edit"></v-btn>
+        <v-btn icon="mdi-pencil" :disabled="!isItemSelected()" @click="openEditDialog"></v-btn>
     </TopBar>
 
-    <div v-if="!isPayeesReady || !isCategoriesReady">
+    <div v-if="!isItemsReady || !isCategoriesReady">
         Loading...
     </div>
 
     <div v-else>
-        <PayeesList :payees="payees" @selectedItemChanged="onSelectedPayeeChanged" />
+        <PayeesList :items="items" @selectedItemChanged="handleSelectedItemChanged" />
 
-        <v-dialog v-model="showPayeeDialog">
-            <PayeeDialog :payee="payeeForDialog" :categories="categories" @close="closePayeeDialog"
-                @change="handlePayeeChange" />
+        <v-dialog v-model="showEditDialog">
+            <PayeeDialog 
+                :item="itemForEditDialog"
+                :categories="categories"
+                @close="closeEditDialog"
+                @change="handleChange" />
         </v-dialog>
     </div>
 </template>

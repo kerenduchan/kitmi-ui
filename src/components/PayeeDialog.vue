@@ -4,7 +4,7 @@ import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcatego
 
 // props 
 const props = defineProps({
-    payee: Object,
+    item: Object,
     categories: Object
 })
 
@@ -20,13 +20,13 @@ const {
 } = updatePayeeSubcategory()
 
 // The selected type (Income/Expense)  (v-model for the radio group element)
-const type = ref(props.payee.type ? props.payee.type : 'Expense')
+const type = ref(props.item.type ? props.item.type : 'Expense')
 
 // The selected category ID (v-model for the v-select element)
-const categoryId = ref(props.payee.categoryId)
+const categoryId = ref(props.item.categoryId)
 
 // The selected subcategory ID (v-model for the select element)
-const subcategoryId = ref(props.payee.subcategoryId)
+const subcategoryId = ref(props.item.subcategoryId)
 
 // The list of possible categories shown in the select.
 // Depends on the selected type (Income/Expense).
@@ -60,10 +60,10 @@ function findSubcategoryById(id) {
 // handle a change in categories, and also run intially.
 // this will happen as a result of type change (Income/Expense)
 watchEffect(() => {
-    const c = findCategoryById(props.payee.categoryId)
+    const c = findCategoryById(props.item.categoryId)
     if(c) {
         // The payee's categoryId appears in the list of categories
-        categoryId.value = props.payee.categoryId
+        categoryId.value = props.item.categoryId
     } else {
         categoryId.value = null
     }
@@ -84,8 +84,8 @@ watchEffect(() => {
         subcategories.value = c.subcategories
 
         // And set subcategoryId accordingly.
-        const s = findSubcategoryById(props.payee.subcategoryId)
-        subcategoryId.value = s ? props.payee.subcategoryId : null
+        const s = findSubcategoryById(props.item.subcategoryId)
+        subcategoryId.value = s ? props.item.subcategoryId : null
     }
 })
 
@@ -95,7 +95,7 @@ const isSaveDisabled = computed(() => {
 
 function save() {
     gqlUpdatePayeeSubcategory({
-        payeeId: props.payee.id, 
+        payeeId: props.item.id, 
         subcategoryId: subcategoryId.value
     })
 }
@@ -117,7 +117,7 @@ function close() {
 
 <template>
     <v-card>
-        <v-card-title>{{ props.payee.name }}</v-card-title>
+        <v-card-title>{{ props.item.name }}</v-card-title>
         <v-card-text>
             <v-form>
                 <v-radio-group label="Type" v-model="type">

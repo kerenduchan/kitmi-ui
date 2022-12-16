@@ -5,7 +5,7 @@ import PayeesList from '@/components/PayeesList.vue'
 import EditPayee from '@/components/EditPayee.vue'
 import getPayees from '@/composables/queries/getPayees'
 import getCategories from '@/composables/queries/getCategories'
-
+import dialog from '@/composables/dialog'
 const {
     payees: items,
     isReady: isItemsReady,
@@ -33,22 +33,12 @@ function handleSelectedItemChanged(t) {
     selectedItem.value = t
 }
 
-// EDIT DIALOG LOGIC
-
-const showEditDialog = ref(false)
-const itemForEditDialog = ref(null)
-
-function openEditDialog() {
-    // "freeze" the item for the dialog so it doesn't get filtered out
-    // in case the item went from being uncategorized to categorized
-    // and "Show Only Uncategorized" is checked
-    itemForEditDialog.value = selectedItem.value
-    showEditDialog.value = true
-}
-
-function closeEditDialog() {
-    showEditDialog.value = false
-}
+const {
+    show: showEditDialog,
+    item: itemForEditDialog,
+    open: openEditDialog,
+    close: closeEditDialog
+} = dialog(selectedItem)
 
 function handleChange() {
     closeEditDialog()

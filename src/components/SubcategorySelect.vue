@@ -3,7 +3,7 @@ import { ref, computed, watchEffect, watch } from 'vue'
 
 // props 
 const props = defineProps({
-    item: Object,
+    defaults: Object,
     categories: Object,
     refs: Object
 })
@@ -11,13 +11,13 @@ const props = defineProps({
 const { type, categoryId, subcategoryId } = props.refs
 
 // The selected type (Income/Expense)  (v-model for the radio group element)
-type.value = props.item.type ? props.item.type : 'Expense'
+type.value = props.defaults.type ? props.defaults.type : 'Expense'
 
 // The selected category ID (v-model for the v-select element)
-categoryId.value = props.item.categoryId
+categoryId.value = props.defaults.categoryId
 
 // The selected subcategory ID (v-model for the select element)
-subcategoryId.value = props.item.subcategoryId
+subcategoryId.value = props.defaults.subcategoryId
 
 // The list of possible categories shown in the select.
 // Depends on the selected type (Income/Expense).
@@ -52,10 +52,10 @@ function findSubcategoryById(id) {
 // handle a change in categories, and also run intially.
 // this will happen as a result of type change (Income/Expense)
 watchEffect(() => {
-    const c = findCategoryById(props.item.categoryId)
+    const c = findCategoryById(props.defaults.categoryId)
     if(c) {
         // The payee's categoryId appears in the list of categories
-        categoryId.value = props.item.categoryId
+        categoryId.value = props.defaults.categoryId
     } else {
         categoryId.value = null
     }
@@ -76,8 +76,8 @@ watchEffect(() => {
         subcategories.value = c.subcategories
 
         // And set subcategoryId accordingly.
-        const s = findSubcategoryById(props.item.subcategoryId)
-        subcategoryId.value = s ? props.item.subcategoryId : null
+        const s = findSubcategoryById(props.defaults.subcategoryId)
+        subcategoryId.value = s ? props.defaults.subcategoryId : null
     }
 })
 

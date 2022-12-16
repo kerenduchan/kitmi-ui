@@ -56,7 +56,7 @@ function close() {
         <v-card-text>
             <v-form>
                 <SubcategorySelect 
-                    :item="item" 
+                    :defaults="item" 
                     :categories="categories"
                     :refs="subcategoryRefs"
                 />

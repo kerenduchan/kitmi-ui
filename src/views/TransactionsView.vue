@@ -2,39 +2,81 @@
 import { ref } from 'vue'
 import TopBar from '@/components/TopBar.vue'
 import TransactionsList from '@/components/TransactionsList.vue'
+import EditTransaction from '@/components/EditTransaction.vue'
 import getTransactions from '@/composables/queries/getTransactions'
+import getCategories from '@/composables/queries/getCategories'
 
 const {
-    transactions,
-    isReady: isTransactionsReady,
-    refetch: refetchTransactions
+    transactions: items,
+    isReady: isItemsReady,
+    refetch: refetchItems
 } = getTransactions()
 
-const selectedTransaction = ref(null)
+const {
+    categories,
+    isReady: isCategoriesReady,
+    refetch: refetchCategories
+} = getCategories()
 
-function onSelectedTransactionChanged(t) {
-    selectedTransaction.value = t
+const showEditDialog = ref(false)
+const itemForEditDialog = ref(null)
+const selectedItem = ref(null)
+
+function handleSelectedItemChanged(t) {
+    selectedItem.value = t
 }
 
-function edit() {
-    console.log('edit transaction')
+function openEditDialog() {
+    // "freeze" the item for the dialog so it doesn't get filtered out
+    // in case the item went from being uncategorized to categorized
+    // and "Show Only Uncategorized" is checked
+    itemForEditDialog.value = itemForEditDialog.value
+    showEditDialog.value = true
 }
 
-function isTransactionSelected() {
-    return selectedTransaction.value !== null
+function closeEditDialog() {
+    showEditDialog.value = false
+}
+
+function handleChange() {
+    closeEditDialog()
+    refetchItems()
+}
+
+function isItemSelected() {
+    return selectedItem.value !== null
 }
 
 </script>
 
 <template>
     <TopBar>
-        <v-btn icon="mdi-pencil" :disabled="!isTransactionSelected()" @click="edit"></v-btn>
+        <!-- Edit button -->
+        <v-btn 
+            icon="mdi-pencil" 
+            :disabled="!isItemSelected()" @click="openEditDialog"></v-btn>
     </TopBar>
 
-    <div v-if="!isTransactionsReady">Loading...</div>
-    <div v-else>
-        <TransactionsList 
-            :transactions="transactions" 
-            @selectedItemChanged="onSelectedTransactionChanged"/>
+    <div v-if="!isItemsReady || !isCategoriesReady">
+        Loading...
     </div>
+    
+    <div v-else>
+
+        <!-- List (table) of transactions -->
+        <TransactionsList 
+            :transactions="items" 
+            @selectedItemChanged="handleSelectedItemChanged"/>
+
+        <!-- Edit selected transaction dialog -->
+        <v-dialog v-model="showEditDialog">
+            <EditTransaction 
+                :item="itemForEditDialog"
+                :categories="categories" 
+                @close="closeEditDialog"
+                @change="handleChange" 
+            />
+        </v-dialog>
+    </div>
+
 </template>

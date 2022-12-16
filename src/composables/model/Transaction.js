@@ -15,18 +15,16 @@ class Transaction {
         this.amount = gqlTransaction.amount
         this.payee = new Payee(gqlTransaction.payee)
         this.account = new Account(gqlTransaction.account)
-        this.#initSubcategory(gqlTransaction)
-    }
 
-    #initSubcategory(gqlTransaction) {
-        // the subcategory of the transaction overrides the subcategory
-        // of the payee of the transaction
-        if(gqlTransaction.subcategory) {
-            this.subcategory = new Subcategory(gqlTransaction.subcategory)
-        } else {
-            // assumes this.payee has already been initialized
-            this.subcategory = this.payee.subcategory;
-        }
+        this.overridingSubcategory = gqlTransaction.subcategory ?
+            new Subcategory(gqlTransaction.subcategory) :
+            null
+
+        // The actual subcategory for the transaction - 
+        // either the payee's subcategory or the overriding subcategory
+        this.subcategory = this.overridingSubcategory ?
+            this.overridingSubcategory :
+            this.payee.subcategory;
     }
 
     get payeeName() {
@@ -37,8 +35,20 @@ class Transaction {
         return this.subcategory ? this.subcategory.name : ''
     }
 
+    get category() {
+        return this.subcategory ? this.subcategory.category : null
+    }
+
     get categoryName() {
-        return this.subcategory ? this.subcategory.categoryName : ''
+        return this.category ? this.category.name : ''
+    }
+
+    get categoryId() {
+        return this.category ? this.category.id : null
+    }
+
+    get subcategoryId() {
+        return this.subcategory ? this.subcategory.id : null
     }
 
     get type() {
@@ -46,7 +56,7 @@ class Transaction {
     }
 
     get formattedAmount() {
-          return formatNumber(this.amount)        
+        return formatNumber(this.amount)
     }
 
     get formattedDate() {

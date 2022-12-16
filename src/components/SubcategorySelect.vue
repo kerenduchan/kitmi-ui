@@ -8,13 +8,13 @@ const props = defineProps({
     refs: Object
 })
 
-const { type, categoryId, subcategoryId } = props.refs
+const { subcategoryId } = props.refs
 
 // The selected type (Income/Expense)  (v-model for the radio group element)
-type.value = props.defaults.type ? props.defaults.type : 'Expense'
+const type = ref(props.defaults.type ? props.defaults.type : 'Expense')
 
 // The selected category ID (v-model for the v-select element)
-categoryId.value = props.defaults.categoryId
+const categoryId = ref(props.defaults.categoryId)
 
 // The selected subcategory ID (v-model for the select element)
 subcategoryId.value = props.defaults.subcategoryId

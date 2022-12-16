@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
-import subcategorySelect from '@/composables/subcategorySelect';
+import getRef from '@/composables/getRef';
 
 // props 
 const props = defineProps({
@@ -21,7 +21,7 @@ const {
     onError: onUpdatePayeeError 
 } = updatePayeeSubcategory()
 
-const subcategoryRefs = subcategorySelect()
+const subcategoryRefs = getRef()
 const { subcategoryId } = subcategoryRefs
 
 const isSaveDisabled = computed(() => {

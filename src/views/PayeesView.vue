@@ -6,6 +6,7 @@ import EditPayee from '@/components/EditPayee.vue'
 import getPayees from '@/composables/queries/getPayees'
 import getCategories from '@/composables/queries/getCategories'
 import dialog from '@/composables/dialog'
+
 const {
     payees: items,
     isReady: isItemsReady,
@@ -21,8 +22,7 @@ function isReady() {
     return isItemsReady && isCategoriesReady
 }
 
-// SELECTED ITEM LOGIC
-
+// logic for selected item
 const selectedItem = ref(null)
 
 function isItemSelected() {
@@ -33,6 +33,7 @@ function handleSelectedItemChanged(t) {
     selectedItem.value = t
 }
 
+// logic for the edit dialog
 const {
     show: showEditDialog,
     item: itemForEditDialog,

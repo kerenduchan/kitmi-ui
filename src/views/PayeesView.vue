@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import TopBar from '@/components/TopBar.vue'
 import PayeesList from '@/components/PayeesList.vue'
-import PayeeDialog from '@/components/PayeeDialog.vue'
+import EditPayee from '@/components/EditPayee.vue'
 import getPayees from '@/composables/queries/getPayees'
 import getCategories from '@/composables/queries/getCategories'
 
@@ -14,17 +14,29 @@ const {
 
 const {
     categories,
-    isReady: isCategoriesReady,
-    refetch: refetchCategories
+    isReady: isCategoriesReady
 } = getCategories()
 
+function isReady() {
+    return isItemsReady && isCategoriesReady
+}
+
+// SELECTED ITEM LOGIC
+
 const selectedItem = ref(null)
-const showEditDialog = ref(false)
-const itemForEditDialog = ref(null)
 
 function isItemSelected() {
     return selectedItem.value !== null
 }
+
+function handleSelectedItemChanged(t) {
+    selectedItem.value = t
+}
+
+// EDIT DIALOG LOGIC
+
+const showEditDialog = ref(false)
+const itemForEditDialog = ref(null)
 
 function openEditDialog() {
     // "freeze" the item for the dialog so it doesn't get filtered out
@@ -38,10 +50,6 @@ function closeEditDialog() {
     showEditDialog.value = false
 }
 
-function handleSelectedItemChanged(t) {
-    selectedItem.value = t
-}
-
 function handleChange() {
     closeEditDialog()
     refetchItems()
@@ -51,18 +59,26 @@ function handleChange() {
 
 <template>
     <TopBar>
-        <v-btn icon="mdi-pencil" :disabled="!isItemSelected()" @click="openEditDialog"></v-btn>
+        <!-- Edit button -->
+        <v-btn 
+            icon="mdi-pencil" 
+            :disabled="!isItemSelected()" 
+            @click="openEditDialog"></v-btn>
     </TopBar>
 
-    <div v-if="!isItemsReady || !isCategoriesReady">
+    <div v-if="!isReady">
         Loading...
     </div>
 
     <div v-else>
-        <PayeesList :items="items" @selectedItemChanged="handleSelectedItemChanged" />
+        <!-- List (table) of items -->
+        <PayeesList 
+            :items="items" 
+            @selectedItemChanged="handleSelectedItemChanged" />
 
+        <!-- Edit selected item dialog -->
         <v-dialog v-model="showEditDialog">
-            <PayeeDialog 
+            <EditPayee 
                 :item="itemForEditDialog"
                 :categories="categories"
                 @close="closeEditDialog"

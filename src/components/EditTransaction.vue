@@ -63,7 +63,6 @@ const fields = ref([
     }
 ])
 
-console.log(props.item)
 </script>
 
 <template>

@@ -66,6 +66,13 @@ class Transaction {
     get isCategorized() {
         return this.subcategory !== null
     }
+
+    get isExpense() {
+        if(this.category) {
+            return this.category.isExpense
+        }
+        return this.amount <= 0
+    }
 }
 
 export default Transaction

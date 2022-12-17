@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 import { formatNumber } from '@/composables/utils'
 import FilteredList from '@/composables/FilteredList'
 
@@ -14,10 +15,10 @@ const emit = defineEmits([
 ])
 
 const headers = ref([
+    '',
     'Date', 
     'Amount', 
     'Payee', 
-    'Type', 
     'Category', 
     'Subcategory'
 ])
@@ -60,10 +61,10 @@ const sum = computed(() => {
                 :class="filteredList.getClassForRow(t)" 
                 @click="filteredList.selectItem(t)"
             >
+                <td><TypeExpenseOrIncomeIcon :isExpense="t.isExpense"/></td>
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>
-                <td>{{ t.type }}</td>
                 <td>{{ t.categoryName }}</td>
                 <td>{{ t.subcategoryName }}</td>
             </tr>

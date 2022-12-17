@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 
 // props 
@@ -12,16 +12,18 @@ const emit = defineEmits([
     'selectedItemChanged'
 ])
 
-function handleCategoryClicked(category) {
-    emit('selectedItemChanged', category)
-}
+const selectedItem = ref(null)
+
+watch(selectedItem, () => {
+    emit('selectedItemChanged', selectedItem.value)
+})
 
 </script>
 
 <template>
-    <v-expansion-panels>
-        <v-expansion-panel v-for="c in props.categories" :key="c.id">
-            <v-expansion-panel-title @click="handleCategoryClicked(c)">
+    <v-expansion-panels v-model="selectedItem">
+        <v-expansion-panel v-for="c in props.categories" :key="c.id" :value="c">
+            <v-expansion-panel-title>
                 <div class="category-type-icon"><TypeExpenseOrIncomeIcon :type="c.type" /></div>
                 {{ c.name }}
             </v-expansion-panel-title>

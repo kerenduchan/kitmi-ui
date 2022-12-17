@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 import getCategories from '@/composables/queries/getCategories'
 

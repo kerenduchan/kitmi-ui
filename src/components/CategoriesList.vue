@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 
 // props 
 const props = defineProps({
@@ -18,11 +19,12 @@ function handleCategoryClicked(category) {
 </script>
 
 <template>
-    <h2>Categories</h2>
-
     <v-expansion-panels>
         <v-expansion-panel v-for="c in props.categories" :key="c.id">
-            <v-expansion-panel-title @click="handleCategoryClicked(c)"> {{ c.name }} </v-expansion-panel-title>
+            <v-expansion-panel-title @click="handleCategoryClicked(c)">
+                <div class="category-type-icon"><TypeExpenseOrIncomeIcon :type="c.type" /></div>
+                {{ c.name }}
+            </v-expansion-panel-title>
             <v-expansion-panel-text>
                 <v-list>
                     <v-list-item v-for="s in c.subcategories" :key="s.id" :title="s.name" />
@@ -31,3 +33,10 @@ function handleCategoryClicked(category) {
         </v-expansion-panel>
     </v-expansion-panels>
 </template>
+
+<style>
+.category-type-icon {
+    padding-right: 10px;
+}
+
+</style>

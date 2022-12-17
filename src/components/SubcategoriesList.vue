@@ -23,7 +23,6 @@ function getClassForRow(item) {
 
 // handle click on a row in the table (select the item)
 function selectItem(item) {
-    console.log('select item ' + item.name)
     selectedItem.value = item
     emit('selectedItemChanged', selectedItem.value)
 }

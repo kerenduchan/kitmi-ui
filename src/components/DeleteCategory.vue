@@ -38,9 +38,9 @@ function close() {
 
 <template>
     <v-card>
-        <v-card-title>Delete Category</v-card-title>
+        <v-card-title>Delete Category '{{ item.name }}'</v-card-title>
         <v-card-text>
-            Are you sure you want to delete category '{{ item.name }}'?
+            Are you sure?
         </v-card-text>
         <v-card-actions>
             <v-btn color="primary" @click="del">Delete</v-btn>

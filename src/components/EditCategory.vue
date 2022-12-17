@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import updateCategory from '@/composables/mutations/updateCategory'
 
 // props 
 const props = defineProps({
@@ -12,11 +13,13 @@ const emit = defineEmits([
     'save'
 ])
 
+const { gqlUpdateCategory, onDone, onError } = updateCategory()
+
 const name = ref(props.item.name)
 const isExpense = ref(props.item.isExpense)
 
 const isNameAlreadyExists = computed(() => {
-    return (name != props.item.name && 
+    return (name.value != props.item.name && 
         props.categories.find(c => c.name == name.value) !== undefined)
 })
 
@@ -25,12 +28,24 @@ const isSaveDisabled = computed(() => {
 })
 
 function save() {
-    console.log('save')
+    gqlUpdateCategory({
+        categoryId: props.item.id,
+        name: name.value,
+        isExpense: isExpense.value
+    })
 }
 
 function close() {
     emit('close')
 }
+
+onDone(() => {
+    emit('save')
+})
+
+onError((e) => {
+    console.error(e)
+})
 
 </script>
 

@@ -52,6 +52,7 @@ function handleChange() {
     showCreateSubcategoryDialog.value = false
     showDeleteCategoryDialog.value = false
     showDeleteSubcategoryDialog.value = false
+    showEditCategoryDialog.value = false
 
     // refetch categories from server
     refetch()

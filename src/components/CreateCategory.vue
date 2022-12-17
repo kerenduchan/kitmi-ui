@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import createCategory from '@/composables/mutations/createCategory'
 
 // props 
 const props = defineProps({
@@ -11,16 +12,32 @@ const emit = defineEmits([
     'save'
 ])
 
+const { gqlCreateCategory, onDone, onError } = createCategory()
+
 const name = ref('')
 const isExpense = ref(false)
+const isNameAlreadyExists = computed(() => {
+    return (props.categories.find(c => c.name == name.value) !== undefined)
+})
 
 const isSaveDisabled = computed(() => {
-    return name.value.length === 0
+    return name.value.length === 0 || isNameAlreadyExists.value === true
 })
 
 function save() {
-    console.log('save')
+    gqlCreateCategory({
+        name: name.value,
+        isExpense: isExpense.value
+    })
 }
+
+onDone(() => {
+    emit('save')
+})
+
+onError((e) => {
+    console.error(e)
+})
 
 function close() {
     emit('close')
@@ -33,10 +50,19 @@ function close() {
         <v-card-title>Create Category</v-card-title>
         <v-card-text>
             <v-form>
-                <v-text-field label="Name" v-model="name" />
+                <!-- Name -->
+                <v-text-field 
+                    label="Name" 
+                    v-model="name" 
+                    :rules="[ 
+                        n => n.length > 0 || 'Name must not be empty',
+                        n => !isNameAlreadyExists || 'Name already used'
+                        ]" />
+
+                    <!-- Type -->
                 <v-radio-group label="Type" v-model="isExpense">
-                    <v-radio :value="false" label="Expense"></v-radio>
-                    <v-radio :value="true" label="Income"></v-radio>
+                    <v-radio :value="true" label="Expense"></v-radio>
+                    <v-radio :value="false" label="Income"></v-radio>
                 </v-radio-group>
             </v-form>
         </v-card-text>

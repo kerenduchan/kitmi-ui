@@ -19,12 +19,12 @@ const isItemSelected = computed(() => {
 const isDeleteDisabled = computed(() => {
     const c = selectedItem.value
     // can't delete a category with subcategories
-    return c === null || c.hasSubcategories
+    return !c || c.hasSubcategories
 })
 
 function handleSelectedItemChanged(item) {
-    console.log('selected item changed ' + item.name)
-    selectedItem.value = item
+    console.log("handleSelectedItemChanged " + (item ? item.name : ''))
+    selectedItem.value = item ? item : null
 }
 
 function handleEditClicked() {
@@ -47,22 +47,17 @@ function handleCategoryCreated() {
 const showCreateSubcategoryDialog = ref(false)
     
 function handleSubcategoryCreated() {
-    refetch()
     showCreateSubcategoryDialog.value = false
+    refetch()
 }
 
 // delete category dialog
-const {
-    show: showDeleteCategoryDialog,
-    item: itemForDeleteDialog,
-    open: openDeleteCategoryDialog,
-    close: closeDeleteCategoryDialog
-} = dialog(selectedItem)
+const showDeleteCategoryDialog = ref(false)
 
 function handleCategoryDeleted() {
-    refetch()
-    closeDeleteCategoryDialog()
+    showDeleteCategoryDialog.value = false
     selectedItem.value = null
+    refetch()
 }
 
 </script>
@@ -97,7 +92,7 @@ function handleCategoryDeleted() {
                     tooltip="Delete category" 
                     icon="mdi-delete"
                     :disabled="isDeleteDisabled"
-                    @click="openDeleteCategoryDialog"
+                    @click="showDeleteCategoryDialog = true"
                 />
             </div>
         </div>
@@ -141,8 +136,8 @@ function handleCategoryDeleted() {
         <!-- Delete category dialog -->
         <v-dialog v-model="showDeleteCategoryDialog">
             <DeleteCategory
-                :item="itemForDeleteDialog"
-                @close="closeDeleteCategoryDialog"
+                :item="selectedItem"
+                @close="showDeleteCategoryDialog = false"
                 @deleted="handleCategoryDeleted" />
         </v-dialog>
 

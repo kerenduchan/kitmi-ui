@@ -45,6 +45,17 @@ watch(selectedItem, () => {
     }
 })
 
+function handleChange() {
+    // close any and all dialogs
+    showCreateCategoryDialog.value = false
+    showCreateSubcategoryDialog.value = false
+    showDeleteCategoryDialog.value = false
+    showDeleteSubcategoryDialog.value = false
+
+    // refetch categories from server
+    refetch()
+}
+
 function handleEditClicked() {
     console.log('handleEditClicked')
 }
@@ -52,19 +63,9 @@ function handleEditClicked() {
 // create category dialog
 const showCreateCategoryDialog = ref(false)
 
-function handleCategoryCreated() {
-    refetch()
-    showCreateCategoryDialog.value = false
-}
-
 // create subcategory dialog
 const showCreateSubcategoryDialog = ref(false)
     
-function handleSubcategoryCreated() {
-    showCreateSubcategoryDialog.value = false
-    refetch()
-}
-
 const isCreateSubcategoryHidden = computed(() => {
     // can't create a subcategory for a subcategory
     return selectedItem.value && selectedItem.value instanceof Subcategory
@@ -79,12 +80,6 @@ function openDeleteCategoryDialog() {
     showDeleteCategoryDialog.value = true
 }
 
-function handleCategoryDeleted() {
-    showDeleteCategoryDialog.value = false
-    selectedItem.value = null
-    refetch()
-}
-
 // delete subcategory dialog
 const showDeleteSubcategoryDialog = ref(false)
 const subcategoryToDelete = ref(null)
@@ -92,12 +87,6 @@ const subcategoryToDelete = ref(null)
 function openDeleteSubcategoryDialog() {
     subcategoryToDelete.value = selectedItem.value
     showDeleteSubcategoryDialog.value = true
-}
-
-function handleSubcategoryDeleted() {
-    showDeleteSubcategoryDialog.value = false
-    selectedItem.value = null
-    refetch()
 }
 
 function openDeleteCategoryOrDeleteSubcategoryDialog() {
@@ -163,14 +152,16 @@ function openDeleteCategoryOrDeleteSubcategoryDialog() {
     <div v-if="!isReady">Loading...</div>
     <div v-else>
         <!-- List of categories -->
-        <CategoriesList :categories="categories" @selectedItemChanged="handleSelectedItemChanged"/>
+        <CategoriesList 
+            :categories="categories" 
+            @selectedItemChanged="handleSelectedItemChanged"/>
 
         <!-- Create category dialog -->
         <v-dialog v-model="showCreateCategoryDialog">
             <CreateCategory 
                 :categories="categories"
                 @close="showCreateCategoryDialog = false"
-                @save="handleCategoryCreated" />
+                @save="handleChange" />
         </v-dialog>
 
         <!-- Create subcategory dialog -->
@@ -178,7 +169,7 @@ function openDeleteCategoryOrDeleteSubcategoryDialog() {
             <CreateSubcategory
                 :category="selectedItem"
                 @close="showCreateSubcategoryDialog = false"
-                @save="handleSubcategoryCreated" />
+                @save="handleChange" />
         </v-dialog>
 
         <!-- Delete category dialog -->
@@ -186,7 +177,7 @@ function openDeleteCategoryOrDeleteSubcategoryDialog() {
             <DeleteCategory
                 :item="categoryToDelete"
                 @close="showDeleteCategoryDialog = false"
-                @deleted="handleCategoryDeleted" />
+                @deleted="handleChange" />
         </v-dialog>
 
         <!-- Delete subcategory dialog -->
@@ -194,7 +185,7 @@ function openDeleteCategoryOrDeleteSubcategoryDialog() {
             <DeleteSubcategory
                 :item="subcategoryToDelete"
                 @close="showDeleteSubcategoryDialog = false"
-                @deleted="handleSubcategoryDeleted" />
+                @deleted="handleChange" />
         </v-dialog>
 
 </div>

@@ -1,7 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import SubcategorySelect from './SubcategorySelect.vue';
-import getRef from '@/composables/getRef';
 
 // props 
 const props = defineProps({
@@ -10,21 +8,14 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'change'
+    'save'
 ])
 
-const defaults = ref({
-    isExpense: true,
-    categoryId: null,
-    subcategoryId: null
-})
-
-
-const subcategoryRefs = getRef()
-const { subcategoryId } = subcategoryRefs
+const name = ref('')
+const isExpense = ref(false)
 
 const isSaveDisabled = computed(() => {
-    return subcategoryId.value === null
+    return name.value.length === 0
 })
 
 function save() {
@@ -42,12 +33,11 @@ function close() {
         <v-card-title>Create Category</v-card-title>
         <v-card-text>
             <v-form>
-                <SubcategorySelect 
-                    :defaults="defaults" 
-                    :categories="categories"
-                    :showExpenseCategoriesFirst="true"
-                    :refs="subcategoryRefs"
-                />
+                <v-text-field label="Name" v-model="name" />
+                <v-radio-group label="Type" v-model="isExpense">
+                    <v-radio :value="false" label="Expense"></v-radio>
+                    <v-radio :value="true" label="Income"></v-radio>
+                </v-radio-group>
             </v-form>
         </v-card-text>
         <v-card-actions>

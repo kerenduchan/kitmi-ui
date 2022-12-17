@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
+import SubcategoriesList from '@/components/SubcategoriesList.vue'
 
 // props 
 const props = defineProps({
@@ -28,9 +29,7 @@ watch(selectedItem, () => {
                 {{ c.name }}
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-                <v-list>
-                    <v-list-item v-for="s in c.subcategories" :key="s.id" :title="s.name" />
-                </v-list>
+                <SubcategoriesList :items="c.subcategories"/>
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>

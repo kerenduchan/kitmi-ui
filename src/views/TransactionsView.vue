@@ -92,7 +92,7 @@ function handleChange() {
 
         <!-- List (table) of transactions -->
         <TransactionsList 
-            :transactions="filteredItems" 
+            :items="filteredItems" 
             @selectedItemChanged="handleSelectedItemChanged"/>
 
         <!-- Edit selected transaction dialog -->

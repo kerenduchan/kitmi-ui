@@ -5,7 +5,7 @@ import { formatNumber } from '@/composables/utils'
 
 // props 
 const props = defineProps({
-    transactions: Object
+    items: Object
 })
 
 // emits
@@ -38,7 +38,7 @@ function selectItem(item) {
 
 // the computed sum of the rows
 const sum = computed(() => {
-    const tmp = props.transactions.reduce((partialSum, t) => partialSum + t.amount, 0)
+    const tmp = props.items.reduce((partialSum, t) => partialSum + t.amount, 0)
     return formatNumber(tmp)
 })
 
@@ -55,7 +55,7 @@ const sum = computed(() => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="t in transactions" 
+            <tr v-for="t in items" 
                 :key="t.id"
                 :class="getClassForRow(t)" 
                 @click="selectItem(t)"

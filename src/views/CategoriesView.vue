@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
 import CategoriesList from '@/components/CategoriesList.vue'
 import getCategories from '@/composables/queries/getCategories'
 
@@ -33,54 +34,49 @@ function handleCreateSubcategoryClicked() {
 <template>
     <div class="top-bar">
         <div class="top-bar-left">
+
+            <!-- Edit button -->
             <div class="top-bar-action">
-                <!-- Edit button -->
-                <v-tooltip text="Edit category" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn 
-                            v-bind="props"
-                            icon="mdi-pencil" 
-                            @click="handleEditClicked">
-                        </v-btn>
-                    </template>
-                </v-tooltip>
+                <ButtonWithTooltip 
+                    tooltip="Edit category" 
+                    icon="mdi-pencil"
+                    :disabled="false"
+                    @click="handleEditClicked"
+                />
             </div>
+
+            <!-- Create subcategory button -->
             <div class="top-bar-action">
-                <!-- Add subcategory button -->
-                <v-tooltip text="Add subcategory" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn 
-                            v-bind="props"
-                            icon="mdi-plus" 
-                            @click="handleCreateSubcategoryClicked">
-                        </v-btn>
-                    </template>
-                </v-tooltip>
+                <ButtonWithTooltip 
+                    tooltip="Create subcategory" 
+                    icon="mdi-plus"
+                    :disabled="false"
+                    @click="handleCreateSubcategoryClicked"
+                />
             </div>
+
+            <!-- Delete button -->
             <div class="top-bar-action">
-                <v-tooltip text="Delete category" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn 
-                            v-bind="props"
-                            icon="mdi-delete" 
-                            @click="handleDeleteClicked">
-                        </v-btn>
-                    </template>
-                </v-tooltip>
+                <ButtonWithTooltip 
+                    tooltip="Delete category" 
+                    icon="mdi-delete"
+                    :disabled="false"
+                    @click="handleDeleteClicked"
+                />
             </div>
         </div>
+
+
         <div class="top-bar-right">
+
+            <!-- Create category button -->
             <div class="top-bar-action">
-                <!-- Create category button -->
-                <v-tooltip text="Create category" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn 
-                            v-bind="props"
-                            icon="mdi-plus" 
-                            @click="handleCreateCategoryClicked">
-                        </v-btn>
-                    </template>
-                </v-tooltip>
+                <ButtonWithTooltip 
+                    tooltip="Create category" 
+                    icon="mdi-plus"
+                    :disabled="false"
+                    @click="handleCreateCategoryClicked"
+                />
             </div>
         </div>
     </div>

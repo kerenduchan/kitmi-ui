@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
 import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
 import getTransactions from '@/composables/queries/getTransactions'
@@ -69,21 +70,22 @@ function handleChange() {
 <template>
     <div class="top-bar">
         <div class="top-bar-left">
+
+            <!-- Edit button -->
             <div class="top-bar-action">
-                <!-- Edit button -->
-                <v-tooltip text="Edit transaction" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-btn 
-                            v-bind="props"
-                            icon="mdi-pencil" 
-                            :disabled="!isItemSelected()" @click="openEditDialog">
-                        </v-btn>
-                    </template>
-                </v-tooltip>
+                <ButtonWithTooltip 
+                    tooltip="Edit transaction" 
+                    icon="mdi-pencil"
+                    :disabled="!isItemSelected()"
+                    @click="openEditDialog"
+                />
             </div>
+
             <v-divider vertical />
+
+
+            <!-- Uncategorized checkbox -->
             <div class="top-bar-action">
-                <!-- Uncategorized checkbox -->
                 <v-tooltip text="Toggle show only uncategorized" location="bottom">
                     <template v-slot:activator="{ props }">
                         <v-checkbox-btn 

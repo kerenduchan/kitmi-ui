@@ -1,30 +1,48 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import CreateCategory from '@/components/CreateCategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import DeleteCategory from '@/components/DeleteCategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
+import Subcategory from '@/composables/model/Subcategory'
 import getCategories from '@/composables/queries/getCategories'
 
 const { categories, isReady, refetch } = getCategories()
 
+// a selected category or subcategory
 const selectedItem = ref(null)
 
-const isItemSelected = computed(() => {
-    return selectedItem.value !== null
-})
+const selectedItemTypeStr = ref('')
 
 const isDeleteDisabled = computed(() => {
-    const c = selectedItem.value
+    if(!selectedItem.value) {
+        // no item is selected
+        return true
+    }
+    if(selectedItem.value instanceof Subcategory) {
+        return false
+    }
+    
+    // selected item is a category -
     // can't delete a category with subcategories
-    return !c || c.hasSubcategories
+    return selectedItem.value.hasSubcategories
 })
 
 function handleSelectedItemChanged(item) {
-    console.log("handleSelectedItemChanged " + (item ? item.name : ''))
     selectedItem.value = item ? item : null
 }
+
+watch(selectedItem, () => {
+    if(!selectedItem.value) {
+        selectedItemTypeStr.value =  ''
+    } else {
+        selectedItemTypeStr.value = 
+            selectedItem.value instanceof Subcategory ? 
+            'subcategory' :
+            'category'
+    }
+})
 
 function handleEditClicked() {
     console.log('handleEditClicked')
@@ -45,6 +63,11 @@ function handleSubcategoryCreated() {
     showCreateSubcategoryDialog.value = false
     refetch()
 }
+
+const isCreateSubcategoryHidden = computed(() => {
+    // can't create a subcategory for a subcategory
+    return selectedItem.value && selectedItem.value instanceof Subcategory
+})
 
 // delete category dialog
 const showDeleteCategoryDialog = ref(false)
@@ -70,19 +93,19 @@ function handleCategoryDeleted() {
             <!-- Edit button -->
             <div class="top-bar-action">
                 <ButtonWithTooltip 
-                    tooltip="Edit category" 
+                    :tooltip="'Edit ' + selectedItemTypeStr" 
                     icon="mdi-pencil"
-                    :disabled="!isItemSelected"
+                    :disabled="!selectedItem"
                     @click="handleEditClicked"
                 />
             </div>
 
             <!-- Create subcategory button -->
-            <div class="top-bar-action">
+            <div v-if="!isCreateSubcategoryHidden" class="top-bar-action">
                 <ButtonWithTooltip 
                     tooltip="Create subcategory" 
                     icon="mdi-plus"
-                    :disabled="!isItemSelected"
+                    :disabled="!selectedItem"
                     @click="showCreateSubcategoryDialog = true"
                 />
             </div>
@@ -90,7 +113,7 @@ function handleCategoryDeleted() {
             <!-- Delete button -->
             <div class="top-bar-action">
                 <ButtonWithTooltip 
-                    tooltip="Delete category" 
+                    :tooltip="'Delete ' + selectedItemTypeStr"
                     icon="mdi-delete"
                     :disabled="isDeleteDisabled"
                     @click="openDeleteCategoryDialog"

@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
-import FilteredList from '@/composables/FilteredList'
 
 // props 
 const props = defineProps({
@@ -21,23 +20,23 @@ const headers = ref([
     'Subcategory'
 ])
 
-// whether to show only uncategorized payees (v-model for the checkbox)
-const showOnlyUncategorized = ref(false)
+// the selected item
+const selectedItem = ref(null)
 
-function filter() {
-    if (showOnlyUncategorized.value) {
-        return props.items.filter(p => !p.isCategorized)
-    }
-    return props.items
+// get the class for a selected row in the table
+function getClassForRow(item) {
+    return selectedItem.value?.id === item.id ? 'selected-row' : ''
 }
 
-let filteredList = new FilteredList(filter, emit)
+// handle click on a row in the table (select the item)
+function selectItem(item) {
+    selectedItem.value = item
+    emit('selectedItemChanged', selectedItem.value)
+}
 
 </script>
 
 <template>
-    <v-checkbox label="Show Only Uncategorized" v-model="showOnlyUncategorized"></v-checkbox>
-
     <v-table density="compact" height="550px" fixed-header>
         <thead>
             <tr>
@@ -47,10 +46,10 @@ let filteredList = new FilteredList(filter, emit)
             </tr>
         </thead>
         <tbody>
-            <tr v-for="p in filteredList.filteredItems.value" 
+            <tr v-for="p in items" 
                 :key="p.id" 
-                :class="filteredList.getClassForRow(p)" 
-                @click="filteredList.selectItem(p)"
+                :class="getClassForRow(p)" 
+                @click="selectItem(p)"
             >
                 <td><TypeExpenseOrIncomeIcon :type="p.type"/></td>
                 <td>{{ p.name}}</td>

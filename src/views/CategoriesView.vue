@@ -6,7 +6,6 @@ import DeleteCategory from '@/components/DeleteCategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 import getCategories from '@/composables/queries/getCategories'
-import dialog from '@/composables/dialog'
 
 const { categories, isReady, refetch } = getCategories()
 
@@ -32,15 +31,11 @@ function handleEditClicked() {
 }
 
 // create category dialog
-const {
-    show: showCreateCategoryDialog,
-    open: openCreateCategoryDialog,
-    close: closeCreateCategoryDialog
-} = dialog()
+const showCreateCategoryDialog = ref(false)
 
 function handleCategoryCreated() {
     refetch()
-    closeCreateCategoryDialog()
+    showCreateCategoryDialog.value = false
 }
 
 // create subcategory dialog
@@ -53,6 +48,12 @@ function handleSubcategoryCreated() {
 
 // delete category dialog
 const showDeleteCategoryDialog = ref(false)
+const categoryToDelete = ref(null)
+
+function openDeleteCategoryDialog() {
+    categoryToDelete.value = selectedItem.value
+    showDeleteCategoryDialog.value = true
+}
 
 function handleCategoryDeleted() {
     showDeleteCategoryDialog.value = false
@@ -92,7 +93,7 @@ function handleCategoryDeleted() {
                     tooltip="Delete category" 
                     icon="mdi-delete"
                     :disabled="isDeleteDisabled"
-                    @click="showDeleteCategoryDialog = true"
+                    @click="openDeleteCategoryDialog"
                 />
             </div>
         </div>
@@ -105,7 +106,7 @@ function handleCategoryDeleted() {
                 <ButtonWithTooltip 
                     tooltip="Create category" 
                     icon="mdi-plus"
-                    @click="openCreateCategoryDialog"
+                    @click="showCreateCategoryDialog = true"
                 />
             </div>
         </div>
@@ -121,7 +122,7 @@ function handleCategoryDeleted() {
         <v-dialog v-model="showCreateCategoryDialog">
             <CreateCategory 
                 :categories="categories"
-                @close="closeCreateCategoryDialog"
+                @close="showCreateCategoryDialog = false"
                 @save="handleCategoryCreated" />
         </v-dialog>
 
@@ -136,7 +137,7 @@ function handleCategoryDeleted() {
         <!-- Delete category dialog -->
         <v-dialog v-model="showDeleteCategoryDialog">
             <DeleteCategory
-                :item="selectedItem"
+                :item="categoryToDelete"
                 @close="showDeleteCategoryDialog = false"
                 @deleted="handleCategoryDeleted" />
         </v-dialog>

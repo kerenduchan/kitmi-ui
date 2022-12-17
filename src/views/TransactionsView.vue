@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue'
-import TopBar from '@/components/TopBar.vue'
+import { ref, computed } from 'vue'
 import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
 import getTransactions from '@/composables/queries/getTransactions'
@@ -68,16 +67,22 @@ function handleChange() {
 </script> 
 
 <template>
-    <TopBar>
-        <!-- Edit button -->
-        <v-btn 
-            icon="mdi-pencil" 
-            :disabled="!isItemSelected()" @click="openEditDialog">
-        </v-btn>
-
-        <v-checkbox label="Uncategorized" v-model="uncategorized"></v-checkbox>
-
-    </TopBar>
+        <v-container>
+            <v-row>
+                <v-col cols="3">
+                    <!-- Edit button -->
+                    <v-btn 
+                        icon="mdi-pencil" 
+                        :disabled="!isItemSelected()" @click="openEditDialog">
+                    </v-btn>
+                </v-col>
+                <v-col cols="6">
+                    <!-- Uncategorized checkbox -->
+                    <v-checkbox label="Uncategorized" v-model="uncategorized"></v-checkbox>
+                </v-col>
+            </v-row>
+        </v-container>
+    <v-divider></v-divider>
 
     <div v-if="!isItemsReady || !isCategoriesReady">
         Loading...

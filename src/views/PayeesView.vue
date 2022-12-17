@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import TopBar from '@/components/TopBar.vue'
 import PayeesList from '@/components/PayeesList.vue'
 import EditPayee from '@/components/EditPayee.vue'
 import getPayees from '@/composables/queries/getPayees'
@@ -71,22 +70,23 @@ function handleChange() {
 </script>
 
 <template>
-        <v-container>
-            <v-row>
-                <v-col cols="3">
-                    <!-- Edit button -->
-                    <v-btn 
-                        icon="mdi-pencil" 
-                        :disabled="!isItemSelected()" @click="openEditDialog">
-                    </v-btn>
-                </v-col>
-                <v-col cols="6">
-                    <!-- Uncategorized checkbox -->
-                    <v-checkbox label="Uncategorized" v-model="uncategorized"></v-checkbox>
-                </v-col>
-            </v-row>
-        </v-container>
-    <v-divider></v-divider>
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <div class="top-bar-action">
+                <!-- Edit button -->
+                <v-btn 
+                    icon="mdi-pencil" 
+                    :disabled="!isItemSelected()" @click="openEditDialog">
+                </v-btn>
+            </div>
+            <v-divider vertical />
+            <div class="top-bar-action">
+                <!-- Uncategorized checkbox -->
+                <v-checkbox-btn label="Uncategorized" v-model="uncategorized"></v-checkbox-btn>
+            </div>
+        </div>
+    </div>
+    <v-divider />
 
     <div v-if="!isReady">
         Loading...

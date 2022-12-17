@@ -61,7 +61,7 @@ const sum = computed(() => {
                 :class="filteredList.getClassForRow(t)" 
                 @click="filteredList.selectItem(t)"
             >
-                <td><TypeExpenseOrIncomeIcon :isExpense="t.isExpense"/></td>
+                <td><TypeExpenseOrIncomeIcon :type="t.type"/></td>
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>

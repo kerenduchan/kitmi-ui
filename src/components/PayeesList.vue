@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 import FilteredList from '@/composables/FilteredList'
 
 // props 
@@ -14,6 +15,7 @@ const emit = defineEmits([
 
 // headers for the payees table
 const headers = ref([
+    '',
     'Name', 
     'Category', 
     'Subcategory'
@@ -50,6 +52,7 @@ let filteredList = new FilteredList(filter, emit)
                 :class="filteredList.getClassForRow(p)" 
                 @click="filteredList.selectItem(p)"
             >
+                <td><TypeExpenseOrIncomeIcon :type="p.type"/></td>
                 <td>{{ p.name}}</td>
                 <td>{{ p.categoryName }}</td>
                 <td>{{ p.subcategoryName }}</td>

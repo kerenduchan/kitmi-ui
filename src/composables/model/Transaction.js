@@ -51,10 +51,6 @@ class Transaction {
         return this.subcategory ? this.subcategory.id : null
     }
 
-    get type() {
-        return this.subcategory ? this.subcategory.type : ''
-    }
-
     get formattedAmount() {
         return formatNumber(this.amount)
     }
@@ -72,6 +68,10 @@ class Transaction {
             return this.category.isExpense
         }
         return this.amount <= 0
+    }
+
+    get type() {
+        return this.isExpense ? "Expense" : "Income"
     }
 }
 

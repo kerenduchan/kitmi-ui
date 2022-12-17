@@ -2,19 +2,25 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-    isExpense: Boolean
+    type: String
 })
 
 const icon = computed(() => {
-    return props.isExpense ? 'mdi-minus' : 'mdi-plus'
-})
-
-const color = computed(() => {
-    return props.isExpense ? 'red' : 'green'
+    switch (props.type) {
+        case 'Expense':
+            return 'mdi-minus-circle-outline'
+            break
+        case 'Income':
+            return 'mdi-plus-circle-outline'
+            break
+        default:
+            return 'mdi-help-circle-outline'
+            break
+}
 })
 
 </script>
 
 <template>
-    <v-icon :color="color">{{ icon }}</v-icon>
+    <v-icon size="small">{{ icon }}</v-icon>
 </template>

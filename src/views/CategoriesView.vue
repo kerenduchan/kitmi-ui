@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import CreateCategory from '@/components/CreateCategory.vue'
+import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import DeleteCategory from '@/components/DeleteCategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
@@ -30,10 +31,6 @@ function handleEditClicked() {
     console.log('handleEditClicked')
 }
 
-function handleCreateSubcategoryClicked() {
-    console.log('handleCreateSubcategoryClicked')
-}
-
 // create category dialog
 const {
     show: showCreateCategoryDialog,
@@ -44,6 +41,14 @@ const {
 function handleCategoryCreated() {
     refetch()
     closeCreateCategoryDialog()
+}
+
+// create subcategory dialog
+const showCreateSubcategoryDialog = ref(false)
+    
+function handleSubcategoryCreated() {
+    refetch()
+    showCreateSubcategoryDialog.value = false
 }
 
 // delete category dialog
@@ -82,7 +87,7 @@ function handleCategoryDeleted() {
                     tooltip="Create subcategory" 
                     icon="mdi-plus"
                     :disabled="!isItemSelected"
-                    @click="handleCreateSubcategoryClicked"
+                    @click="showCreateSubcategoryDialog = true"
                 />
             </div>
 
@@ -125,6 +130,14 @@ function handleCategoryDeleted() {
                 @save="handleCategoryCreated" />
         </v-dialog>
 
+        <!-- Create subcategory dialog -->
+        <v-dialog v-model="showCreateSubcategoryDialog">
+            <CreateSubcategory
+                :category="selectedItem"
+                @close="showCreateSubcategoryDialog = false"
+                @save="handleSubcategoryCreated" />
+        </v-dialog>
+
         <!-- Delete category dialog -->
         <v-dialog v-model="showDeleteCategoryDialog">
             <DeleteCategory
@@ -133,5 +146,5 @@ function handleCategoryDeleted() {
                 @deleted="handleCategoryDeleted" />
         </v-dialog>
 
-    </div>
+</div>
 </template>

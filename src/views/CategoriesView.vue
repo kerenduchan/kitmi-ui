@@ -60,10 +60,6 @@ function handleChange() {
     refetch()
 }
 
-function handleEditClicked() {
-    console.log('handleEditClicked')
-}
-
 // create category dialog
 const showCreateCategoryDialog = ref(false)
 
@@ -121,7 +117,7 @@ function openEditCategoryOrEditSubcategoryDialog() {
     <div class="top-bar">
         <div class="top-bar-left">
 
-            <!-- Edit button -->
+            <!-- Edit category/subcategory button -->
             <div class="top-bar-action">
                 <ButtonWithTooltip 
                     :tooltip="'Edit ' + selectedItemTypeStr" 

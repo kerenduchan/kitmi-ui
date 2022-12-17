@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import EditCategory from '../components/EditCategory.vue'
 import CreateCategory from '@/components/CreateCategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import DeleteCategory from '@/components/DeleteCategory.vue'
@@ -89,11 +90,25 @@ function openDeleteSubcategoryDialog() {
     showDeleteSubcategoryDialog.value = true
 }
 
+// edit category
+const showEditCategoryDialog = ref(false)
+
+// edit subcategory
+const showEditSubcategoryDialog = ref(false)
+
 function openDeleteCategoryOrDeleteSubcategoryDialog() {
     if(selectedItem.value instanceof Subcategory) {
         openDeleteSubcategoryDialog()
     } else {
         openDeleteCategoryDialog()
+    }
+}
+
+function openEditCategoryOrEditSubcategoryDialog() {
+    if(selectedItem.value instanceof Subcategory) {
+        showEditSubcategoryDialog.value = true
+    } else {
+        showEditCategoryDialog.value = true
     }
 }
 
@@ -109,7 +124,7 @@ function openDeleteCategoryOrDeleteSubcategoryDialog() {
                     :tooltip="'Edit ' + selectedItemTypeStr" 
                     icon="mdi-pencil"
                     :disabled="!selectedItem"
-                    @click="handleEditClicked"
+                    @click="openEditCategoryOrEditSubcategoryDialog"
                 />
             </div>
 
@@ -155,6 +170,15 @@ function openDeleteCategoryOrDeleteSubcategoryDialog() {
         <CategoriesList 
             :categories="categories" 
             @selectedItemChanged="handleSelectedItemChanged"/>
+
+        <!-- Edit category dialog -->
+        <v-dialog v-model="showEditCategoryDialog">
+            <EditCategory
+                :item="selectedItem"
+                :categories="categories"
+                @close="showEditCategoryDialog = false"
+                @save="handleChange" />
+        </v-dialog>
 
         <!-- Create category dialog -->
         <v-dialog v-model="showCreateCategoryDialog">

@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import CreateCategory from '@/components/CreateCategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import DeleteCategory from '@/components/DeleteCategory.vue'
+import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 import Subcategory from '@/composables/model/Subcategory'
@@ -84,6 +85,29 @@ function handleCategoryDeleted() {
     refetch()
 }
 
+// delete subcategory dialog
+const showDeleteSubcategoryDialog = ref(false)
+const subcategoryToDelete = ref(null)
+
+function openDeleteSubcategoryDialog() {
+    subcategoryToDelete.value = selectedItem.value
+    showDeleteSubcategoryDialog.value = true
+}
+
+function handleSubcategoryDeleted() {
+    showDeleteSubcategoryDialog.value = false
+    selectedItem.value = null
+    refetch()
+}
+
+function openDeleteCategoryOrDeleteSubcategoryDialog() {
+    if(selectedItem.value instanceof Subcategory) {
+        openDeleteSubcategoryDialog()
+    } else {
+        openDeleteCategoryDialog()
+    }
+}
+
 </script>
 
 <template>
@@ -110,13 +134,13 @@ function handleCategoryDeleted() {
                 />
             </div>
 
-            <!-- Delete button -->
+            <!-- Delete category/subcategory button -->
             <div class="top-bar-action">
                 <ButtonWithTooltip 
                     :tooltip="'Delete ' + selectedItemTypeStr"
                     icon="mdi-delete"
                     :disabled="isDeleteDisabled"
-                    @click="openDeleteCategoryDialog"
+                    @click="openDeleteCategoryOrDeleteSubcategoryDialog"
                 />
             </div>
         </div>
@@ -163,6 +187,14 @@ function handleCategoryDeleted() {
                 :item="categoryToDelete"
                 @close="showDeleteCategoryDialog = false"
                 @deleted="handleCategoryDeleted" />
+        </v-dialog>
+
+        <!-- Delete subcategory dialog -->
+        <v-dialog v-model="showDeleteSubcategoryDialog">
+            <DeleteSubcategory
+                :item="subcategoryToDelete"
+                @close="showDeleteSubcategoryDialog = false"
+                @deleted="handleSubcategoryDeleted" />
         </v-dialog>
 
 </div>

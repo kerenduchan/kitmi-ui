@@ -15,7 +15,6 @@ const emit = defineEmits([
 // headers for the payees table
 const headers = ref([
     'Name', 
-    'Type', 
     'Category', 
     'Subcategory'
 ])
@@ -52,7 +51,6 @@ let filteredList = new FilteredList(filter, emit)
                 @click="filteredList.selectItem(p)"
             >
                 <td>{{ p.name}}</td>
-                <td>{{ p.type }}</td>
                 <td>{{ p.categoryName }}</td>
                 <td>{{ p.subcategoryName }}</td>
             </tr>

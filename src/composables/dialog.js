@@ -8,7 +8,9 @@ function dialog(selectedItem) {
         // "freeze" the item for the dialog so it doesn't get filtered out
         // in case the item went from being uncategorized to categorized
         // and "Show Only Uncategorized" is checked
-        item.value = selectedItem.value
+        if(selectedItem) {
+            item.value = selectedItem.value
+        }
         show.value = true
     }
     

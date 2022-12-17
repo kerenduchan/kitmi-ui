@@ -1,8 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue'
+import CreateCategory from '@/components/CreateCategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 import getCategories from '@/composables/queries/getCategories'
+import dialog from '@/composables/dialog'
 
 const { categories, isReady, refetch } = getCategories()
 
@@ -27,16 +29,24 @@ function handleEditClicked() {
     console.log('handleEditClicked')
 }
 
-function handleCreateCategoryClicked() {
-    console.log('handleCreateCategoryClicked')
-}
-
 function handleDeleteClicked() {
     console.log('handleDeleteClicked')
 }
 
 function handleCreateSubcategoryClicked() {
     console.log('handleCreateSubcategoryClicked')
+}
+
+// create category dialog
+const {
+    show: showCreateCategoryDialog,
+    open: openCreateCategoryDialog,
+    close: closeCreateCategoryDialog
+} = dialog()
+
+function handleCategoryCreated() {
+    refetch()
+    closeCreateCategoryDialog()
 }
 
 </script>
@@ -84,7 +94,7 @@ function handleCreateSubcategoryClicked() {
                 <ButtonWithTooltip 
                     tooltip="Create category" 
                     icon="mdi-plus"
-                    @click="handleCreateCategoryClicked"
+                    @click="openCreateCategoryDialog"
                 />
             </div>
         </div>
@@ -93,6 +103,16 @@ function handleCreateSubcategoryClicked() {
 
     <div v-if="!isReady">Loading...</div>
     <div v-else>
+        <!-- List of categories -->
         <CategoriesList :categories="categories" @selectedItemChanged="handleSelectedItemChanged"/>
+
+        <!-- Create category dialog -->
+        <v-dialog v-model="showCreateCategoryDialog">
+            <CreateCategory 
+                :categories="categories"
+                @close="closeCreateCategoryDialog"
+                @save="handleCategoryCreated" />
+        </v-dialog>
+
     </div>
 </template>

@@ -74,15 +74,28 @@ function handleChange() {
         <div class="top-bar-left">
             <div class="top-bar-action">
                 <!-- Edit button -->
-                <v-btn 
-                    icon="mdi-pencil" 
-                    :disabled="!isItemSelected()" @click="openEditDialog">
-                </v-btn>
+                <v-tooltip text="Edit payee" location="bottom">
+                    <template v-slot:activator="{ props }">
+                        <v-btn 
+                            v-bind="props"
+                            icon="mdi-pencil" 
+                            :disabled="!isItemSelected()" @click="openEditDialog">
+                        </v-btn>
+                    </template>
+                </v-tooltip>
             </div>
             <v-divider vertical />
             <div class="top-bar-action">
                 <!-- Uncategorized checkbox -->
-                <v-checkbox-btn label="Uncategorized" v-model="uncategorized"></v-checkbox-btn>
+                <v-tooltip text="Toggle show only uncategorized" location="bottom">
+                    <template v-slot:activator="{ props }">
+                        <v-checkbox-btn 
+                            v-bind="props"
+                            label="Uncategorized" 
+                            v-model="uncategorized">
+                        </v-checkbox-btn>
+                    </template>
+                </v-tooltip>
             </div>
         </div>
     </div>

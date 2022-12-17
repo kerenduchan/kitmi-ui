@@ -15,7 +15,7 @@ const emit = defineEmits([
 const { gqlCreateCategory, onDone, onError } = createCategory()
 
 const name = ref('')
-const isExpense = ref(false)
+const isExpense = ref(true)
 const isNameAlreadyExists = computed(() => {
     return (props.categories.find(c => c.name == name.value) !== undefined)
 })

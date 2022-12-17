@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import CreateCategory from '@/components/CreateCategory.vue'
+import DeleteCategory from '@/components/DeleteCategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 import getCategories from '@/composables/queries/getCategories'
@@ -29,10 +30,6 @@ function handleEditClicked() {
     console.log('handleEditClicked')
 }
 
-function handleDeleteClicked() {
-    console.log('handleDeleteClicked')
-}
-
 function handleCreateSubcategoryClicked() {
     console.log('handleCreateSubcategoryClicked')
 }
@@ -47,6 +44,20 @@ const {
 function handleCategoryCreated() {
     refetch()
     closeCreateCategoryDialog()
+}
+
+// delete category dialog
+const {
+    show: showDeleteCategoryDialog,
+    item: itemForDeleteDialog,
+    open: openDeleteCategoryDialog,
+    close: closeDeleteCategoryDialog
+} = dialog(selectedItem)
+
+function handleCategoryDeleted() {
+    refetch()
+    closeDeleteCategoryDialog()
+    selectedItem.value = null
 }
 
 </script>
@@ -81,7 +92,7 @@ function handleCategoryCreated() {
                     tooltip="Delete category" 
                     icon="mdi-delete"
                     :disabled="isDeleteDisabled"
-                    @click="handleDeleteClicked"
+                    @click="openDeleteCategoryDialog"
                 />
             </div>
         </div>
@@ -112,6 +123,14 @@ function handleCategoryCreated() {
                 :categories="categories"
                 @close="closeCreateCategoryDialog"
                 @save="handleCategoryCreated" />
+        </v-dialog>
+
+        <!-- Delete category dialog -->
+        <v-dialog v-model="showDeleteCategoryDialog">
+            <DeleteCategory
+                :item="itemForDeleteDialog"
+                @close="closeDeleteCategoryDialog"
+                @deleted="handleCategoryDeleted" />
         </v-dialog>
 
     </div>

@@ -5,6 +5,7 @@ class Subcategory {
     constructor(gqlSubcategory) {
         this.id = gqlSubcategory.id
         this.name = gqlSubcategory.name
+        this.categoryId = gqlSubcategory.categoryId
         this.category = gqlSubcategory.category ? new Category(gqlSubcategory.category) : null
     }
 
@@ -15,7 +16,6 @@ class Subcategory {
     get categoryName() {
         return this.category ? this.category.name : ''
     }
-
 }
 
 export default Subcategory

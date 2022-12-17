@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import EditCategory from '../components/EditCategory.vue'
+import EditCategory from '@/components/EditCategory.vue'
+import EditSubcategory from '@/components/EditSubcategory.vue'
 import CreateCategory from '@/components/CreateCategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import DeleteCategory from '@/components/DeleteCategory.vue'
@@ -53,6 +54,7 @@ function handleChange() {
     showDeleteCategoryDialog.value = false
     showDeleteSubcategoryDialog.value = false
     showEditCategoryDialog.value = false
+    showEditSubcategoryDialog.value = false
 
     // refetch categories from server
     refetch()
@@ -178,6 +180,15 @@ function openEditCategoryOrEditSubcategoryDialog() {
                 :item="selectedItem"
                 :categories="categories"
                 @close="showEditCategoryDialog = false"
+                @save="handleChange" />
+        </v-dialog>
+
+        <!-- Edit subcategory dialog -->
+        <v-dialog v-model="showEditSubcategoryDialog">
+            <EditSubcategory
+                :item="selectedItem"
+                :categories="categories"
+                @close="showEditSubcategoryDialog = false"
                 @save="handleChange" />
         </v-dialog>
 

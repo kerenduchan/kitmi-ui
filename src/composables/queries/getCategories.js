@@ -13,6 +13,7 @@ function getCategories() {
                 subcategories {
                     id
                     name
+                    categoryId
                 }
             }
         }

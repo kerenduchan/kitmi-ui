@@ -58,6 +58,7 @@ function close() {
                 <SubcategorySelect 
                     :defaults="item" 
                     :categories="categories"
+                    :showExpenseCategoriesFirst="true"
                     :refs="subcategoryRefs"
                 />
             </v-form>

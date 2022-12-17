@@ -5,22 +5,36 @@ const props = defineProps({
     type: String
 })
 
-const icon = computed(() => {
+const iconAndColor = computed(() => {
+    let res = {
+        icon: 'mdi-help-circle-outline',
+        color: 'grey'
+    }
     switch (props.type) {
         case 'Expense':
-            return 'mdi-minus-circle-outline'
+            res.icon = 'mdi-minus-circle-outline'
+            res.color = '#F08080'
             break
         case 'Income':
-            return 'mdi-plus-circle-outline'
+        res.icon = 'mdi-plus-circle-outline'
+            res.color = '#37A0CC'
             break
         default:
-            return 'mdi-help-circle-outline'
             break
-}
+    }
+    return res
+})
+
+const icon = computed(() => {
+    return iconAndColor.value.icon
+})
+
+const color = computed(() => {
+    return iconAndColor.value.color
 })
 
 </script>
 
 <template>
-    <v-icon size="small">{{ icon }}</v-icon>
+    <v-icon size="small" :color="color">{{ icon }}</v-icon>
 </template>

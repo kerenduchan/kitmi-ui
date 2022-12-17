@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import TopBar from '@/components/TopBar.vue'
 import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
@@ -19,15 +19,37 @@ const {
     refetch: refetchCategories
 } = getCategories()
 
-// logic for selected item
+// Show only uncategorized filter (v-model for checkbox)
+const uncategorized = ref(false)
+
+// The items, after applying the filter
+const filteredItems = computed(() => {
+    if(uncategorized.value === true) {
+        return items.value.filter(item => !item.isCategorized)
+    }
+    return items.value
+})
+
+// The selected item
 const selectedItem = ref(null)
 
-function isItemSelected() {
-    return selectedItem.value !== null
+// update the selected item
+function handleSelectedItemChanged(item) {
+    selectedItem.value = item
 }
 
-function handleSelectedItemChanged(t) {
-    selectedItem.value = t
+// The selected item if it's not filtered out, null otherwise
+const filteredSelectedItem = computed(() => {
+    if (selectedItem.value === null) {
+        return null
+    }
+    const found = filteredItems.value.find(item => item.id === selectedItem.value.id)
+    return found ? selectedItem.value : null
+})
+
+// Return whether or not any item is selected
+function isItemSelected() {
+    return filteredSelectedItem.value !== null
 }
 
 // logic for the edit dialog
@@ -43,14 +65,18 @@ function handleChange() {
     refetchItems()
 }
 
-</script>
+</script> 
 
 <template>
     <TopBar>
         <!-- Edit button -->
         <v-btn 
             icon="mdi-pencil" 
-            :disabled="!isItemSelected()" @click="openEditDialog"></v-btn>
+            :disabled="!isItemSelected()" @click="openEditDialog">
+        </v-btn>
+
+        <v-checkbox label="Uncategorized" v-model="uncategorized"></v-checkbox>
+
     </TopBar>
 
     <div v-if="!isItemsReady || !isCategoriesReady">
@@ -61,7 +87,7 @@ function handleChange() {
 
         <!-- List (table) of transactions -->
         <TransactionsList 
-            :transactions="items" 
+            :transactions="filteredItems" 
             @selectedItemChanged="handleSelectedItemChanged"/>
 
         <!-- Edit selected transaction dialog -->

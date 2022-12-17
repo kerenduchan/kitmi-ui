@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 import { formatNumber } from '@/composables/utils'
-import FilteredList from '@/composables/FilteredList'
 
 // props 
 const props = defineProps({
@@ -23,17 +22,19 @@ const headers = ref([
     'Subcategory'
 ])
 
-const showOnlyUncategorized = ref(false)
+// the selected item
+const selectedItem = ref(null)
 
-// logic for filtering the list
-function filter() {
-    if (showOnlyUncategorized.value) {
-        return props.transactions.filter(t => !t.isCategorized)
-    }
-    return props.transactions
+// get the class for a selected row in the table
+function getClassForRow(item) {
+    return selectedItem.value?.id === item.id ? 'selected-row' : ''
 }
 
-let filteredList = new FilteredList(filter, emit)
+// handle click on a row in the table (select the item)
+function selectItem(item) {
+    selectedItem.value = item
+    emit('selectedItemChanged', selectedItem.value)
+}
 
 // the computed sum of the rows
 const sum = computed(() => {
@@ -45,8 +46,6 @@ const sum = computed(() => {
 
 <template>
 
-    <v-checkbox label="Show Only Uncategorized" v-model="showOnlyUncategorized"></v-checkbox>
-
     <v-table density="compact" height="550px" fixed-header>
         <thead>
             <tr>
@@ -56,10 +55,10 @@ const sum = computed(() => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="t in filteredList.filteredItems.value" 
-                :key="t.id" 
-                :class="filteredList.getClassForRow(t)" 
-                @click="filteredList.selectItem(t)"
+            <tr v-for="t in transactions" 
+                :key="t.id"
+                :class="getClassForRow(t)" 
+                @click="selectItem(t)"
             >
                 <td><TypeExpenseOrIncomeIcon :type="t.type"/></td>
                 <td>{{ t.formattedDate }}</td>

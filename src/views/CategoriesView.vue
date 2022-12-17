@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 import getCategories from '@/composables/queries/getCategories'
@@ -7,6 +7,16 @@ import getCategories from '@/composables/queries/getCategories'
 const { categories, isReady, refetch } = getCategories()
 
 const selectedItem = ref(null)
+
+const isItemSelected = computed(() => {
+    return selectedItem.value !== null
+})
+
+const isDeleteDisabled = computed(() => {
+    const c = selectedItem.value
+    // can't delete a category with subcategories
+    return c === null || c.hasSubcategories
+})
 
 function handleSelectedItemChanged(item) {
     console.log('selected item changed ' + item.name)
@@ -40,7 +50,7 @@ function handleCreateSubcategoryClicked() {
                 <ButtonWithTooltip 
                     tooltip="Edit category" 
                     icon="mdi-pencil"
-                    :disabled="false"
+                    :disabled="!isItemSelected"
                     @click="handleEditClicked"
                 />
             </div>
@@ -50,7 +60,7 @@ function handleCreateSubcategoryClicked() {
                 <ButtonWithTooltip 
                     tooltip="Create subcategory" 
                     icon="mdi-plus"
-                    :disabled="false"
+                    :disabled="!isItemSelected"
                     @click="handleCreateSubcategoryClicked"
                 />
             </div>
@@ -60,7 +70,7 @@ function handleCreateSubcategoryClicked() {
                 <ButtonWithTooltip 
                     tooltip="Delete category" 
                     icon="mdi-delete"
-                    :disabled="false"
+                    :disabled="isDeleteDisabled"
                     @click="handleDeleteClicked"
                 />
             </div>
@@ -74,7 +84,6 @@ function handleCreateSubcategoryClicked() {
                 <ButtonWithTooltip 
                     tooltip="Create category" 
                     icon="mdi-plus"
-                    :disabled="false"
                     @click="handleCreateCategoryClicked"
                 />
             </div>

@@ -14,9 +14,6 @@ const emit = defineEmits([
 const { gqlDeleteCategory, onDone, onError } = deleteCategory()
 
 function del() {
-    console.log({
-        categoryId: props.item.id
-    })
     gqlDeleteCategory({
         categoryId: props.item.id
     })

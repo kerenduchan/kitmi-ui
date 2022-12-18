@@ -84,7 +84,13 @@ watchEffect(() => {
         subcategories.value = c.subcategories
         // And set subcategoryId accordingly.
         const s = findSubcategoryById(props.defaults.subcategoryId)
-        subcategoryId.value = s ? props.defaults.subcategoryId : subcategories.value[0].id
+        if(s) {
+            subcategoryId.value = props.defaults.subcategoryId
+        } else if(subcategories.value.length === 1) {
+            subcategoryId.value = subcategories.value[0]
+        } else {
+            subcategoryId.value = null
+        }
     }
 })
 

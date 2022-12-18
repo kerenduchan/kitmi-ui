@@ -91,7 +91,28 @@ watchEffect(() => {
 </script>
 
 <template>
-    <v-select label="Category" :items="categories" item-title="name" item-value="id" v-model="categoryId" />
 
-    <v-select label="Subcategory" :items="subcategories" item-title="name" item-value="id" v-model="subcategoryId" />
+    <div v-if="categories.length === 0">
+        Define a few categories and subcategories first.
+    </div>
+    
+    <!-- Category select -->
+    <v-select 
+        label="Category" 
+        :items="categories" 
+        :disabled="categories.length === 0"
+        item-title="name" 
+        item-value="id" 
+        v-model="categoryId" 
+    />
+
+    <!-- Subcategory select -->
+    <v-select 
+        label="Subcategory" 
+        :items="subcategories" 
+        :disabled="categoryId === null"
+        item-title="name" 
+        item-value="id" 
+        v-model="subcategoryId" 
+    />
 </template>

@@ -20,7 +20,7 @@ function del() {
 }
 
 onDone(() => {
-    emit('deleted')
+    emit('deleted', props.item)
 })
 
 onError((e) => {

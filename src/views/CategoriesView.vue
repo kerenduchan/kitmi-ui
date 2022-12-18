@@ -33,6 +33,7 @@ const isDeleteDisabled = computed(() => {
 
 function handleSelectedItemChanged(item) {
     selectedItem.value = item ? item : null
+    forceSelectedItemKey.value = null
 }
 
 watch(selectedItem, () => {
@@ -113,8 +114,13 @@ function openEditCategoryOrEditSubcategoryDialog() {
 const forceSelectedItemKey = ref(null)
 
 function handleCategoryCreated(c) {
-    console.log(c)
     forceSelectedItemKey.value = c.key
+    handleChange()
+}
+
+function handleSubcategoryDeleted(s) {
+    // select the deleted subcategory's category
+    forceSelectedItemKey.value = 'c' + s.categoryId
     handleChange()
 }
 
@@ -225,7 +231,7 @@ function handleCategoryCreated(c) {
             <DeleteSubcategory
                 :item="subcategoryToDelete"
                 @close="showDeleteSubcategoryDialog = false"
-                @deleted="handleChange" />
+                @deleted="handleSubcategoryDeleted" />
         </v-dialog>
 
 </div>

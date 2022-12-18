@@ -5,7 +5,7 @@ import CategoryOrSubcategoryRow from './CategoryOrSubcategoryRow.vue'
 // props 
 const props = defineProps({
     categories: Object,
-    forceSelectedItemKey: Object
+    forceSelectedItemKey: String
 })
 
 // emits

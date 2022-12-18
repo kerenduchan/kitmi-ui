@@ -8,6 +8,8 @@ import DeleteCategory from '@/components/DeleteCategory.vue'
 import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
+import moveCategoryUp from '@/composables/mutations/moveCategoryUp'
+import moveCategoryDown from '@/composables/mutations/moveCategoryDown'
 import getStore from '@/composables/store'
 
 const store = getStore()
@@ -129,6 +131,57 @@ function handleSubcategoryDeleted(s) {
     handleChange()
 }
 
+const isMoveCategoryButtonVisible = computed(() => {
+    return selectedItem.value === null || 
+        (selectedItem.value.objClass == 'Category')
+})
+
+const { gqlMoveCategoryDown, onDone: onMoveCategoryDownDone } = moveCategoryDown()
+
+function doMoveCategoryDown() {
+    gqlMoveCategoryDown({
+        categoryId: selectedItem.value.id
+    })
+}
+
+onMoveCategoryDownDone(() => {
+    store.refetchCategories()
+})
+
+const { gqlMoveCategoryUp, onDone: onMoveCategoryUpDone } = moveCategoryUp()
+
+function doMoveCategoryUp() {
+    gqlMoveCategoryUp({
+        categoryId: selectedItem.value.id
+    })
+}
+
+onMoveCategoryUpDone(() => {
+    store.refetchCategories()
+})
+
+function isMoveCategoryDownDisabled() {
+    if(!selectedItem.value) {
+        return true
+    }
+    if(selectedItem.value.id === categories.value[categories.value.length - 1].id) {
+        // can't move the category any further down
+        return true
+    }
+    return false
+}
+
+function isMoveCategoryUpDisabled() {
+    if(!selectedItem.value) {
+        return true
+    }
+    if(selectedItem.value.id === categories.value[0].id) {
+        // can't move the category any further up
+        return true
+    }
+    return false
+}
+
 </script>
 
 <template>
@@ -152,6 +205,26 @@ function handleSubcategoryDeleted(s) {
                     icon="mdi-plus"
                     :disabled="!selectedItem"
                     @click="showCreateSubcategoryDialog = true"
+                />
+            </div>
+
+            <!-- Move category down button -->
+            <div v-if="isMoveCategoryButtonVisible" class="top-bar-action">
+                <ButtonWithTooltip 
+                    tooltip="Move Category Down" 
+                    icon="mdi-arrow-down"
+                    :disabled="isMoveCategoryDownDisabled()"
+                    @click="doMoveCategoryDown"
+                />
+            </div>
+
+            <!-- Move category up button -->
+            <div v-if="isMoveCategoryButtonVisible" class="top-bar-action">
+                <ButtonWithTooltip 
+                    tooltip="Move Category Up" 
+                    icon="mdi-arrow-up"
+                    :disabled="isMoveCategoryUpDisabled()"
+                    @click="doMoveCategoryUp"
                 />
             </div>
 

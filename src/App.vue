@@ -1,5 +1,5 @@
 <template>
-    <v-app id="inspire">
+    <v-app v-if="isReady" id="inspire">
         <v-navigation-drawer permanent>
             <v-list>
                 <v-list-item v-for="link in links" :key="link.key" router :to="link.to">
@@ -24,7 +24,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import getStore from '@/composables/store'
 
 const links = ref([
     {
@@ -58,6 +59,18 @@ const links = ref([
         icon: 'mdi-star'
     },
 ])
+
+// fetch categories, payees, transactions from the server
+const store = getStore()
+const { isReady: isCategoriesReady } = store.fetchCategories()
+const { isReady: isPayeesReady } = store.fetchPayees()
+const { isReady: isTransactionsReady } = store.fetchTransactions()
+
+const isReady = computed(() => {
+    return isCategoriesReady.value === true &&
+        isPayeesReady.value === true &&
+        isTransactionsReady.value === true
+})
 
 </script>
 

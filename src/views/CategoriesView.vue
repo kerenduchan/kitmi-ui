@@ -8,9 +8,10 @@ import DeleteCategory from '@/components/DeleteCategory.vue'
 import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
-import getCategories from '@/composables/queries/getCategories'
+import getStore from '@/composables/store'
 
-const { categories, isReady, refetch } = getCategories()
+const store = getStore()
+const categories = store.categories
 
 // a selected category or subcategory
 const selectedItem = ref(null)
@@ -57,7 +58,7 @@ function handleChange() {
     showEditSubcategoryDialog.value = false
 
     // refetch categories from server
-    refetch()
+    store.refetchCategories()
 }
 
 // create category dialog
@@ -121,6 +122,10 @@ function handleCategoryCreated(c) {
 function handleSubcategoryDeleted(s) {
     // select the deleted subcategory's category
     forceSelectedItemKey.value = 'c' + s.categoryId
+
+    // deleting a subcategory may affect the payees/transactions data
+    store.refetchPayees()
+    store.refetchTransactions()
     handleChange()
 }
 
@@ -176,63 +181,60 @@ function handleSubcategoryDeleted(s) {
     </div>
     <v-divider />
 
-    <div v-if="!isReady">Loading...</div>
-    <div v-else>
-        <!-- List of categories -->
-        <CategoriesList 
+    <!-- List of categories -->
+    <CategoriesList 
+        :categories="categories"
+        :forceSelectedItemKey="forceSelectedItemKey"
+        @selectedItemChanged="handleSelectedItemChanged"/>
+
+    <!-- Edit category dialog -->
+    <v-dialog v-model="showEditCategoryDialog">
+        <EditCategory
+            :item="selectedItem"
             :categories="categories"
-            :forceSelectedItemKey="forceSelectedItemKey"
-            @selectedItemChanged="handleSelectedItemChanged"/>
+            @close="showEditCategoryDialog = false"
+            @save="handleChange" />
+    </v-dialog>
 
-        <!-- Edit category dialog -->
-        <v-dialog v-model="showEditCategoryDialog">
-            <EditCategory
-                :item="selectedItem"
-                :categories="categories"
-                @close="showEditCategoryDialog = false"
-                @save="handleChange" />
-        </v-dialog>
+    <!-- Edit subcategory dialog -->
+    <v-dialog v-model="showEditSubcategoryDialog">
+        <EditSubcategory
+            :item="selectedItem"
+            :categories="categories"
+            @close="showEditSubcategoryDialog = false"
+            @save="handleChange" />
+    </v-dialog>
 
-        <!-- Edit subcategory dialog -->
-        <v-dialog v-model="showEditSubcategoryDialog">
-            <EditSubcategory
-                :item="selectedItem"
-                :categories="categories"
-                @close="showEditSubcategoryDialog = false"
-                @save="handleChange" />
-        </v-dialog>
+    <!-- Create category dialog -->
+    <v-dialog v-model="showCreateCategoryDialog">
+        <CreateCategory 
+            :categories="categories"
+            @close="showCreateCategoryDialog = false"
+            @created="handleCategoryCreated" />
+    </v-dialog>
 
-        <!-- Create category dialog -->
-        <v-dialog v-model="showCreateCategoryDialog">
-            <CreateCategory 
-                :categories="categories"
-                @close="showCreateCategoryDialog = false"
-                @created="handleCategoryCreated" />
-        </v-dialog>
+    <!-- Create subcategory dialog -->
+    <v-dialog v-model="showCreateSubcategoryDialog">
+        <CreateSubcategory
+            :category="selectedItem"
+            @close="showCreateSubcategoryDialog = false"
+            @save="handleChange" />
+    </v-dialog>
 
-        <!-- Create subcategory dialog -->
-        <v-dialog v-model="showCreateSubcategoryDialog">
-            <CreateSubcategory
-                :category="selectedItem"
-                @close="showCreateSubcategoryDialog = false"
-                @save="handleChange" />
-        </v-dialog>
+    <!-- Delete category dialog -->
+    <v-dialog v-model="showDeleteCategoryDialog">
+        <DeleteCategory
+            :item="categoryToDelete"
+            @close="showDeleteCategoryDialog = false"
+            @deleted="handleChange" />
+    </v-dialog>
 
-        <!-- Delete category dialog -->
-        <v-dialog v-model="showDeleteCategoryDialog">
-            <DeleteCategory
-                :item="categoryToDelete"
-                @close="showDeleteCategoryDialog = false"
-                @deleted="handleChange" />
-        </v-dialog>
+    <!-- Delete subcategory dialog -->
+    <v-dialog v-model="showDeleteSubcategoryDialog">
+        <DeleteSubcategory
+            :item="subcategoryToDelete"
+            @close="showDeleteSubcategoryDialog = false"
+            @deleted="handleSubcategoryDeleted" />
+    </v-dialog>
 
-        <!-- Delete subcategory dialog -->
-        <v-dialog v-model="showDeleteSubcategoryDialog">
-            <DeleteSubcategory
-                :item="subcategoryToDelete"
-                @close="showDeleteSubcategoryDialog = false"
-                @deleted="handleSubcategoryDeleted" />
-        </v-dialog>
-
-</div>
 </template>

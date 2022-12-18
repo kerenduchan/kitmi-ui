@@ -3,21 +3,12 @@ import { ref, computed } from 'vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
 import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
-import getTransactions from '@/composables/queries/getTransactions'
-import getCategories from '@/composables/queries/getCategories'
+import getStore from '@/composables/store'
 import dialog from '@/composables/dialog'
 
-const {
-    transactions: items,
-    isReady: isItemsReady,
-    refetch: refetchItems
-} = getTransactions()
-
-const {
-    categories,
-    isReady: isCategoriesReady,
-    refetch: refetchCategories
-} = getCategories()
+const store = getStore()
+const categories = store.categories
+const items = store.transactions
 
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
@@ -62,7 +53,7 @@ const {
 
 function handleChange() {
     closeEditDialog()
-    refetchItems()
+    store.refetchTransactions()
 }
 
 </script> 
@@ -100,26 +91,19 @@ function handleChange() {
     </div>
     <v-divider />
 
-    <div v-if="!isItemsReady || !isCategoriesReady">
-        Loading...
-    </div>
-    
-    <div v-else>
+    <!-- List (table) of transactions -->
+    <TransactionsList 
+        :items="filteredItems" 
+        @selectedItemChanged="handleSelectedItemChanged"/>
 
-        <!-- List (table) of transactions -->
-        <TransactionsList 
-            :items="filteredItems" 
-            @selectedItemChanged="handleSelectedItemChanged"/>
-
-        <!-- Edit selected transaction dialog -->
-        <v-dialog v-model="showEditDialog">
-            <EditTransaction 
-                :item="itemForEditDialog"
-                :categories="categories" 
-                @close="closeEditDialog"
-                @change="handleChange" 
-            />
-        </v-dialog>
-    </div>
+    <!-- Edit selected transaction dialog -->
+    <v-dialog v-model="showEditDialog">
+        <EditTransaction 
+            :item="itemForEditDialog"
+            :categories="categories" 
+            @close="closeEditDialog"
+            @change="handleChange" 
+        />
+    </v-dialog>
 
 </template>

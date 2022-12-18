@@ -35,7 +35,7 @@ function getClassForRow() {
             <span class="category-type-icon">
                 <TypeExpenseOrIncomeIcon :type="item.type" />
             </span>
-            category: {{ item.name }}
+            {{ item.name }}
         </td>
     </tr>
 

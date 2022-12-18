@@ -15,10 +15,12 @@ const emit = defineEmits([
 
 const { gqlDeleteSubcategory, onDone, onError } = deleteSubcategory()
 
-const { info, isReady } = getSubcategoryUsageInfo(props.item.id)
+const { info, isReady, refetch } = getSubcategoryUsageInfo(props.item.id)
+
+// need to refetch the data, otherwise it remembers an old cached result
+refetch()
 
 const message = computed(() => {
-    console.log(info.value)
     if(info.value.isUsed) {
         return 'This subcategory is used by one or more payees and/or transactions. ' + 
                 'Deleting this subcategory will uncategorize these payees and transactions. ' +

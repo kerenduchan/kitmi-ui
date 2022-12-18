@@ -54,6 +54,19 @@ const tableRows = computed(() => {
     return res
 })
 
+watchEffect(() => {
+    // deselect the selected item if it is no longer in the list
+    if(!selectedItem.value) {
+        return
+    }
+    const selectedItemKey = generateKey(selectedItem.value)
+    if(!tableRows.value.find(row => generateKey(row) === selectedItemKey)) {
+        console.log('selected item is no longer in the list')
+        selectedItem.value = null
+    }
+})
+
+
 function generateKey(item) {
     return (item instanceof Subcategory ? 's' : 'c') + item.id
 }

@@ -5,17 +5,23 @@ import { ref, computed, watchEffect, watch } from 'vue'
 const props = defineProps({
     defaults: Object,
     showExpenseCategoriesFirst: Boolean,
-    categories: Object,
-    refs: Object
+    categories: Object
 })
 
-const { subcategoryId } = props.refs
+// emits
+const emit = defineEmits([
+    'subcategorySelected'
+])
 
 // The selected category ID (v-model for the v-select element)
 const categoryId = ref(props.defaults.categoryId)
 
 // The selected subcategory ID (v-model for the select element)
-subcategoryId.value = props.defaults.subcategoryId
+const subcategoryId = ref(props.defaults.subcategoryId)
+
+watch(subcategoryId, () => {
+    emit('subcategorySelected', subcategoryId.value)
+})
 
 // The expense categories that have subcategories
 const expenseCategories = computed(() => {

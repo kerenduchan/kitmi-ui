@@ -1,8 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
-import getRef from '@/composables/getRef';
 
 // props 
 const props = defineProps({
@@ -21,8 +20,12 @@ const {
     onError: onUpdatePayeeError 
 } = updatePayeeSubcategory()
 
-const subcategoryRefs = getRef()
-const { subcategoryId } = subcategoryRefs
+const subcategoryId = ref(props.item.subcategoryId)
+
+
+function handleSubcategorySelected(id) {
+    subcategoryId.value = id
+}
 
 const isSaveDisabled = computed(() => {
     return subcategoryId.value === null
@@ -59,7 +62,7 @@ function close() {
                     :defaults="item" 
                     :categories="categories"
                     :showExpenseCategoriesFirst="true"
-                    :refs="subcategoryRefs"
+                    @subcategorySelected="handleSubcategorySelected"
                 />
             </v-form>
         </v-card-text>

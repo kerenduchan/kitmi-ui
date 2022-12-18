@@ -18,10 +18,11 @@ const emit = defineEmits([
 const selectedItem = ref(null)
 
 watchEffect(() => {
-
     if(props.forceSelectedItem) {
         if(!selectedItem.value || 
         (selectedItem.value && props.forceSelectedItem.id != selectItem.id)) {
+            // the parent component forced an item to be selected.
+            // this happens when a new category is created.
             selectedItem.value = props.forceSelectedItem
         }
     }

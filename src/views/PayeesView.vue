@@ -4,7 +4,6 @@ import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
 import PayeesList from '@/components/PayeesList.vue'
 import EditPayee from '@/components/EditPayee.vue'
 import getStore from '@/composables/store'
-import dialog from '@/composables/dialog'
 
 const store = getStore()
 const categories = store.categories
@@ -43,16 +42,17 @@ function isItemSelected() {
     return filteredSelectedItem.value !== null
 }
 
-// logic for the edit dialog
-const {
-    show: showEditDialog,
-    item: itemForEditDialog,
-    open: openEditDialog,
-    close: closeEditDialog
-} = dialog(selectedItem)
+// edit dialog
+const showEditDialog = ref(false)
+const itemForEditDialog = ref(null)
+
+function openEditDialog() {
+    itemForEditDialog.value = selectedItem.value
+    showEditDialog.value = true
+}
 
 function handleChange() {
-    closeEditDialog()
+    showEditDialog.value = false
     store.refetchPayees()
 }
 
@@ -101,7 +101,7 @@ function handleChange() {
         <EditPayee 
             :item="itemForEditDialog"
             :categories="categories"
-            @close="closeEditDialog"
+            @close="showEditDialog = false"
             @change="handleChange" />
     </v-dialog>
 </template>

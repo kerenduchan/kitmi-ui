@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch } from 'vue'
-import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
-import SubcategoriesList from '@/components/SubcategoriesList.vue'
+import { ref, computed, watch } from 'vue'
+import CategoryOrSubcategoryRow from './CategoryOrSubcategoryRow.vue';
+import Subcategory from '@/composables/model/Subcategory'
 
 // props 
 const props = defineProps({
@@ -13,40 +13,55 @@ const emit = defineEmits([
     'selectedItemChanged'
 ])
 
-// the selected category - v-model for the categories expansion panel
+// the selected category
 const selectedCategory = ref(null)
 
 // either a selected category or a selected subcategory
 const selectedItem = ref(null)
 
-watch(selectedCategory, () => {
-    selectedItem.value = selectedCategory.value
-})
+function selectItem(item) {
+    selectedItem.value = item
+}
+
+function isSelectedItem(item) {
+    if(!selectedItem.value) {
+        return false
+    }
+    return generateKey(selectedItem.value) == generateKey(item)
+}
 
 watch(selectedItem, () => {
     emit('selectedItemChanged', selectedItem.value)
 })
 
-function handleSubcategorySelected(subcategory) {
-    selectedItem.value = subcategory
+const tableRows = computed(() => {
+    let res = []
+    props.categories.forEach(c => {
+        res.push(c)
+        c.subcategories.forEach(s => {
+            res.push(s)
+        })
+    })
+    return res
+})
+
+function generateKey(item) {
+    return (item instanceof Subcategory ? 's' : 'c') + item.id
 }
+
 </script>
 
 <template>
-    <v-expansion-panels v-model="selectedCategory">
-        <v-expansion-panel v-for="c in props.categories" :key="c.id" :value="c">
-            <v-expansion-panel-title>
-                <div class="category-type-icon"><TypeExpenseOrIncomeIcon :type="c.type" /></div>
-                {{ c.name }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-                <SubcategoriesList 
-                    :items="c.subcategories" 
-                    @selectedItemChanged="handleSubcategorySelected"
-                />
-            </v-expansion-panel-text>
-        </v-expansion-panel>
-    </v-expansion-panels>
+    <v-table density="compact">
+        <tbody>
+            <CategoryOrSubcategoryRow 
+                v-for="item in tableRows" 
+                :item="item" 
+                :isSelected="isSelectedItem(item)"
+                :key="generateKey(item)" 
+                @click="selectItem(item)"/>
+        </tbody>
+    </v-table>
 </template>
 
 <style>

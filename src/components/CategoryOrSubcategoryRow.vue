@@ -1,6 +1,5 @@
 <script setup>
 import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
-import Subcategory from '@/composables/model/Subcategory'
 
 const props = defineProps({
     item: Object,
@@ -22,7 +21,7 @@ function getClassForRow() {
 
 <template>
     <tr :class="getClassForRow()" @click="handleClick">
-        <td v-if="(item instanceof Subcategory)">
+        <td v-if="(item.objClass == 'Subcategory')">
             <span class="category-type-icon">
                 <v-icon>empty</v-icon>
             </span>

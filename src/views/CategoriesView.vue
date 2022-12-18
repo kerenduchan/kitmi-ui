@@ -8,7 +8,6 @@ import DeleteCategory from '@/components/DeleteCategory.vue'
 import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
-import Subcategory from '@/composables/model/Subcategory'
 import getCategories from '@/composables/queries/getCategories'
 
 const { categories, isReady, refetch } = getCategories()
@@ -23,7 +22,7 @@ const isDeleteDisabled = computed(() => {
         // no item is selected
         return true
     }
-    if(selectedItem.value instanceof Subcategory) {
+    if(selectedItem.value.objClass == 'Subcategory') {
         return false
     }
     
@@ -41,7 +40,7 @@ watch(selectedItem, () => {
         selectedItemTypeStr.value =  ''
     } else {
         selectedItemTypeStr.value = 
-            selectedItem.value instanceof Subcategory ? 
+            selectedItem.value.objClass == 'Subcategory' ? 
             'subcategory' :
             'category'
     }
@@ -68,7 +67,7 @@ const showCreateSubcategoryDialog = ref(false)
     
 const isCreateSubcategoryHidden = computed(() => {
     // can't create a subcategory for a subcategory
-    return selectedItem.value && selectedItem.value instanceof Subcategory
+    return selectedItem.value && selectedItem.value.objClass == 'Subcategory'
 })
 
 // delete category dialog
@@ -96,7 +95,7 @@ const showEditCategoryDialog = ref(false)
 const showEditSubcategoryDialog = ref(false)
 
 function openDeleteCategoryOrDeleteSubcategoryDialog() {
-    if(selectedItem.value instanceof Subcategory) {
+    if(selectedItem.value.objClass == 'Subcategory') {
         openDeleteSubcategoryDialog()
     } else {
         openDeleteCategoryDialog()
@@ -104,7 +103,7 @@ function openDeleteCategoryOrDeleteSubcategoryDialog() {
 }
 
 function openEditCategoryOrEditSubcategoryDialog() {
-    if(selectedItem.value instanceof Subcategory) {
+    if(selectedItem.value.objClass == 'Subcategory') {
         showEditSubcategoryDialog.value = true
     } else {
         showEditCategoryDialog.value = true

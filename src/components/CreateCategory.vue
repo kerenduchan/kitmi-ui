@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import createCategory from '@/composables/mutations/createCategory'
+import Category from '@/composables/model/Category'
 
 // props 
 const props = defineProps({
@@ -9,7 +10,7 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'save'
+    'created'
 ])
 
 const { gqlCreateCategory, onDone, onError } = createCategory()
@@ -31,8 +32,9 @@ function save() {
     })
 }
 
-onDone(() => {
-    emit('save')
+onDone((res) => {
+    const c = new Category(res.data.createCategory)
+    emit('created', c)
 })
 
 onError((e) => {

@@ -1,11 +1,12 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 import CategoryOrSubcategoryRow from './CategoryOrSubcategoryRow.vue';
 import Subcategory from '@/composables/model/Subcategory'
 
 // props 
 const props = defineProps({
-    categories: Object
+    categories: Object,
+    forceSelectedItem: Object
 })
 
 // emits
@@ -13,11 +14,18 @@ const emit = defineEmits([
     'selectedItemChanged'
 ])
 
-// the selected category
-const selectedCategory = ref(null)
-
 // either a selected category or a selected subcategory
 const selectedItem = ref(null)
+
+watchEffect(() => {
+
+    if(props.forceSelectedItem) {
+        if(!selectedItem.value || 
+        (selectedItem.value && props.forceSelectedItem.id != selectItem.id)) {
+            selectedItem.value = props.forceSelectedItem
+        }
+    }
+})
 
 function selectItem(item) {
     selectedItem.value = item

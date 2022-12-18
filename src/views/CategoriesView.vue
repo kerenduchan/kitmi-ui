@@ -111,6 +111,14 @@ function openEditCategoryOrEditSubcategoryDialog() {
     }
 }
 
+const forceSelectedItem = ref(null)
+
+function handleCategoryCreated(c) {
+    console.log(c)
+    forceSelectedItem.value = c
+    handleChange()
+}
+
 </script>
 
 <template>
@@ -167,7 +175,8 @@ function openEditCategoryOrEditSubcategoryDialog() {
     <div v-else>
         <!-- List of categories -->
         <CategoriesList 
-            :categories="categories" 
+            :categories="categories"
+            :forceSelectedItem="forceSelectedItem"
             @selectedItemChanged="handleSelectedItemChanged"/>
 
         <!-- Edit category dialog -->
@@ -193,7 +202,7 @@ function openEditCategoryOrEditSubcategoryDialog() {
             <CreateCategory 
                 :categories="categories"
                 @close="showCreateCategoryDialog = false"
-                @save="handleChange" />
+                @created="handleCategoryCreated" />
         </v-dialog>
 
         <!-- Create subcategory dialog -->

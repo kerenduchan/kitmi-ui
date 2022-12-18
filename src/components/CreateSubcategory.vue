@@ -51,8 +51,8 @@ function close() {
 <template>
     <v-card>
         <v-card-title>Create Subcategory</v-card-title>
-        Category: {{ category.name }}
         <v-card-text>
+            Category: {{ category.name }}
             <v-form>
                 <!-- Name -->
                 <v-text-field 

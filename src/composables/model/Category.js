@@ -22,6 +22,14 @@ class Category {
         return this.subcategories && this.subcategories.length > 0
     }
 
+    get objClass() {
+        return 'Category'
+    }
+
+    get key() {
+        // key is unique across all object types (category, subcategory etc)
+        return 'c' + this.id
+    }
 }
 
 export default Category

@@ -16,6 +16,15 @@ class Subcategory {
     get categoryName() {
         return this.category ? this.category.name : ''
     }
+
+    get objClass() {
+        return 'Subcategory'
+    }
+
+    get key() {
+        // key is unique across all object types (category, subcategory etc)
+        return 's' + this.id
+    }
 }
 
 export default Subcategory

@@ -111,11 +111,11 @@ function openEditCategoryOrEditSubcategoryDialog() {
     }
 }
 
-const forceSelectedItem = ref(null)
+const forceSelectedItemKey = ref(null)
 
 function handleCategoryCreated(c) {
     console.log(c)
-    forceSelectedItem.value = c
+    forceSelectedItemKey.value = c.key
     handleChange()
 }
 
@@ -176,7 +176,7 @@ function handleCategoryCreated(c) {
         <!-- List of categories -->
         <CategoriesList 
             :categories="categories"
-            :forceSelectedItem="forceSelectedItem"
+            :forceSelectedItemKey="forceSelectedItemKey"
             @selectedItemChanged="handleSelectedItemChanged"/>
 
         <!-- Edit category dialog -->

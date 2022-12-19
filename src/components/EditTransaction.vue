@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
-import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
+import TransactionSubcategorySaveOptions from '@/components/TransactionSubcategorySaveOptions.vue'
 
 // props 
 const props = defineProps({
@@ -11,14 +11,8 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'change'
+    'save'
 ])
-
-const { 
-    gqlUpdatePayeeSubcategory, 
-    onDone: onUpdatePayeeDone, 
-    onError: onUpdatePayeeError 
-} = updatePayeeSubcategory()
 
 const subcategoryId = ref(props.item.subcategoryId)
 
@@ -31,21 +25,16 @@ const isSaveDisabled = computed(() => {
     return subcategoryId.value === null
 })
 
+const showTransactionSubcategorySaveOptionsDialog = ref(false)
+
 function save() {
-    gqlUpdatePayeeSubcategory({
-        payeeId: props.item.payee.id, 
-        subcategoryId: subcategoryId.value
-    })
+    showTransactionSubcategorySaveOptionsDialog.value = true
 }
 
-onUpdatePayeeDone(() => {
-    emit('change')
-})
-
-onUpdatePayeeError((e) => {
-    console.error('failed to update payee')
-    console.error(e)
-})
+function handleSave() {
+    showTransactionSubcategorySaveOptionsDialog.value = false
+    emit('save')
+}
 
 function close() {
     emit('close')
@@ -95,4 +84,13 @@ const fields = ref([
             
         </v-card-actions>
     </v-card>
+
+    <!-- Dialog for choosing whether to save subcategory on payee or on transaction -->
+    <v-dialog v-model="showTransactionSubcategorySaveOptionsDialog">
+        <TransactionSubcategorySaveOptions
+            :item="item"
+            :subcategoryId="subcategoryId"
+            @close="showTransactionSubcategorySaveOptionsDialog = false"
+            @save="handleSave" />
+    </v-dialog>
 </template>

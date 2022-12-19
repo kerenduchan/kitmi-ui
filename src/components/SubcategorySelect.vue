@@ -87,7 +87,7 @@ watchEffect(() => {
         if(s) {
             subcategoryId.value = props.defaults.subcategoryId
         } else if(subcategories.value.length === 1) {
-            subcategoryId.value = subcategories.value[0]
+            subcategoryId.value = subcategories.value[0].id
         } else {
             subcategoryId.value = null
         }

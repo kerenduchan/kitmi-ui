@@ -51,10 +51,14 @@ function openEditDialog() {
     showEditDialog.value = true
 }
 
-function handleChange() {
+function handlePayeeChange() {
+    showEditDialog.value = false
+    store.refetchPayees()
+}
+
+function handleTransactionChange() {
     showEditDialog.value = false
     store.refetchTransactions()
-    store.refetchPayees()
 }
 
 </script> 
@@ -103,7 +107,8 @@ function handleChange() {
             :item="itemForEditDialog"
             :categories="categories" 
             @close="showEditDialog = false"
-            @save="handleChange" 
+            @payeeChanged="handlePayeeChange" 
+            @transactionChanged="handleTransactionChange" 
         />
     </v-dialog>
 

@@ -125,9 +125,6 @@ function handleSubcategoryDeleted(s) {
     // select the deleted subcategory's category
     forceSelectedItemKey.value = 'c' + s.categoryId
 
-    // deleting a subcategory may affect the payees/transactions data
-    store.refetchPayees()
-    store.refetchTransactions()
     handleChange()
 }
 

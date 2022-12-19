@@ -6,26 +6,50 @@ import getTransactions from '@/composables/queries/getTransactions'
 let theStore = null
 
 class Store {
+    constructor() {
+        this.refetchers = {}
+    }
+
     fetchCategories() {
         const { categories, isReady, refetch } = getCategories() 
         this.categories = categories
-        this.refetchCategories = refetch
+        this.refetchers.refetchCategories = refetch
         return { isReady }
     }
 
     fetchPayees() {
         const { payees, isReady, refetch } = getPayees() 
         this.payees = payees
-        this.refetchPayees = refetch
+        this.refetchers.refetchPayees = refetch
         return { isReady }
     }
 
     fetchTransactions() {
         const { transactions, isReady, refetch } = getTransactions() 
         this.transactions = transactions
-        this.refetchTransactions = refetch
+        this.refetchers.refetchTransactions = refetch
         return { isReady }
     }
+
+    refetchCategories() {
+        // a category/subcategory change means we need to refetch
+        // transactions and payees as well.
+        this.refetchers.refetchCategories()
+        this.refetchers.refetchPayees()
+        this.refetchers.refetchTransactions()
+    }
+
+    refetchPayees() {
+        // a payee change means we need to refetch
+        // transactions as well.
+        this.refetchers.refetchPayees()
+        this.refetchers.refetchTransactions()
+    }
+
+    refetchTransactions() {
+        this.refetchers.refetchTransactions()
+    }
+
 }
 
 function getStore() {

@@ -9,7 +9,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-    'save',
+    'payeeChanged',
+    'transactionChanged',
     'close'
 ])
 
@@ -31,7 +32,6 @@ function save() {
     } else {
         saveOnTransaction()
     }
-    emit('save')
 }
 
 function close() {
@@ -39,7 +39,7 @@ function close() {
 }
 
 onUpdatePayeeDone(() => {
-    emit('save')
+    emit('payeeChanged')
 })
 
 onUpdatePayeeError((e) => {
@@ -49,11 +49,15 @@ onUpdatePayeeError((e) => {
 
 function saveOnPayee() {
 
-    gqlUpdateTransactionSubcategory({
-        transactionId: props.item.id, 
-        subcategoryId: null
-    })
+    // set the subcategoryId of the transaction to null
+    if(props.item.subcategoryId !== null) {
+        gqlUpdateTransactionSubcategory({
+            transactionId: props.item.id, 
+            subcategoryId: null
+        })
+    }
 
+    // update the subcategoryId of the payee
     gqlUpdatePayeeSubcategory({
         payeeId: props.item.payee.id, 
         subcategoryId: props.subcategoryId
@@ -68,8 +72,8 @@ function saveOnTransaction() {
 }
 
 onUpdateTransactionDone(() => {
-    if(!isApplyToPayee) {
-        emit('save')
+    if(isApplyToPayee.value === false) {
+        emit('transactionChanged')
     }
 })
 

@@ -11,7 +11,8 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'save'
+    'payeeChanged',
+    'transactionChanged'
 ])
 
 const subcategoryId = ref(props.item.subcategoryId)
@@ -31,9 +32,14 @@ function save() {
     showTransactionSubcategorySaveOptionsDialog.value = true
 }
 
-function handleSave() {
+function handlePayeeChange() {
     showTransactionSubcategorySaveOptionsDialog.value = false
-    emit('save')
+    emit('payeeChanged')
+}
+
+function handleTransactionChange() {
+    showTransactionSubcategorySaveOptionsDialog.value = false
+    emit('transactionChanged')
 }
 
 function close() {
@@ -91,6 +97,8 @@ const fields = ref([
             :item="item"
             :subcategoryId="subcategoryId"
             @close="showTransactionSubcategorySaveOptionsDialog = false"
-            @save="handleSave" />
+            @payeeChanged="handlePayeeChange" 
+            @transactionChanged="handleTransactionChange" 
+        />
     </v-dialog>
 </template>

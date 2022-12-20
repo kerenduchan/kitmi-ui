@@ -67,13 +67,13 @@ const {
 } = updatePayeeSubcategory()
 
 function savePayeeSubcategory() {
-    if(selectedSubcategoryId.value !== currentItem.value.subcategoryId) {
-        console.log('savePayeeSubcategory ' + selectedSubcategoryId.value + ' payee id ' + currentItem.value.id)
+
+    if(selectedSubcategoryId.value !== null &&
+        selectedSubcategoryId.value !== currentItem.value.subcategoryId) {
         gqlUpdatePayeeSubcategory({
             payeeId: currentItem.value.id, 
             subcategoryId: selectedSubcategoryId.value
         })
-        selectedSubcategoryId.value = null
         emit('change')
     }
 }
@@ -81,6 +81,11 @@ function savePayeeSubcategory() {
 function handleSubcategorySelected(subcategoryId) {
     selectedSubcategoryId.value = subcategoryId
 }
+
+watch(currentItem, () => {
+    selectedSubcategoryId.value = null
+})
+
 </script>
 
 <template>

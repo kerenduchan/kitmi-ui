@@ -12,29 +12,18 @@ const emit = defineEmits([
     'subcategorySelected',
 ])
 
-console.log(props.categories)
-
-console.log('item categoryId = ' + props.item.categoryId)
-console.log('item subcategoryId = ' + props.item.subcategoryId)
-
 // v-model for the categories v-item-group - index in the categories array
 const selectedCategoryIdx = ref(getCategoryIdxById(props.item.categoryId))
-
-console.log('selectedCategoryIdx = ' + selectedCategoryIdx.value)
 
 // v-model for the subcategories v-item-group - 
 // index in the subcategories array on the selected category
 const selectedSubcategoryIdx = ref(getSubcategoryIdxById(props.item.subcategoryId))
 
-console.log('selectedSubcategoryIdx = ' + selectedSubcategoryIdx.value)
-
 function getCategoryIdxById(categoryId) {
-    console.log('getCategoryIdxById(' + categoryId + ')')
     if(categoryId === null) {
         return null
     }
     const foundIdx = props.categories.findIndex(c => c.id === categoryId)
-    console.log(foundIdx)
     return foundIdx !== null ? foundIdx : null
 }
 

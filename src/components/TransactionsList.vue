@@ -70,9 +70,9 @@ const sum = computed(() => {
         </tbody>
         <tfoot>
             <tr>
+                <td></td>
                 <td>Total</td>
                 <td class="text-right">{{ sum }}</td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

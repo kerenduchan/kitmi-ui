@@ -103,7 +103,7 @@ watch(currentItem, () => {
     </v-card>
 
     <!-- show this if there are subcategories -->
-    <v-card v-else>
+    <v-card v-else height="600px">
         <v-card-title>Categorization Wizard</v-card-title>
         <v-card-text>
             <!-- key forces the component to remount upon change -->

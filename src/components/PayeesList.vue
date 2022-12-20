@@ -20,18 +20,18 @@ const headers = ref([
     'Subcategory'
 ])
 
-// the selected item
-const selectedItem = ref(null)
+// the ID of the selected item
+const selectedItemId = ref(null)
 
 // get the class for a selected row in the table
 function getClassForRow(item) {
-    return selectedItem.value?.id === item.id ? 'selected-row' : ''
+    return selectedItemId.value === item.id ? 'selected-row' : ''
 }
 
 // handle click on a row in the table (select the item)
 function selectItem(item) {
-    selectedItem.value = item
-    emit('selectedItemChanged', selectedItem.value)
+    selectedItemId.value = item.id
+    emit('selectedItemChanged', selectedItemId.value)
 }
 
 </script>

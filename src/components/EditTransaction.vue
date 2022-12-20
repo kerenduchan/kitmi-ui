@@ -2,6 +2,13 @@
 import { ref, computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import TransactionSubcategorySaveOptions from '@/components/TransactionSubcategorySaveOptions.vue'
+import updateTransactionSubcategory from '@/composables/mutations/updateTransactionSubcategory'
+
+const { 
+    gqlUpdateTransactionSubcategory, 
+    onDone: onUpdateTransactionDone, 
+    onError: onUpdateTransactionError 
+} = updateTransactionSubcategory()
 
 // props 
 const props = defineProps({
@@ -17,6 +24,12 @@ const emit = defineEmits([
 
 const subcategoryId = ref(props.item.subcategoryId)
 
+const isSubcategoryOverridden = computed(() => {
+    if(props.item) {
+        return props.item.overridingSubcategory !== null
+    }
+    return false
+})
 
 function handleSubcategorySelected(id) {
     subcategoryId.value = id
@@ -61,6 +74,30 @@ const fields = ref([
     }
 ])
 
+function usePayeeSubcategory() {
+    // set the subcategoryId of the transaction to null
+    gqlUpdateTransactionSubcategory({
+        transactionId: props.item.id, 
+        subcategoryId: null
+    })
+}
+
+onUpdateTransactionDone(() => {
+    emit('transactionChanged')
+})
+
+onUpdateTransactionError((e) => {
+    console.error('failed to update transaction')
+    console.error(e)
+})
+
+const payeeCategorization = computed(() => {
+    if(!props.item.payee.subcategory) {
+        return 'Uncategorized'
+    }
+    return props.item.payee.categoryName + ': ' + props.item.payee.subcategoryName
+})
+
 </script>
 
 <template>
@@ -83,6 +120,12 @@ const fields = ref([
                     @subcategorySelected="handleSubcategorySelected"
                 />
             </v-form>
+
+            <div v-if="isSubcategoryOverridden">
+                <p>The categorization for this transaction overrides the categorization of the payee ({{ payeeCategorization }})</p>
+                <v-btn @click="usePayeeSubcategory">Use Payee Subcategory</v-btn>
+            </div>
+            
         </v-card-text>
         <v-card-actions>
             <v-btn color="primary" :disabled="isSaveDisabled" @click="save">Save</v-btn>

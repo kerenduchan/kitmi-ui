@@ -39,12 +39,6 @@ function handleSelectedItemChanged(id) {
 
 // edit dialog
 const showEditDialog = ref(false)
-const itemForEditDialog = ref(null)
-
-function openEditDialog() {
-    itemForEditDialog.value = selectedItem.value
-    showEditDialog.value = true
-}
 
 function handlePayeeChange() {
     showEditDialog.value = false
@@ -52,7 +46,7 @@ function handlePayeeChange() {
 }
 
 function handleTransactionChange() {
-    showEditDialog.value = false
+        showEditDialog.value = false
     store.refetchTransactions()
 }
 
@@ -68,7 +62,7 @@ function handleTransactionChange() {
                     tooltip="Edit transaction" 
                     icon="mdi-pencil"
                     :disabled="selectedItem === null"
-                    @click="openEditDialog"
+                    @click="showEditDialog = true"
                 />
             </div>
 
@@ -99,7 +93,7 @@ function handleTransactionChange() {
     <!-- Edit selected transaction dialog -->
     <v-dialog v-model="showEditDialog">
         <EditTransaction 
-            :item="itemForEditDialog"
+            :item="selectedItem"
             :categories="categories" 
             @close="showEditDialog = false"
             @payeeChanged="handlePayeeChange" 

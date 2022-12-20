@@ -158,7 +158,7 @@ onMoveCategoryUpDone(() => {
 })
 
 function isMoveCategoryDownDisabled() {
-    if(!selectedItem.value) {
+    if(!selectedItem.value || categories.value.length === 0) {
         return true
     }
     if(selectedItem.value.id === categories.value[categories.value.length - 1].id) {
@@ -169,7 +169,7 @@ function isMoveCategoryDownDisabled() {
 }
 
 function isMoveCategoryUpDisabled() {
-    if(!selectedItem.value) {
+    if(!selectedItem.value || categories.value.length === 0) {
         return true
     }
     if(selectedItem.value.id === categories.value[0].id) {

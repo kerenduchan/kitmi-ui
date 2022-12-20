@@ -17,8 +17,6 @@ function getSubcategoryUsageInfo(subcategoryId) {
     const isReady = ref(false)
 
     onResult(queryResult => {
-        console.log('got result')
-        console.log(queryResult.data.subcategoryUsageInfo)
         info.value = new SubcategoryUsageInfo(queryResult.data.subcategoryUsageInfo)
         isReady.value = true
     })

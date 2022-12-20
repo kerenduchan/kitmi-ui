@@ -1,70 +1,119 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import CategorizationWizardOnePayee from '@/components/CategorizationWizardOnePayee.vue'
+import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 
 // props 
 const props = defineProps({
-    items: Object,
+    payeeIds: Object,
+    payees: Object,
     categories: Object
 })
 
 // emits
 const emit = defineEmits([
-    'close'
+    'close',
+    'change'
 ])
 
+// index into the payeeIds array - 
+// the payee that's currently displayed in the wizard
 const currentItemIdx = ref(0)
 
-const currentItem = computed(() => {
-    return props.items[currentItemIdx.value]
-})
+// the selected subcategory ID for the currently displayed payee
+const selectedSubcategoryId = ref(null)
 
+// whether there's a next payee after the current one
 const hasNext = computed(() => {
-    return currentItemIdx.value < props.items.length - 1
+    return currentItemIdx.value < props.payeeIds.length - 1
 })
 
+// whether there's a previous payee before the current one
 const hasPrev = computed(() => {
     return currentItemIdx.value > 0
 })
 
+// the current payee
+const currentItem = computed(() => {
+    const payeeId = props.payeeIds[currentItemIdx.value]
+    const found = props.payees.find(p => p.id === payeeId)
+    return found ? found : null
+})
+
+// only the categories that have subcategories
 const filteredCategories = computed(() => {
     return props.categories.filter(item => item.hasSubcategories)
 })
 
-function next() {
-    currentItemIdx.value++
-}
-
 function prev() {
+    savePayeeSubcategory()
     currentItemIdx.value--
 }
 
+function next() {
+    savePayeeSubcategory()
+    currentItemIdx.value++
+}
+
 function close() {
+    savePayeeSubcategory()
     emit('close')
 }
 
+const { 
+    gqlUpdatePayeeSubcategory, 
+    onDone: onUpdatePayeeDone, 
+    onError: onUpdatePayeeError 
+} = updatePayeeSubcategory()
+
+function savePayeeSubcategory() {
+    if(selectedSubcategoryId.value !== currentItem.value.subcategoryId) {
+        console.log('savePayeeSubcategory ' + selectedSubcategoryId.value + ' payee id ' + currentItem.value.id)
+        gqlUpdatePayeeSubcategory({
+            payeeId: currentItem.value.id, 
+            subcategoryId: selectedSubcategoryId.value
+        })
+        selectedSubcategoryId.value = null
+        emit('change')
+    }
+}
+
+function handleSubcategorySelected(subcategoryId) {
+    selectedSubcategoryId.value = subcategoryId
+}
 </script>
 
 <template>
-    <v-card>
-        <v-card-title>Categorization Wizard</v-card-title>
-        <v-card-text v-if="filteredCategories.length > 0">
-            <CategorizationWizardOnePayee 
-                :item="currentItem" 
-                :categories="filteredCategories" 
-                :hasNext="hasNext"
-                :hasPrev="hasPrev"
-                @next="next"
-                @prev="prev"
-                @close="close"
-            />
-        </v-card-text>
-        <v-card-text v-else>
+    <!-- show this if there are no subcategories -->
+    <v-card v-if="filteredCategories.length === 0">
+        <v-card-title>
+            Categorization Wizard
+        </v-card-title>
+        <v-card-text>
             Define some categories with subcategories first.
+        </v-card-text>
+        <v-card-actions>
+            <v-btn color="primary" @click="close">Close</v-btn>
+        </v-card-actions>
+    </v-card>
+
+    <!-- show this if there are subcategories -->
+    <v-card v-else>
+        <v-card-title>Categorization Wizard</v-card-title>
+        <v-card-text>
+            <!-- key forces the component to remount upon change -->
+            <CategorizationWizardOnePayee 
+                :key="currentItemIdx"
+                :item="currentItem" 
+                :categories="filteredCategories"
+                @subcategorySelected="handleSubcategorySelected"
+            />
         </v-card-text>
 
         <v-card-actions>
-            <v-btn v-if="filteredCategories.length === 0" color="primary" @click="close">Close</v-btn>
+            <v-btn color="primary" :disabled="!hasPrev" @click="prev">Previous</v-btn>
+            <v-btn color="primary" :disabled="!hasNext" @click="next">Next</v-btn>
+            <v-btn color="primary" @click="close">Close</v-btn>
         </v-card-actions>
     </v-card>
 

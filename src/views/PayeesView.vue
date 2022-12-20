@@ -58,11 +58,14 @@ function handleChange() {
 
 const showCategorizationWizard = ref(false)
 
-function closeCategorizationWizard() {
-    showCategorizationWizard.value = false
-    store.refetchPayees()
-}
+const payeeIdsForCategorizationWizard = ref(null)
 
+function openCategorizationWizard() {
+    // "freeze" the list of IDs of payees that are currently uncategorized, for the wizard
+    // so that prev/next can go back to a payee that has been categorized using the wizard
+    payeeIdsForCategorizationWizard.value = uncategorizedItems.value.map(item => item.id)
+    showCategorizationWizard.value = true
+}
 </script>
 
 <template>
@@ -104,7 +107,7 @@ function closeCategorizationWizard() {
                     tooltip="Categorization wizard" 
                     icon="mdi-wizard-hat"
                     :disabled="uncategorizedItems.length === 0"
-                    @click="showCategorizationWizard = true"
+                    @click="openCategorizationWizard"
                 />
             </div>
         </div>
@@ -128,9 +131,11 @@ function closeCategorizationWizard() {
     <!-- Categorization wizard -->
     <v-dialog v-model="showCategorizationWizard">
         <CategorizationWizard
-            :items="uncategorizedItems"
+            :payeeIds="payeeIdsForCategorizationWizard"
+            :payees="items"
             :categories="categories"
-            @close="closeCategorizationWizard"
+            @close="showCategorizationWizard = false"
+            @change="store.refetchPayees()"
         />
     </v-dialog>
 

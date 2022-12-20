@@ -1,64 +1,70 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
-import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
+import { onMounted, ref, watch } from 'vue'
 
 // props 
 const props = defineProps({
     item: Object,
-    categories: Object,
-    hasNext: Boolean,
-    hasPrev: Boolean
+    categories: Object
 })
 
 // emits
 const emit = defineEmits([
-    'prev',
-    'next',
-    'close'
+    'subcategorySelected',
 ])
 
-const { 
-    gqlUpdatePayeeSubcategory, 
-    onDone: onUpdatePayeeDone, 
-    onError: onUpdatePayeeError 
-} = updatePayeeSubcategory()
+console.log(props.categories)
 
-const selectedCategoryIdx = ref(null)
+console.log('item categoryId = ' + props.item.categoryId)
+console.log('item subcategoryId = ' + props.item.subcategoryId)
 
-const selectedCategory = computed(() => {
-    return selectedCategoryIdx.value !== null ? props.categories[selectedCategoryIdx.value] : null
-})
+// v-model for the categories v-item-group - index in the categories array
+const selectedCategoryIdx = ref(getCategoryIdxById(props.item.categoryId))
 
-const selectedSubcategoryIdx = ref(null)
+console.log('selectedCategoryIdx = ' + selectedCategoryIdx.value)
 
-watch(selectedCategory, () => {
-    selectedSubcategoryIdx.value = null
-})
+// v-model for the subcategories v-item-group - 
+// index in the subcategories array on the selected category
+const selectedSubcategoryIdx = ref(getSubcategoryIdxById(props.item.subcategoryId))
 
-function next() {
-    savePayeeSubcategory()
-    selectedCategoryIdx.value = null
-    selectedSubcategoryIdx.value = null
-    emit('next')
-}
+console.log('selectedSubcategoryIdx = ' + selectedSubcategoryIdx.value)
 
-function savePayeeSubcategory() {
-    if(selectedSubcategoryIdx.value !== null) {
-        gqlUpdatePayeeSubcategory({
-            payeeId: props.item.id, 
-            subcategoryId: props.categories[selectedCategoryIdx.value].subcategories[selectedSubcategoryIdx.value].id
-        })
+function getCategoryIdxById(categoryId) {
+    console.log('getCategoryIdxById(' + categoryId + ')')
+    if(categoryId === null) {
+        return null
     }
+    const foundIdx = props.categories.findIndex(c => c.id === categoryId)
+    console.log(foundIdx)
+    return foundIdx !== null ? foundIdx : null
 }
 
-function prev() {
-    emit('prev')
+function getSubcategoryIdxById(subcategoryId) {
+    if(subcategoryId === null) {
+        return null
+    }
+    const selectedCategory = getSelectedCategory()
+    const foundIdx = selectedCategory.subcategories.findIndex(s => s.id === subcategoryId)
+    return foundIdx !== null ? foundIdx : null
 }
 
-function close() {
-    savePayeeSubcategory()
-    emit('close')
+function getSelectedCategory() {
+    if(selectedCategoryIdx.value === null) {
+        return null
+    }
+    return props.categories[selectedCategoryIdx.value]
 }
+
+watch(selectedCategoryIdx, () => {
+    selectedSubcategoryIdx.value = null
+})
+
+watch(selectedSubcategoryIdx, () => {
+    if(selectedSubcategoryIdx.value !== null) {
+        const selectedCategory = getSelectedCategory()
+        const selectedSubcategoryId = selectedCategory.subcategories[selectedSubcategoryIdx.value].id
+        emit('subcategorySelected', selectedSubcategoryId)    
+    }
+})
 
 </script>
 
@@ -84,12 +90,12 @@ function close() {
 
             <v-divider />
 
-            <div v-if="selectedCategory !== null">
+            <div v-if="selectedCategoryIdx !== null">
                 Subcategory:
                 <v-item-group v-model="selectedSubcategoryIdx">
                     <v-container>
                         <v-row>
-                            <v-col cols="4" v-for="s in selectedCategory.subcategories" :key="s.id">
+                            <v-col cols="4" v-for="s in getSelectedCategory().subcategories" :key="s.id">
                                 <v-item v-slot="{ isSelected, toggle }">
                                     <v-card :color="isSelected ? 'primary' : ''" class="d-flex align-center"
                                         @click="toggle">
@@ -102,11 +108,6 @@ function close() {
                 </v-item-group>
             </div>
         </v-card-text>
-        <v-card-actions>
-            <v-btn color="primary" :disabled="!hasPrev" @click="prev">Previous</v-btn>
-            <v-btn color="primary" :disabled="!hasNext" @click="next">Next</v-btn>
-            <v-btn color="primary" @click="close">Close</v-btn>
-        </v-card-actions>
     </v-card>
 
 </template>

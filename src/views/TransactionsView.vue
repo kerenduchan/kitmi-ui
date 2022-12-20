@@ -20,26 +20,21 @@ const filteredItems = computed(() => {
     return items.value
 })
 
+// The ID of the selected item
+const selectedItemId = ref(null)
+
 // The selected item
-const selectedItem = ref(null)
-
-// update the selected item
-function handleSelectedItemChanged(item) {
-    selectedItem.value = item
-}
-
-// The selected item if it's not filtered out, null otherwise
-const filteredSelectedItem = computed(() => {
-    if (selectedItem.value === null) {
+const selectedItem = computed(() => {
+    if(selectedItemId.value === null) {
         return null
     }
-    const found = filteredItems.value.find(item => item.id === selectedItem.value.id)
-    return found ? selectedItem.value : null
+    const found = filteredItems.value.find(item => item.id === selectedItemId.value)
+    return found ? found : null
 })
 
-// Return whether or not any item is selected
-function isItemSelected() {
-    return filteredSelectedItem.value !== null
+// update the selected item ID
+function handleSelectedItemChanged(id) {
+    selectedItemId.value = id
 }
 
 // edit dialog
@@ -72,7 +67,7 @@ function handleTransactionChange() {
                 <ButtonWithTooltip 
                     tooltip="Edit transaction" 
                     icon="mdi-pencil"
-                    :disabled="!isItemSelected()"
+                    :disabled="selectedItem === null"
                     @click="openEditDialog"
                 />
             </div>

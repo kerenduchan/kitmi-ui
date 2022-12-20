@@ -37,11 +37,6 @@ function handleSelectedItemChanged(id) {
     selectedItemId.value = id
 }
 
-// Return whether or not any item is selected
-function isItemSelected() {
-    return selectedItem.value !== null
-}
-
 // edit dialog
 const showEditDialog = ref(false)
 const itemForEditDialog = ref(null)
@@ -67,7 +62,7 @@ function handleChange() {
                 <ButtonWithTooltip 
                     tooltip="Edit payee" 
                     icon="mdi-pencil"
-                    :disabled="!isItemSelected()"
+                    :disabled="selectedItem === null"
                     @click="openEditDialog"
                 />
             </div>

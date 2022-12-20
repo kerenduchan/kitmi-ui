@@ -48,7 +48,7 @@ function close() {
 <template>
     <v-card>
         <v-card-title>Categorization Wizard</v-card-title>
-        <v-card-text>
+        <v-card-text v-if="filteredCategories.length > 0">
             <CategorizationWizardOnePayee 
                 :item="currentItem" 
                 :categories="filteredCategories" 
@@ -59,8 +59,13 @@ function close() {
                 @close="close"
             />
         </v-card-text>
-        <v-card-actions>
+        <v-card-text v-else>
+            Define some categories with subcategories first.
+        </v-card-text>
 
+        <v-card-actions>
+            <v-btn v-if="filteredCategories.length === 0" color="primary" @click="close">Close</v-btn>
         </v-card-actions>
     </v-card>
+
 </template>

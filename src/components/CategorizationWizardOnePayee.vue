@@ -58,7 +58,7 @@ watch(selectedSubcategoryIdx, () => {
 </script>
 
 <template>
-    <v-card>
+    <v-card height="500px">
         <v-card-title>{{ item.name }}</v-card-title>
         <v-card-text>
             Category:

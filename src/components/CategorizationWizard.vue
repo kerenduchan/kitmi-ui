@@ -95,7 +95,7 @@ watch(currentItem, () => {
             Categorization Wizard
         </v-card-title>
         <v-card-text>
-            Define some categories with subcategories first.
+            Define some categories and subcategories first.
         </v-card-text>
         <v-card-actions>
             <v-btn color="primary" @click="close">Close</v-btn>
@@ -103,7 +103,7 @@ watch(currentItem, () => {
     </v-card>
 
     <!-- show this if there are subcategories -->
-    <v-card v-else height="600px">
+    <v-card v-else>
         <v-card-title>Categorization Wizard</v-card-title>
         <v-card-text>
             <!-- key forces the component to remount upon change -->

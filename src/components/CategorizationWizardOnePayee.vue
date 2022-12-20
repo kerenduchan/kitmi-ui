@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 
 // props 
 const props = defineProps({
@@ -16,6 +17,12 @@ const emit = defineEmits([
     'close'
 ])
 
+const { 
+    gqlUpdatePayeeSubcategory, 
+    onDone: onUpdatePayeeDone, 
+    onError: onUpdatePayeeError 
+} = updatePayeeSubcategory()
+
 const selectedCategoryIdx = ref(null)
 
 const selectedCategory = computed(() => {
@@ -25,7 +32,20 @@ const selectedCategory = computed(() => {
 const selectedSubcategoryIdx = ref(null)
 
 function next() {
+    savePayeeSubcategory()
+    selectedCategoryIdx.value = null
+    selectedSubcategoryIdx.value = null
     emit('next')
+}
+
+function savePayeeSubcategory() {
+    console.log('')
+    if(selectedSubcategoryIdx !== null) {
+        gqlUpdatePayeeSubcategory({
+            payeeId: props.item.id, 
+            subcategoryId: props.categories[selectedCategoryIdx.value].subcategories[selectedSubcategoryIdx.value].id
+        })
+    }
 }
 
 function prev() {
@@ -33,6 +53,7 @@ function prev() {
 }
 
 function close() {
+    savePayeeSubcategory()
     emit('close')
 }
 

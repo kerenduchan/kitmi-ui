@@ -58,6 +58,11 @@ function handleChange() {
 
 const showCategorizationWizard = ref(false)
 
+function closeCategorizationWizard() {
+    showCategorizationWizard.value = false
+    store.refetchPayees()
+}
+
 </script>
 
 <template>
@@ -125,7 +130,7 @@ const showCategorizationWizard = ref(false)
         <CategorizationWizard
             :items="uncategorizedItems"
             :categories="categories"
-            @close="showCategorizationWizard = false"
+            @close="closeCategorizationWizard"
         />
     </v-dialog>
 

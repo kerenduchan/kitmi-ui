@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import CategorizationWizardOnePayee from '@/components/CategorizationWizardOnePayee.vue'
 
 // props 
@@ -20,7 +20,7 @@ const currentItem = computed(() => {
 })
 
 const hasNext = computed(() => {
-    return currentItemIdx.value < props.categories.length - 1
+    return currentItemIdx.value < props.items.length - 1
 })
 
 const hasPrev = computed(() => {

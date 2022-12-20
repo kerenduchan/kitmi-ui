@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
+import CategorizationWizard from '@/components/CategorizationWizard.vue';
 import PayeesList from '@/components/PayeesList.vue'
 import EditPayee from '@/components/EditPayee.vue'
 import getStore from '@/composables/store'
@@ -12,10 +13,14 @@ const items = store.payees
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
 
+const uncategorizedItems = computed(() => {
+    return items.value.filter(item => !item.isCategorized)
+})
+
 // The items, after applying the filter
 const filteredItems = computed(() => {
     if(uncategorized.value === true) {
-        return items.value.filter(item => !item.isCategorized)
+        return uncategorizedItems.value
     }
     return items.value
 })
@@ -51,6 +56,8 @@ function handleChange() {
     store.refetchPayees()
 }
 
+const showCategorizationWizard = ref(false)
+
 </script>
 
 <template>
@@ -83,6 +90,19 @@ function handleChange() {
                 </v-tooltip>
             </div>
         </div>
+
+        <div class="top-bar-right">
+
+            <!-- Open categorization wizard button -->
+            <div class="top-bar-action">
+                <ButtonWithTooltip 
+                    tooltip="Categorization wizard" 
+                    icon="mdi-wizard-hat"
+                    :disabled="uncategorizedItems.length === 0"
+                    @click="showCategorizationWizard = true"
+                />
+            </div>
+        </div>
     </div>
     <v-divider />
 
@@ -99,4 +119,14 @@ function handleChange() {
             @close="showEditDialog = false"
             @change="handleChange" />
     </v-dialog>
+
+    <!-- Categorization wizard -->
+    <v-dialog v-model="showCategorizationWizard">
+        <CategorizationWizard
+            :items="uncategorizedItems"
+            :categories="categories"
+            @close="showCategorizationWizard = false"
+        />
+    </v-dialog>
+
 </template>

@@ -38,7 +38,7 @@ const selectedPayee = computed(() => {
 })
 
 // update the selected payee
-function handleSelectedPayeeChanged(id) {
+function handleSelect(id) {
     selectedPayeeId.value = id
 }
 
@@ -118,7 +118,7 @@ function openCategorizationWizard() {
     <!-- List (table) of payees -->
     <PayeesList 
         :payees="filteredPayees" 
-        @select="handleSelectedPayeeChanged" />
+        @select="handleSelect" />
 
     <!-- Edit selected payee dialog -->
     <v-dialog v-model="showEditDialog">

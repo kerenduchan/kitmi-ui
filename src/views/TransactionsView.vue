@@ -7,34 +7,34 @@ import getStore from '@/composables/store'
 
 const store = getStore()
 const categories = store.categories
-const items = store.transactions
+const transactions = store.transactions
 
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
 
-// The items, after applying the filter
-const filteredItems = computed(() => {
+// The transactions, after applying the filter
+const filteredTransactions = computed(() => {
     if(uncategorized.value === true) {
-        return items.value.filter(item => !item.isCategorized)
+        return transactions.value.filter(t => !t.isCategorized)
     }
-    return items.value
+    return transactions.value
 })
 
-// The ID of the selected item
-const selectedItemId = ref(null)
+// The ID of the selected transaction
+const selectedTransactionId = ref(null)
 
-// The selected item
-const selectedItem = computed(() => {
-    if(selectedItemId.value === null) {
+// The selected transaction
+const selectedTransaction = computed(() => {
+    if(selectedTransactionId.value === null) {
         return null
     }
-    const found = filteredItems.value.find(item => item.id === selectedItemId.value)
+    const found = filteredTransactions.value.find(t => t.id === selectedTransactionId.value)
     return found ? found : null
 })
 
-// update the selected item ID
-function handleSelectedItemChanged(id) {
-    selectedItemId.value = id
+// update the selected transaction ID
+function handleSelect(id) {
+    selectedTransactionId.value = id
 }
 
 // edit dialog
@@ -46,7 +46,7 @@ function handlePayeeChange() {
 }
 
 function handleTransactionChange() {
-        showEditDialog.value = false
+    showEditDialog.value = false
     store.refetchTransactions()
 }
 
@@ -61,7 +61,7 @@ function handleTransactionChange() {
                 <ButtonWithTooltip 
                     tooltip="Edit transaction" 
                     icon="mdi-pencil"
-                    :disabled="selectedItem === null"
+                    :disabled="selectedTransaction === null"
                     @click="showEditDialog = true"
                 />
             </div>
@@ -87,13 +87,13 @@ function handleTransactionChange() {
 
     <!-- List (table) of transactions -->
     <TransactionsList 
-        :items="filteredItems" 
-        @selectedItemChanged="handleSelectedItemChanged"/>
+        :transactions="filteredTransactions" 
+        @select="handleSelect"/>
 
     <!-- Edit selected transaction dialog -->
     <v-dialog v-model="showEditDialog">
         <EditTransaction 
-            :item="selectedItem"
+            :transaction="selectedTransaction"
             :categories="categories" 
             @close="showEditDialog = false"
             @payeeChanged="handlePayeeChange" 

@@ -12,7 +12,7 @@ const {
 
 // props 
 const props = defineProps({
-    item: Object,
+    transaction: Object,
     categories: Object
 })
 
@@ -22,11 +22,11 @@ const emit = defineEmits([
     'transactionChanged'
 ])
 
-const subcategoryId = ref(props.item.subcategoryId)
+const subcategoryId = ref(props.transaction.subcategoryId)
 
 const isSubcategoryOverridden = computed(() => {
-    if(props.item) {
-        return props.item.overridingSubcategory !== null
+    if(props.transaction) {
+        return props.transaction.overridingSubcategory !== null
     }
     return false
 })
@@ -62,22 +62,22 @@ function close() {
 const fields = ref([
     {
         label: 'Payee',
-        value: props.item.payee.name
+        value: props.transaction.payee.name
     },
     {
         label: 'Amount',
-        value: props.item.formattedAmount
+        value: props.transaction.formattedAmount
     },
     {
         label: 'Date',
-        value: props.item.formattedDate
+        value: props.transaction.formattedDate
     }
 ])
 
 function usePayeeSubcategory() {
     // set the subcategoryId of the transaction to null
     gqlUpdateTransactionSubcategory({
-        transactionId: props.item.id, 
+        transactionId: props.transaction.id, 
         subcategoryId: null
     })
 }
@@ -92,10 +92,10 @@ onUpdateTransactionError((e) => {
 })
 
 const payeeCategorization = computed(() => {
-    if(!props.item.payee.subcategory) {
+    if(!props.transaction.payee.subcategory) {
         return 'Uncategorized'
     }
-    return props.item.payee.categoryName + ': ' + props.item.payee.subcategoryName
+    return props.transaction.payee.categoryName + ': ' + props.transaction.payee.subcategoryName
 })
 
 </script>
@@ -115,7 +115,7 @@ const payeeCategorization = computed(() => {
 
             <v-form>
                 <SubcategorySelect 
-                    :defaults="item" 
+                    :defaults="transaction" 
                     :categories="categories"
                     @subcategorySelected="handleSubcategorySelected"
                 />
@@ -137,7 +137,7 @@ const payeeCategorization = computed(() => {
     <!-- Dialog for choosing whether to save subcategory on payee or on transaction -->
     <v-dialog v-model="showTransactionSubcategorySaveOptionsDialog">
         <TransactionSubcategorySaveOptions
-            :item="item"
+            :transaction="transaction"
             :subcategoryId="subcategoryId"
             @close="showTransactionSubcategorySaveOptionsDialog = false"
             @payeeChanged="handlePayeeChange" 

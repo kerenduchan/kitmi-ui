@@ -4,7 +4,7 @@ import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcatego
 import updateTransactionSubcategory from '@/composables/mutations/updateTransactionSubcategory'
 
 const props = defineProps({
-    item: Object,
+    transaction: Object,
     subcategoryId: String
 })
 
@@ -50,23 +50,23 @@ onUpdatePayeeError((e) => {
 function saveOnPayee() {
 
     // set the subcategoryId of the transaction to null
-    if(props.item.subcategoryId !== null) {
+    if(props.transaction.subcategoryId !== null) {
         gqlUpdateTransactionSubcategory({
-            transactionId: props.item.id, 
+            transactionId: props.transaction.id, 
             subcategoryId: null
         })
     }
 
     // update the subcategoryId of the payee
     gqlUpdatePayeeSubcategory({
-        payeeId: props.item.payee.id, 
+        payeeId: props.transaction.payee.id, 
         subcategoryId: props.subcategoryId
     })
 }
 
 function saveOnTransaction() {
     gqlUpdateTransactionSubcategory({
-        transactionId: props.item.id, 
+        transactionId: props.transaction.id, 
         subcategoryId: props.subcategoryId
     })
 }
@@ -85,7 +85,7 @@ onUpdateTransactionError((e) => {
 const isApplyToPayee = ref(true)
 
 const payeeLabel = computed(() => {
-    return 'Apply the changes to the payee (' + props.item.payee.name + ')'
+    return 'Apply the changes to the payee (' + props.transaction.payee.name + ')'
 })
 
 </script>

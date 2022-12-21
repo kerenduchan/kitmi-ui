@@ -109,7 +109,7 @@ function clearSelectedSubcategory() {
 </script>
 
 <template>
-    <v-card height="500px">
+    <v-card height="100%">
         <v-card-title>{{ payee.name }}</v-card-title>
         <v-card-text>
 

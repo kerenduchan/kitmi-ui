@@ -46,6 +46,9 @@ function getSelectedCategory() {
 }
 
 watch(selectedCategoryIdx, () => {
+    if(selectedCategoryIdx.value === undefined) {
+        selectedCategoryIdx.value = null
+    }
     selectedSubcategoryIdx.value = null
 })
 

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import TransactionsList from '@/components/TransactionsList.vue'
+import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
 
 // props 
 const props = defineProps({
@@ -66,10 +66,16 @@ const showTransactionsDialog = ref(false)
     <v-card height="500px">
         <v-card-title>{{ item.name }}</v-card-title>
         <v-card-text>
-            <!-- transactions button -->
-            <v-btn @click="showTransactionsDialog = true">
-                Transactions
-            </v-btn>
+            <v-expansion-panels width="300px">
+            <v-expansion-panel>
+                <v-expansion-panel-title>
+                    Transactions
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <TransactionsListForPayee :items="props.transactions"/>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+        </v-expansion-panels>
 
             <!-- category -->
             <div class="pt-6">Category:</div>
@@ -110,10 +116,4 @@ const showTransactionsDialog = ref(false)
             </div>
         </v-card-text>
     </v-card>
-
-    <!-- transactions dialog -->
-    <v-dialog v-model="showTransactionsDialog">
-        <TransactionsList :items="props.transactions"/>
-    </v-dialog>
-
 </template>

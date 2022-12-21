@@ -82,7 +82,9 @@ function savePayeeSubcategory() {
 function handleSubcategorySelected(subcategoryId) {
     selectedSubcategoryId.value = subcategoryId
     if(subcategoryId !== null) {
-        next()
+        if(hasNext.value === true) {
+            next()
+        } 
     }
 }
 

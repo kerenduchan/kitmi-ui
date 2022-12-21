@@ -19,41 +19,41 @@ const emit = defineEmits([
 
 // index into the payeeIds array - 
 // the payee that's currently displayed in the wizard
-const currentItemIdx = ref(0)
+const currentPayeeIdx = ref(0)
 
 // the selected subcategory ID for the currently displayed payee
 const selectedSubcategoryId = ref(null)
 
 // whether there's a next payee after the current one
 const hasNext = computed(() => {
-    return currentItemIdx.value < props.payeeIds.length - 1
+    return currentPayeeIdx.value < props.payeeIds.length - 1
 })
 
 // whether there's a previous payee before the current one
 const hasPrev = computed(() => {
-    return currentItemIdx.value > 0
+    return currentPayeeIdx.value > 0
 })
 
 // the current payee
-const currentItem = computed(() => {
-    const payeeId = props.payeeIds[currentItemIdx.value]
+const currentPayee = computed(() => {
+    const payeeId = props.payeeIds[currentPayeeIdx.value]
     const found = props.payees.find(p => p.id === payeeId)
     return found ? found : null
 })
 
 // only the categories that have subcategories
 const filteredCategories = computed(() => {
-    return props.categories.filter(item => item.hasSubcategories)
+    return props.categories.filter(c => c.hasSubcategories)
 })
 
 function prev() {
     savePayeeSubcategory()
-    currentItemIdx.value--
+    currentPayeeIdx.value--
 }
 
 function next() {
     savePayeeSubcategory()
-    currentItemIdx.value++
+    currentPayeeIdx.value++
 }
 
 function close() {
@@ -70,9 +70,9 @@ const {
 function savePayeeSubcategory() {
 
     if(selectedSubcategoryId.value !== null &&
-        selectedSubcategoryId.value !== currentItem.value.subcategoryId) {
+        selectedSubcategoryId.value !== currentPayee.value.subcategoryId) {
         gqlUpdatePayeeSubcategory({
-            payeeId: currentItem.value.id, 
+            payeeId: currentPayee.value.id, 
             subcategoryId: selectedSubcategoryId.value
         })
         emit('change')
@@ -86,7 +86,7 @@ function handleSubcategorySelected(subcategoryId) {
     }
 }
 
-watch(currentItem, () => {
+watch(currentPayee, () => {
     selectedSubcategoryId.value = null
 })
 
@@ -112,9 +112,9 @@ watch(currentItem, () => {
         <v-card-text>
             <!-- key forces the component to remount upon change -->
             <CategorizationWizardOnePayee 
-                :key="currentItemIdx"
-                :item="currentItem" 
-                :transactions="transactionsPerPayeeId[currentItemIdx]"
+                :key="currentPayeeIdx"
+                :payee="currentPayee" 
+                :transactions="transactionsPerPayeeId[currentPayeeIdx]"
                 :categories="filteredCategories"
                 @subcategorySelected="handleSubcategorySelected"
             />

@@ -10,7 +10,7 @@ const props = defineProps({
 
 // emits
 const emit = defineEmits([
-    'selectedItemChanged'
+    'select'
 ])
 
 // The items (categories and subcategories) in the order they appear 
@@ -59,7 +59,7 @@ function isSelectedItem(item) {
 }
 
 watch(selectedItem, () => {
-    emit('selectedItemChanged', selectedItem.value)
+    emit('select', selectedItem.value)
 })
 
 </script>

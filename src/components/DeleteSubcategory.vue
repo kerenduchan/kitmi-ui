@@ -5,7 +5,7 @@ import getSubcategoryUsageInfo from '@/composables/queries/getSubcategoryUsageIn
 
 // props 
 const props = defineProps({
-    item: Object
+    subcategory: Object
 })
 
 const emit = defineEmits([
@@ -15,7 +15,7 @@ const emit = defineEmits([
 
 const { gqlDeleteSubcategory, onDone, onError } = deleteSubcategory()
 
-const { info, isReady, refetch } = getSubcategoryUsageInfo(props.item.id)
+const { info, isReady, refetch } = getSubcategoryUsageInfo(props.subcategory.id)
 
 // need to refetch the data, otherwise it remembers an old cached result
 refetch()
@@ -32,12 +32,12 @@ const message = computed(() => {
 
 function del() {
     gqlDeleteSubcategory({
-        subcategoryId: props.item.id
+        subcategoryId: props.subcategory.id
     })
 }
 
 onDone(() => {
-    emit('deleted', props.item)
+    emit('deleted', props.subcategory)
 })
 
 onError((e) => {
@@ -52,7 +52,7 @@ function close() {
 
 <template>
     <v-card v-if="isReady">
-        <v-card-title>Delete Subcategory '{{ item.name }}'</v-card-title>
+        <v-card-title>Delete Subcategory '{{ subcategory.name }}'</v-card-title>
         <v-card-text>
             {{ message }}
         </v-card-text>

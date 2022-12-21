@@ -3,7 +3,7 @@ import deleteCategory from '@/composables/mutations/deleteCategory'
 
 // props 
 const props = defineProps({
-    item: Object
+    category: Object
 })
 
 const emit = defineEmits([
@@ -15,7 +15,7 @@ const { gqlDeleteCategory, onDone, onError } = deleteCategory()
 
 function del() {
     gqlDeleteCategory({
-        categoryId: props.item.id
+        categoryId: props.category.id
     })
 }
 
@@ -35,7 +35,7 @@ function close() {
 
 <template>
     <v-card>
-        <v-card-title>Delete Category '{{ item.name }}'</v-card-title>
+        <v-card-title>Delete Category '{{ category.name }}'</v-card-title>
         <v-card-text>
             Are you sure?
         </v-card-text>

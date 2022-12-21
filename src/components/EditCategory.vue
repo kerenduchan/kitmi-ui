@@ -4,7 +4,7 @@ import updateCategory from '@/composables/mutations/updateCategory'
 
 // props 
 const props = defineProps({
-    item: Object,
+    category: Object,
     categories: Object
 })
 
@@ -15,11 +15,11 @@ const emit = defineEmits([
 
 const { gqlUpdateCategory, onDone, onError } = updateCategory()
 
-const name = ref(props.item.name)
-const isExpense = ref(props.item.isExpense)
+const name = ref(props.category.name)
+const isExpense = ref(props.category.isExpense)
 
 const isNameAlreadyExists = computed(() => {
-    return (name.value != props.item.name && 
+    return (name.value != props.category.name && 
         props.categories.find(c => c.name == name.value) !== undefined)
 })
 
@@ -29,7 +29,7 @@ const isSaveDisabled = computed(() => {
 
 function save() {
     gqlUpdateCategory({
-        categoryId: props.item.id,
+        categoryId: props.category.id,
         name: name.value,
         isExpense: isExpense.value
     })
@@ -51,7 +51,7 @@ onError((e) => {
 
 <template>
     <v-card>
-        <v-card-title>Edit Category '{{ item.name }}'</v-card-title>
+        <v-card-title>Edit Category '{{ category.name }}'</v-card-title>
         <v-card-text>
             <v-form>
                 <!-- Name -->

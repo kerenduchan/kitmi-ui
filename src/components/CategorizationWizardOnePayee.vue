@@ -4,7 +4,7 @@ import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
 
 // props 
 const props = defineProps({
-    item: Object,
+    payee: Object,
     transactions: Object,
     categories: Object
 })
@@ -16,7 +16,7 @@ const emit = defineEmits([
 
 // Index in the categories array of the selected category.
 // v-model for the categories v-item-group.
-const selectedCategoryIdx = ref(getCategoryIdxById(props.item.categoryId))
+const selectedCategoryIdx = ref(getCategoryIdxById(props.payee.categoryId))
 
 // The selected category
 const selectedCategory = computed(() => {
@@ -36,7 +36,7 @@ const subcategories = computed(() => {
 
 // Index in the subcategories array on the selected category.
 // v-model for the subcategories v-item-group.
-const selectedSubcategoryIdx = ref(getSubcategoryIdxById(props.item.subcategoryId))
+const selectedSubcategoryIdx = ref(getSubcategoryIdxById(props.payee.subcategoryId))
 
 // The selected subcategory
 const selectedSubcategory = computed(() => {
@@ -110,7 +110,7 @@ function clearSelectedSubcategory() {
 
 <template>
     <v-card height="500px">
-        <v-card-title>{{ item.name }}</v-card-title>
+        <v-card-title>{{ payee.name }}</v-card-title>
         <v-card-text>
             <v-expansion-panels width="300px">
                 <v-expansion-panel>
@@ -118,7 +118,7 @@ function clearSelectedSubcategory() {
                         Transactions
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
-                        <TransactionsListForPayee :items="props.transactions" />
+                        <TransactionsListForPayee :transactions="props.transactions" />
                     </v-expansion-panel-text>
                 </v-expansion-panel>
             </v-expansion-panels>

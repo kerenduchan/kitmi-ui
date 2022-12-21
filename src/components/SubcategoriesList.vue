@@ -2,29 +2,29 @@
 import { ref } from 'vue'
 // props
 const props = defineProps({
-    items: Object
+    subcategories: Object
 })
 
 // emits
 const emit = defineEmits([
-    'selectedItemChanged'
+    'select'
 ])
 
-// the selected item
-const selectedItem = ref(null)
+// the selected subcategory
+const selectedSubcategory = ref(null)
 
 // get the class for a selected row in the table
-function getClassForRow(item) {
-    if(!selectedItem.value) {
+function getClassForRow(subcategory) {
+    if(!selectedSubcategory.value) {
         return ''
     }
-    return selectedItem.value?.id === item.id ? 'selected-row' : ''
+    return selectedSubcategory.value.id === subcategory.id ? 'selected-row' : ''
 }
 
-// handle click on a row in the table (select the item)
-function selectItem(item) {
-    selectedItem.value = item
-    emit('selectedItemChanged', selectedItem.value)
+// handle click on a row in the table (select the subcategory)
+function select(subcategory) {
+    selectedSubcategory.value = subcategory
+    emit('select', selectedSubcategory.value)
 }
 
 </script>
@@ -32,10 +32,10 @@ function selectItem(item) {
 <template>
     <v-table density="compact">
         <tbody>
-            <tr v-for="s in items" 
+            <tr v-for="s in subcategories" 
                 :key="s.id"
                 :class="getClassForRow(s)" 
-                @click="selectItem(s)"
+                @click="select(s)"
             >
                 <td>{{ s.name }}</td>
             </tr>

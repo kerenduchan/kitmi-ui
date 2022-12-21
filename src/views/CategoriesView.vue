@@ -255,12 +255,12 @@ function isMoveCategoryUpDisabled() {
     <CategoriesList 
         :categories="categories"
         :forceSelectedItemKey="forceSelectedItemKey"
-        @selectedItemChanged="handleSelectedItemChanged"/>
+        @select="handleSelectedItemChanged"/>
 
     <!-- Edit category dialog -->
     <v-dialog v-model="showEditCategoryDialog">
         <EditCategory
-            :item="selectedItem"
+            :category="selectedItem"
             :categories="categories"
             @close="showEditCategoryDialog = false"
             @save="handleChange" />
@@ -269,7 +269,7 @@ function isMoveCategoryUpDisabled() {
     <!-- Edit subcategory dialog -->
     <v-dialog v-model="showEditSubcategoryDialog">
         <EditSubcategory
-            :item="selectedItem"
+            :subcategory="selectedItem"
             :categories="categories"
             @close="showEditSubcategoryDialog = false"
             @save="handleChange" />
@@ -294,7 +294,7 @@ function isMoveCategoryUpDisabled() {
     <!-- Delete category dialog -->
     <v-dialog v-model="showDeleteCategoryDialog">
         <DeleteCategory
-            :item="categoryToDelete"
+            :category="categoryToDelete"
             @close="showDeleteCategoryDialog = false"
             @deleted="handleChange" />
     </v-dialog>
@@ -302,7 +302,7 @@ function isMoveCategoryUpDisabled() {
     <!-- Delete subcategory dialog -->
     <v-dialog v-model="showDeleteSubcategoryDialog">
         <DeleteSubcategory
-            :item="subcategoryToDelete"
+            :subcategory="subcategoryToDelete"
             @close="showDeleteSubcategoryDialog = false"
             @deleted="handleSubcategoryDeleted" />
     </v-dialog>

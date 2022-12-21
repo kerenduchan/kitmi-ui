@@ -5,13 +5,8 @@ import { formatNumber } from '@/composables/utils'
 
 // props 
 const props = defineProps({
-    items: Object
+    transactions: Object
 })
-
-// emits
-const emit = defineEmits([
-    'selectedItemChanged'
-])
 
 const headers = ref([
     '',
@@ -21,7 +16,7 @@ const headers = ref([
 
 // the computed sum of the rows
 const sum = computed(() => {
-    const tmp = props.items.reduce((partialSum, t) => partialSum + t.amount, 0)
+    const tmp = props.transactions.reduce((partialSum, t) => partialSum + t.amount, 0)
     return formatNumber(tmp)
 })
 
@@ -38,7 +33,7 @@ const sum = computed(() => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="t in items" 
+            <tr v-for="t in transactions" 
                 :key="t.id"
             >
                 <td><TypeExpenseOrIncomeIcon :type="t.type"/></td>

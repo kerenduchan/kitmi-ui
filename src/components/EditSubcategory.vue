@@ -4,7 +4,7 @@ import updateSubcategory from '@/composables/mutations/updateSubcategory'
 
 // props 
 const props = defineProps({
-    item: Object,
+    subcategory: Object,
     categories: Object
 })
 
@@ -15,8 +15,8 @@ const emit = defineEmits([
 
 const { gqlUpdateSubcategory, onDone, onError } = updateSubcategory()
 
-const name = ref(props.item.name)
-const categoryId = ref(props.item.categoryId)
+const name = ref(props.subcategory.name)
+const categoryId = ref(props.subcategory.categoryId)
 
 const subcategories = computed(() => {
     let res = []
@@ -27,7 +27,7 @@ const subcategories = computed(() => {
 })
 
 const isNameAlreadyExists = computed(() => {
-    return (name.value != props.item.name && 
+    return (name.value != props.subcategory.name && 
         subcategories.value.find(s => s.name == name.value) !== undefined)
 })
 
@@ -37,7 +37,7 @@ const isSaveDisabled = computed(() => {
 
 function save() {
     gqlUpdateSubcategory({
-        subcategoryId: props.item.id,
+        subcategoryId: props.subcategory.id,
         name: name.value,
         categoryId: categoryId.value
     })
@@ -59,7 +59,7 @@ onError((e) => {
 
 <template>
     <v-card>
-        <v-card-title>Edit Subcategory '{{ item.name }}'</v-card-title>
+        <v-card-title>Edit Subcategory '{{ subcategory.name }}'</v-card-title>
         <v-card-text>
             <v-form>
                 <!-- Name -->

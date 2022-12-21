@@ -81,6 +81,9 @@ function savePayeeSubcategory() {
 
 function handleSubcategorySelected(subcategoryId) {
     selectedSubcategoryId.value = subcategoryId
+    if(subcategoryId !== null) {
+        next()
+    }
 }
 
 watch(currentItem, () => {

@@ -1,4 +1,5 @@
 
+import getAccounts from '@/composables/queries/getAccounts'
 import getCategories from '@/composables/queries/getCategories'
 import getPayees from '@/composables/queries/getPayees'
 import getTransactions from '@/composables/queries/getTransactions'
@@ -8,6 +9,13 @@ let theStore = null
 class Store {
     constructor() {
         this.refetchers = {}
+    }
+
+    fetchAccounts() {
+        const { accounts, isReady, refetch } = getAccounts() 
+        this.accounts = accounts
+        this.refetchers.refetchAccounts = refetch
+        return { isReady }
     }
 
     fetchCategories() {
@@ -29,6 +37,10 @@ class Store {
         this.transactions = transactions
         this.refetchers.refetchTransactions = refetch
         return { isReady }
+    }
+
+    refetchAccounts() {
+        this.refetchers.refetchAccounts()
     }
 
     refetchCategories() {

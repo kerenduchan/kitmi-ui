@@ -35,6 +35,12 @@ const links = ref([
         icon: 'mdi-home'
     },
     {
+        title: 'Accounts',
+        value: 'accounts',
+        to: '/accounts',
+        icon: 'mdi-account'
+    },
+    {
         title: 'Categories',
         value: 'categories',
         to: '/categories',
@@ -60,14 +66,16 @@ const links = ref([
     },
 ])
 
-// fetch categories, payees, transactions from the server
+// fetch accounts, categories, payees, transactions from the server
 const store = getStore()
+const { isReady: isAccountsReady } = store.fetchAccounts()
 const { isReady: isCategoriesReady } = store.fetchCategories()
 const { isReady: isPayeesReady } = store.fetchPayees()
 const { isReady: isTransactionsReady } = store.fetchTransactions()
 
 const isReady = computed(() => {
-    return isCategoriesReady.value === true &&
+    return isAccountsReady.value === true &&
+        isCategoriesReady.value === true &&
         isPayeesReady.value === true &&
         isTransactionsReady.value === true
 })

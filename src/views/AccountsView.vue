@@ -82,8 +82,9 @@ function handleAccountCreated() {
     <v-dialog v-model="showEditDialog">
         <EditAccount 
             :account="selectedAccount"
+            :accounts="accounts"
             @close="showEditDialog = false"
-            @change="handleChange" />
+            @save="handleChange" />
     </v-dialog>
 
     <!-- Create account dialog -->

@@ -14,13 +14,39 @@ const emit = defineEmits([
     'subcategorySelected',
 ])
 
-// v-model for the categories v-item-group - index in the categories array
+// Index in the categories array of the selected category.
+// v-model for the categories v-item-group.
 const selectedCategoryIdx = ref(getCategoryIdxById(props.item.categoryId))
 
-// v-model for the subcategories v-item-group - 
-// index in the subcategories array on the selected category
+// The selected category
+const selectedCategory = computed(() => {
+    if (selectedCategoryIdx.value === null) {
+        return null
+    }
+    return props.categories[selectedCategoryIdx.value]
+})
+
+// the subcategories of the selected category
+const subcategories = computed(() => {
+    if (selectedCategory.value === null) {
+        return null
+    }
+    return selectedCategory.value.subcategories
+})
+
+// Index in the subcategories array on the selected category.
+// v-model for the subcategories v-item-group.
 const selectedSubcategoryIdx = ref(getSubcategoryIdxById(props.item.subcategoryId))
 
+// The selected subcategory
+const selectedSubcategory = computed(() => {
+    if (selectedSubcategoryIdx.value === null) {
+        return null
+    }
+    return subcategories.value[selectedSubcategoryIdx.value]
+})
+
+// get the index in the categories array of the category with the given ID
 function getCategoryIdxById(categoryId) {
     if (categoryId === null) {
         return null
@@ -29,60 +55,54 @@ function getCategoryIdxById(categoryId) {
     return foundIdx !== null ? foundIdx : null
 }
 
+// get the index in the subcategories array of the category with the given ID
 function getSubcategoryIdxById(subcategoryId) {
     if (subcategoryId === null) {
         return null
     }
-    const selectedCategory = getSelectedCategory()
-    const foundIdx = selectedCategory.subcategories.findIndex(s => s.id === subcategoryId)
+    const foundIdx = subcategories.findIndex(s => s.id === subcategoryId)
     return foundIdx !== null ? foundIdx : null
 }
 
-function getSelectedCategory() {
-    if (selectedCategoryIdx.value === null) {
-        return null
-    }
-    return props.categories[selectedCategoryIdx.value]
-}
-
-const selectedSubcategory = computed(() => {
-    if (selectedSubcategoryIdx.value === null) {
-        return null
-    }
-    return props.categories[selectedCategoryIdx.value].subcategories[selectedSubcategoryIdx.value]
-})
 
 watch(selectedCategoryIdx, () => {
     if (selectedCategoryIdx.value === undefined) {
-        selectedCategoryIdx.value = null
+        // The selected category has been deselected. Clear the selected category.
+        clearSelectedCategory()
     }
+    // The selected category has changed. Reset the selected subcategory.
     selectedSubcategoryIdx.value = null
 })
 
 watch(selectedSubcategoryIdx, () => {
     if (selectedSubcategoryIdx.value === undefined) {
-        selectedSubcategoryIdx.value = null
+        // The selected subcategory has been deselected. Clear the selected subcategory.
+        clearSelectedSubcategory()
     }
-    if (selectedSubcategoryIdx.value !== null) {
-        const selectedCategory = getSelectedCategory()
-        const selectedSubcategoryId = selectedCategory.subcategories[selectedSubcategoryIdx.value].id
-        emit('subcategorySelected', selectedSubcategoryId)
+    if (selectedSubcategory.value !== null) {
+        // The selected subcategory has changed. Emit 'subcategorySelected'
+        
+        emit('subcategorySelected', selectedSubcategory.value.id)
     }
-})
-
-const showSubcategorySelect = computed(() => {
-    return selectedCategoryIdx.value !== null && selectedSubcategoryIdx.value === null
 })
 
 const showCategorySelect = computed(() => {
+    // show the category selection item group 
+    // if a category is not selected
     return selectedCategoryIdx.value === null
 })
 
-function resetCategory() {
+const showSubcategorySelect = computed(() => {
+    // show the subcategory selection item group 
+    // if a category is selected and a subcategory is not selected
+    return selectedCategoryIdx.value !== null && selectedSubcategoryIdx.value === null
+})
+
+function clearSelectedCategory() {
     selectedCategoryIdx.value = null
 }
 
-function resetSubcategory() {
+function clearSelectedSubcategory() {
     selectedSubcategoryIdx.value = null
 }
 
@@ -110,13 +130,13 @@ function resetSubcategory() {
                     Uncategorized
                 </span>
                 <span v-else>
-                    <a @click="resetCategory">
-                        {{ getSelectedCategory().name }}
+                    <a @click="clearSelectedCategory">
+                        {{ selectedCategory.name }}
                     </a>
                 </span>
                 <span v-if="selectedSubcategory !== null">
                     >
-                    <a @click="resetSubcategory">{{ selectedSubcategory.name }}</a>
+                    <a @click="clearSelectedSubcategory">{{ selectedSubcategory.name }}</a>
                 </span>
             </div>
 
@@ -145,7 +165,7 @@ function resetSubcategory() {
                 <v-item-group v-model="selectedSubcategoryIdx">
                     <v-container>
                         <v-row>
-                            <v-col cols="4" v-for="s in getSelectedCategory().subcategories" :key="s.id">
+                            <v-col cols="4" v-for="s in subcategories" :key="s.id">
                                 <v-item v-slot="{ isSelected, toggle }">
                                     <v-card :color="isSelected ? 'primary' : ''" class="d-flex align-center"
                                         @click="toggle">

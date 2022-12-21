@@ -112,7 +112,9 @@ function clearSelectedSubcategory() {
     <v-card height="500px">
         <v-card-title>{{ payee.name }}</v-card-title>
         <v-card-text>
-            <v-expansion-panels width="300px">
+
+            <!-- the transactions associated with this payee -->
+            <v-expansion-panels>
                 <v-expansion-panel>
                     <v-expansion-panel-title>
                         Transactions

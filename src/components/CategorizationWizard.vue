@@ -110,7 +110,7 @@ watch(currentPayee, () => {
 
     <!-- show this if there are subcategories -->
     <v-card v-else>
-        <v-card-title>Categorization Wizard</v-card-title>
+        <v-card-title>Categorization Wizard ({{ currentPayeeIdx + 1 }} of {{ payeeIds.length }})</v-card-title>
         <v-card-text>
             <!-- key forces the component to remount upon change -->
             <CategorizationWizardOnePayee 

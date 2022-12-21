@@ -60,7 +60,7 @@ function getSubcategoryIdxById(subcategoryId) {
     if (subcategoryId === null) {
         return null
     }
-    const foundIdx = subcategories.findIndex(s => s.id === subcategoryId)
+    const foundIdx = subcategories.value.findIndex(s => s.id === subcategoryId)
     return foundIdx !== null ? foundIdx : null
 }
 

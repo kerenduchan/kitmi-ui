@@ -17,7 +17,7 @@ const selectedAccount = computed(() => {
     if(selectedAccountId.value === null) {
         return null
     }
-    const found = props.accounts.value.find(a => a.id === selectedAccountId.value)
+    const found = accounts.value.find(a => a.id === selectedAccountId.value)
     return found ? found : null
 })
 
@@ -81,7 +81,7 @@ function handleAccountCreated() {
     <!-- Edit selected account dialog -->
     <v-dialog v-model="showEditDialog">
         <EditAccount 
-            :account="accountForEditDialog"
+            :account="selectedAccount"
             @close="showEditDialog = false"
             @change="handleChange" />
     </v-dialog>

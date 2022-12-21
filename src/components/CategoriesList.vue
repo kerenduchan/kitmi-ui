@@ -1,11 +1,12 @@
 <script setup>
 import { ref, computed, watch, watchEffect } from 'vue'
-import CategoryOrSubcategoryRow from './CategoryOrSubcategoryRow.vue'
+import SubcategoriesList from '@/components/SubcategoriesList.vue';
+import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 
 // props 
 const props = defineProps({
     categories: Object,
-    forceSelectedItemKey: String
+    forceSelectedCategoryId: String
 })
 
 // emits
@@ -13,73 +14,84 @@ const emit = defineEmits([
     'select'
 ])
 
-// The items (categories and subcategories) in the order they appear 
-// in the table
-const items = computed(() => {
-    let res = []
-    props.categories.forEach(c => {
-        res.push(c)
-        c.subcategories.forEach(s => {
-            res.push(s)
-        })
-    })
-    return res
-})
+// the selected category ID (v-model for the v-expansion-panels)
+const selectedCategoryId = ref(null)
 
-// The key of the selected item
-const selectedItemKey = ref(null)
+// the selected subcategory ID
+const selectedSubcategoryId = ref(null)
 
-// Either a selected category or a selected subcategory
-// Compute it from the list because an item might become stale on changes
-const selectedItem = computed(() => {
-    const found = items.value.find(item => item.key === selectedItemKey.value)
+const selectedCategory = computed(() => {
+    if(selectedCategoryId.value === null) {
+        return null
+    }
+    const found = props.categories.find(c => c.id === selectedCategoryId.value)
     return found ? found : null
+}) 
+
+const selectedSubcategory = computed(() => {
+    if(selectedSubcategoryId.value === null || selectedCategory.value === null) {
+        return null
+    }
+    const found = selectedCategory.value.subcategories.find(
+        s => s.id === selectedSubcategoryId.value)
+    return found ? found : null
+}) 
+
+const selectedItem = computed(() => {
+    if(selectedSubcategory.value !== null) {
+        return selectedSubcategory.value
+    }
+    return selectedCategory.value
 })
 
-watchEffect(() => {
-    if(props.forceSelectedItemKey) {
-        if(!selectedItemKey.value || 
-        (selectedItemKey.value != props.forceSelectedItemKey)) {
-            // the parent component forced an item to be selected.
-            // this happens when a new category is created.
-            selectedItemKey.value = props.forceSelectedItemKey
-        }
-    }
+watch(selectedCategoryId, () => {
+    selectedSubcategoryId.value = null
 })
-
-function selectItem(item) {
-    selectedItemKey.value = item.key
-}
-
-function isSelectedItem(item) {
-    if(!selectedItem.value) {
-        return false
-    }
-    return selectedItemKey.value == item.key
-}
 
 watch(selectedItem, () => {
     emit('select', selectedItem.value)
 })
 
+watchEffect(() => {
+    if(props.forceSelectedCategoryId !== null) {
+        selectedCategoryId.value = props.forceSelectedCategoryId
+        selectedSubcategoryId.value = null
+    }
+})
+
+function handleSubcategorySelected(subcategoryId) {
+    selectedSubcategoryId.value = subcategoryId
+}
+
 </script>
 
 <template>
-    <v-table density="compact">
-        <tbody>
-            <CategoryOrSubcategoryRow 
-                v-for="item in items" 
-                :item="item" 
-                :isSelected="isSelectedItem(item)"
-                :key="item.key" 
-                @click="selectItem(item)"/>
-        </tbody>
-    </v-table>
+
+    <v-expansion-panels class="pa-4" v-model="selectedCategoryId">
+
+        <!-- Category -->
+        <v-expansion-panel  v-for="c in categories" :value="c.id">
+            <v-expansion-panel-title>
+                <span class="category-type-icon">
+                    <TypeExpenseOrIncomeIcon :type="c.type" />
+                </span>
+                {{ c.name }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+
+                <!-- Subcategories of the current category -->
+                <SubcategoriesList 
+                    :subcategories="c.subcategories" 
+                    @select="handleSubcategorySelected"/>
+
+            </v-expansion-panel-text>
+        </v-expansion-panel>
+    </v-expansion-panels>
+
 </template>
 
 <style>
 .category-type-icon {
     padding-right: 10px;
 }
-
 </style>

@@ -36,7 +36,7 @@ const isDeleteDisabled = computed(() => {
 
 function handleSelect(item) {
     selectedItem.value = item ? item : null
-    forceSelectedItemKey.value = null
+    forceSelectedCategoryId.value = null
 }
 
 watch(selectedItem, () => {
@@ -114,16 +114,16 @@ function openEditCategoryOrEditSubcategoryDialog() {
     }
 }
 
-const forceSelectedItemKey = ref(null)
+const forceSelectedCategoryId = ref(null)
 
 function handleCategoryCreated(c) {
-    forceSelectedItemKey.value = c.key
+    forceSelectedCategoryId.value = c.id
     handleChange()
 }
 
 function handleSubcategoryDeleted(s) {
     // select the deleted subcategory's category
-    forceSelectedItemKey.value = 'c' + s.categoryId
+    forceSelectedCategoryId.value = s.categoryId
     handleChange()
 }
 
@@ -253,7 +253,7 @@ function isMoveCategoryUpDisabled() {
     <!-- List of categories -->
     <CategoriesList 
         :categories="categories"
-        :forceSelectedItemKey="forceSelectedItemKey"
+        :forceSelectedCategoryId="forceSelectedCategoryId"
         @select="handleSelect"/>
 
     <!-- Edit category dialog -->

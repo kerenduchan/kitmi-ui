@@ -11,20 +11,25 @@ const emit = defineEmits([
 ])
 
 // the selected subcategory
-const selectedSubcategory = ref(null)
+const selectedSubcategoryId = ref(null)
 
 // get the class for a selected row in the table
 function getClassForRow(subcategory) {
-    if(!selectedSubcategory.value) {
+    if(!selectedSubcategoryId.value) {
         return ''
     }
-    return selectedSubcategory.value.id === subcategory.id ? 'selected-row' : ''
+    return selectedSubcategoryId.value === subcategory.id ? 'selected-row' : ''
 }
 
-// handle click on a row in the table (select the subcategory)
-function select(subcategory) {
-    selectedSubcategory.value = subcategory
-    emit('select', selectedSubcategory.value)
+// handle click on a row in the table (select/deselect the subcategory)
+function toggleSelect(subcategory) {
+    if(selectedSubcategoryId.value === subcategory.id) {
+        // deselect
+        selectedSubcategoryId.value = null
+    } else {
+        selectedSubcategoryId.value = subcategory.id
+    }
+    emit('select', selectedSubcategoryId.value)
 }
 
 </script>
@@ -35,7 +40,7 @@ function select(subcategory) {
             <tr v-for="s in subcategories" 
                 :key="s.id"
                 :class="getClassForRow(s)" 
-                @click="select(s)"
+                @click="toggleSelect(s)"
             >
                 <td>{{ s.name }}</td>
             </tr>

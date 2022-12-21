@@ -4,12 +4,12 @@ import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 
 // props 
 const props = defineProps({
-    items: Object
+    payees: Object
 })
 
 // emits
 const emit = defineEmits([
-    'selectedItemChanged'
+    'select'
 ])
 
 // headers for the payees table
@@ -20,18 +20,18 @@ const headers = ref([
     'Subcategory'
 ])
 
-// the ID of the selected item
-const selectedItemId = ref(null)
+// the ID of the selected payee
+const selectedPayeeId = ref(null)
 
 // get the class for a selected row in the table
-function getClassForRow(item) {
-    return selectedItemId.value === item.id ? 'selected-row' : ''
+function getClassForRow(payee) {
+    return selectedPayeeId.value === payee.id ? 'selected-row' : ''
 }
 
-// handle click on a row in the table (select the item)
-function selectItem(item) {
-    selectedItemId.value = item.id
-    emit('selectedItemChanged', selectedItemId.value)
+// handle click on a row in the table (select the payee)
+function select(payee) {
+    selectedPayeeId.value = payee.id
+    emit('select', selectedPayeeId.value)
 }
 
 </script>
@@ -46,10 +46,10 @@ function selectItem(item) {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="p in items" 
+            <tr v-for="p in payees" 
                 :key="p.id" 
                 :class="getClassForRow(p)" 
-                @click="selectItem(p)"
+                @click="select(p)"
             >
                 <td><TypeExpenseOrIncomeIcon :type="p.type"/></td>
                 <td>{{ p.name}}</td>

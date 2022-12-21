@@ -5,7 +5,7 @@ import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcatego
 
 // props 
 const props = defineProps({
-    item: Object,
+    payee: Object,
     categories: Object
 })
 
@@ -20,7 +20,7 @@ const {
     onError: onUpdatePayeeError 
 } = updatePayeeSubcategory()
 
-const subcategoryId = ref(props.item.subcategoryId)
+const subcategoryId = ref(props.payee.subcategoryId)
 
 
 function handleSubcategorySelected(id) {
@@ -33,7 +33,7 @@ const isSaveDisabled = computed(() => {
 
 function save() {
     gqlUpdatePayeeSubcategory({
-        payeeId: props.item.id, 
+        payeeId: props.payee.id, 
         subcategoryId: subcategoryId.value
     })
 }
@@ -55,11 +55,11 @@ function close() {
 
 <template>
     <v-card>
-        <v-card-title>{{ props.item.name }}</v-card-title>
+        <v-card-title>{{ props.payee.name }}</v-card-title>
         <v-card-text>
             <v-form>
                 <SubcategorySelect 
-                    :defaults="item" 
+                    :defaults="payee" 
                     :categories="categories"
                     :showExpenseCategoriesFirst="true"
                     @subcategorySelected="handleSubcategorySelected"

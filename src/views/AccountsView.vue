@@ -22,7 +22,7 @@ const selectedAccount = computed(() => {
     return found ? found : null
 })
 
-// update the selected item
+// update the selected account
 function handleSelect(accountId) {
     selectedAccountId.value = accountId
 }
@@ -52,7 +52,7 @@ const usedAccountIds = computed(() => {
 
 const isDeleteDisabled = computed(() => {
     // Delete is disabled if:
-    // - No item is selected, or 
+    // - No account is selected, or 
     // - The selected account is used in one or more transactions.
     return !selectedAccountId.value || usedAccountIds.value.includes(selectedAccountId.value)
 })

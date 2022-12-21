@@ -8,48 +8,42 @@ import getStore from '@/composables/store'
 
 const store = getStore()
 const categories = store.categories
-const items = store.payees
+const payees = store.payees
 
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
 
-const uncategorizedItems = computed(() => {
-    return items.value.filter(item => !item.isCategorized)
+const uncategorizedPayees = computed(() => {
+    return payees.value.filter(p => !p.isCategorized)
 })
 
-// The items, after applying the filter
-const filteredItems = computed(() => {
+// The payees, after applying the filter
+const filteredPayees = computed(() => {
     if(uncategorized.value === true) {
-        return uncategorizedItems.value
+        return uncategorizedPayees.value
     }
-    return items.value
+    return payees.value
 })
 
-// the ID of the selected item
-const selectedItemId = ref(null)
+// the ID of the selected payee
+const selectedPayeeId = ref(null)
 
-// The selected item
-const selectedItem = computed(() => {
-    if(selectedItemId.value === null) {
+// The selected payee
+const selectedPayee = computed(() => {
+    if(selectedPayeeId.value === null) {
         return null
     }
-    const found = filteredItems.value.find(item => item.id === selectedItemId.value)
+    const found = filteredPayees.value.find(p => p.id === selectedPayeeId.value)
     return found ? found : null
 })
 
-// update the selected item
-function handleSelectedItemChanged(id) {
-    selectedItemId.value = id
+// update the selected payee
+function handleSelectedPayeeChanged(id) {
+    selectedPayeeId.value = id
 }
 
 // edit dialog
 const showEditDialog = ref(false)
-const itemForEditDialog = ref(null)
-
-function openEditDialog() {
-    itemForEditDialog.value = selectedItem.value
-    showEditDialog.value = true
-}
 
 function handleChange() {
     showEditDialog.value = false
@@ -64,7 +58,7 @@ const transactionsForCategorizationWizard = ref(null)
 function openCategorizationWizard() {
     // "freeze" the list of IDs of payees that are currently uncategorized, for the wizard
     // so that prev/next can go back to a payee that has been categorized using the wizard
-    payeeIdsForCategorizationWizard.value = uncategorizedItems.value.map(item => item.id)
+    payeeIdsForCategorizationWizard.value = uncategorizedPayees.value.map(p => p.id)
 
     // in the same order as the payeeIdsForCategorizationWizard array, get
     // the transactions of each payee
@@ -84,8 +78,8 @@ function openCategorizationWizard() {
                 <ButtonWithTooltip 
                     tooltip="Edit payee" 
                     icon="mdi-pencil"
-                    :disabled="selectedItem === null"
-                    @click="openEditDialog"
+                    :disabled="selectedPayee === null"
+                    @click="showEditDialog = true"
                 />
             </div>
 
@@ -113,7 +107,7 @@ function openCategorizationWizard() {
                 <ButtonWithTooltip 
                     tooltip="Categorization wizard" 
                     icon="mdi-wizard-hat"
-                    :disabled="uncategorizedItems.length === 0"
+                    :disabled="uncategorizedPayees.length === 0"
                     @click="openCategorizationWizard"
                 />
             </div>
@@ -121,15 +115,15 @@ function openCategorizationWizard() {
     </div>
     <v-divider />
 
-    <!-- List (table) of items -->
+    <!-- List (table) of payees -->
     <PayeesList 
-        :items="filteredItems" 
-        @selectedItemChanged="handleSelectedItemChanged" />
+        :payees="filteredPayees" 
+        @select="handleSelectedPayeeChanged" />
 
-    <!-- Edit selected item dialog -->
+    <!-- Edit selected payee dialog -->
     <v-dialog v-model="showEditDialog">
         <EditPayee 
-            :item="itemForEditDialog"
+            :payee="selectedPayee"
             :categories="categories"
             @close="showEditDialog = false"
             @change="handleChange" />
@@ -140,7 +134,7 @@ function openCategorizationWizard() {
         <CategorizationWizard
             :payeeIds="payeeIdsForCategorizationWizard"
             :transactionsPerPayeeId="transactionsForCategorizationWizard"
-            :payees="items"
+            :payees="payees"
             :categories="categories"
             @close="showCategorizationWizard = false"
             @change="store.refetchPayees()"

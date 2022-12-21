@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { formatNumber, formatDate } from '@/composables/utils'
 import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
 
 // props 
@@ -117,7 +118,7 @@ function clearSelectedSubcategory() {
             <v-expansion-panels>
                 <v-expansion-panel>
                     <v-expansion-panel-title>
-                        Transactions
+                        Last Transaction: {{ formatNumber(transactions[0].amount) }} at {{ formatDate(transactions[0].date) }}
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
                         <TransactionsListForPayee :transactions="props.transactions" />

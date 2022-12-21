@@ -136,7 +136,7 @@ function openCategorizationWizard() {
     </v-dialog>
 
     <!-- Categorization wizard -->
-    <v-dialog v-model="showCategorizationWizard">
+    <v-dialog fullscreen v-model="showCategorizationWizard">
         <CategorizationWizard
             :payeeIds="payeeIdsForCategorizationWizard"
             :transactionsPerPayeeId="transactionsForCategorizationWizard"

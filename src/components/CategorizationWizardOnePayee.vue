@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
 
 // props 
@@ -22,7 +22,7 @@ const selectedCategoryIdx = ref(getCategoryIdxById(props.item.categoryId))
 const selectedSubcategoryIdx = ref(getSubcategoryIdxById(props.item.subcategoryId))
 
 function getCategoryIdxById(categoryId) {
-    if(categoryId === null) {
+    if (categoryId === null) {
         return null
     }
     const foundIdx = props.categories.findIndex(c => c.id === categoryId)
@@ -30,7 +30,7 @@ function getCategoryIdxById(categoryId) {
 }
 
 function getSubcategoryIdxById(subcategoryId) {
-    if(subcategoryId === null) {
+    if (subcategoryId === null) {
         return null
     }
     const selectedCategory = getSelectedCategory()
@@ -39,32 +39,52 @@ function getSubcategoryIdxById(subcategoryId) {
 }
 
 function getSelectedCategory() {
-    if(selectedCategoryIdx.value === null) {
+    if (selectedCategoryIdx.value === null) {
         return null
     }
     return props.categories[selectedCategoryIdx.value]
 }
 
+const selectedSubcategory = computed(() => {
+    if (selectedSubcategoryIdx.value === null) {
+        return null
+    }
+    return props.categories[selectedCategoryIdx.value].subcategories[selectedSubcategoryIdx.value]
+})
+
 watch(selectedCategoryIdx, () => {
-    if(selectedCategoryIdx.value === undefined) {
+    if (selectedCategoryIdx.value === undefined) {
         selectedCategoryIdx.value = null
     }
     selectedSubcategoryIdx.value = null
 })
 
 watch(selectedSubcategoryIdx, () => {
-    if(selectedSubcategoryIdx.value === undefined) {
+    if (selectedSubcategoryIdx.value === undefined) {
         selectedSubcategoryIdx.value = null
     }
-    if(selectedSubcategoryIdx.value !== null) {
+    if (selectedSubcategoryIdx.value !== null) {
         const selectedCategory = getSelectedCategory()
         const selectedSubcategoryId = selectedCategory.subcategories[selectedSubcategoryIdx.value].id
-        emit('subcategorySelected', selectedSubcategoryId)    
+        emit('subcategorySelected', selectedSubcategoryId)
     }
 })
 
-const showTransactionsDialog = ref(false)
+const showSubcategorySelect = computed(() => {
+    return selectedCategoryIdx.value !== null && selectedSubcategoryIdx.value === null
+})
 
+const showCategorySelect = computed(() => {
+    return selectedCategoryIdx.value === null
+})
+
+function resetCategory() {
+    selectedCategoryIdx.value = null
+}
+
+function resetSubcategory() {
+    selectedSubcategoryIdx.value = null
+}
 
 </script>
 
@@ -73,37 +93,54 @@ const showTransactionsDialog = ref(false)
         <v-card-title>{{ item.name }}</v-card-title>
         <v-card-text>
             <v-expansion-panels width="300px">
-            <v-expansion-panel>
-                <v-expansion-panel-title>
-                    Transactions
-                </v-expansion-panel-title>
-                <v-expansion-panel-text>
-                    <TransactionsListForPayee :items="props.transactions"/>
-                </v-expansion-panel-text>
-            </v-expansion-panel>
-        </v-expansion-panels>
+                <v-expansion-panel>
+                    <v-expansion-panel-title>
+                        Transactions
+                    </v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                        <TransactionsListForPayee :items="props.transactions" />
+                    </v-expansion-panel-text>
+                </v-expansion-panel>
+            </v-expansion-panels>
 
-            <!-- category -->
-            <div class="pt-6">Category:</div>
-            <v-item-group v-model="selectedCategoryIdx">
-                <v-container>
-                    <v-row>
-                        <v-col cols="4" v-for="c in categories" :key="c.id">
-                            <v-item v-slot="{ isSelected, toggle }">
-                                <v-card :color="isSelected ? 'primary' : ''" class="d-flex align-center"
-                                    @click="toggle">
-                                    <v-card-title>{{ c.name }}</v-card-title>
-                                </v-card>
-                            </v-item>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-item-group>
+            <!-- the "breadcrumbs" of the selected category and subcategory -->
+            <div class="pt-3">
+                Categorization:
+                <span v-if="selectedCategoryIdx === null">
+                    Uncategorized
+                </span>
+                <span v-else>
+                    <a @click="resetCategory">
+                        {{ getSelectedCategory().name }}
+                    </a>
+                </span>
+                <span v-if="selectedSubcategory !== null">
+                    >
+                    <a @click="resetSubcategory">{{ selectedSubcategory.name }}</a>
+                </span>
+            </div>
 
-            <v-divider />
+            <!-- category select -->
+            <div class="pt-3" v-if="showCategorySelect">
+                <div>Category:</div>
+                <v-item-group v-model="selectedCategoryIdx">
+                    <v-container>
+                        <v-row>
+                            <v-col cols="4" v-for="c in categories" :key="c.id">
+                                <v-item v-slot="{ isSelected, toggle }">
+                                    <v-card :color="isSelected ? 'primary' : ''" class="d-flex align-center"
+                                        @click="toggle">
+                                        <v-card-title>{{ c.name }}</v-card-title>
+                                    </v-card>
+                                </v-item>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-item-group>
+            </div>
 
-            <!-- subcategory -->
-            <div v-if="selectedCategoryIdx !== null">
+            <!-- subcategory select -->
+            <div class="pt-3" v-if="showSubcategorySelect">
                 Subcategory:
                 <v-item-group v-model="selectedSubcategoryIdx">
                     <v-container>
@@ -123,3 +160,10 @@ const showTransactionsDialog = ref(false)
         </v-card-text>
     </v-card>
 </template>
+
+<style>
+a {
+    text-decoration: underline;
+    color: blue;
+}
+</style>

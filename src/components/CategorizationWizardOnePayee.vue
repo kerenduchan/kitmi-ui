@@ -81,8 +81,8 @@ watch(selectedSubcategoryIdx, () => {
     }
     if (selectedSubcategory.value !== null) {
         // The selected subcategory has changed. Emit 'subcategorySelected'
+        setTimeout(() => { emit('subcategorySelected', selectedSubcategory.value.id) }, 400)
         
-        emit('subcategorySelected', selectedSubcategory.value.id)
     }
 })
 

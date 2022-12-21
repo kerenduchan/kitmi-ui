@@ -34,7 +34,7 @@ const isDeleteDisabled = computed(() => {
     return selectedItem.value.hasSubcategories
 })
 
-function handleSelectedItemChanged(item) {
+function handleSelect(item) {
     selectedItem.value = item ? item : null
     forceSelectedItemKey.value = null
 }
@@ -255,7 +255,7 @@ function isMoveCategoryUpDisabled() {
     <CategoriesList 
         :categories="categories"
         :forceSelectedItemKey="forceSelectedItemKey"
-        @select="handleSelectedItemChanged"/>
+        @select="handleSelect"/>
 
     <!-- Edit category dialog -->
     <v-dialog v-model="showEditCategoryDialog">

@@ -33,16 +33,12 @@ const showEditDialog = ref(false)
 function handleChange() {
     showEditDialog.value = false
     showDeleteDialog.value = false
+    showCreateDialog.value = false
     store.refetchAccounts()
 }
 
 // create account dialog
-
 const showCreateDialog = ref(false)
-
-function handleAccountCreated() {
-
-}
 
 // delete account dialog
 const showDeleteDialog = ref(false)
@@ -128,8 +124,9 @@ const isDeleteDisabled = computed(() => {
     <!-- Create account dialog -->
     <v-dialog v-model="showCreateDialog">
         <CreateAccount 
+            :accounts="accounts"
             @close="showCreateDialog = false"
-            @created="handleAccountCreated" 
+            @created="handleChange" 
         />
     </v-dialog>
 

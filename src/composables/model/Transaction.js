@@ -14,6 +14,7 @@ class Transaction {
         this.date = new Date(gqlTransaction.date)
         this.amount = gqlTransaction.amount
         this.payee = new Payee(gqlTransaction.payee)
+        this.accountId = gqlTransaction.account.id
         this.account = new Account(gqlTransaction.account)
 
         this.overridingSubcategory = gqlTransaction.subcategory ?

@@ -53,6 +53,9 @@ watch(selectedCategoryIdx, () => {
 })
 
 watch(selectedSubcategoryIdx, () => {
+    if(selectedSubcategoryIdx.value === undefined) {
+        selectedSubcategoryIdx.value = null
+    }
     if(selectedSubcategoryIdx.value !== null) {
         const selectedCategory = getSelectedCategory()
         const selectedSubcategoryId = selectedCategory.subcategories[selectedSubcategoryIdx.value].id

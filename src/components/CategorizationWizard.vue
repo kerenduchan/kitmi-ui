@@ -6,6 +6,7 @@ import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcatego
 // props 
 const props = defineProps({
     payeeIds: Object,
+    transactionsPerPayeeId: Object,
     payees: Object,
     categories: Object
 })
@@ -110,6 +111,7 @@ watch(currentItem, () => {
             <CategorizationWizardOnePayee 
                 :key="currentItemIdx"
                 :item="currentItem" 
+                :transactions="transactionsPerPayeeId[currentItemIdx]"
                 :categories="filteredCategories"
                 @subcategorySelected="handleSubcategorySelected"
             />

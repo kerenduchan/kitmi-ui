@@ -59,11 +59,18 @@ function handleChange() {
 const showCategorizationWizard = ref(false)
 
 const payeeIdsForCategorizationWizard = ref(null)
+const transactionsForCategorizationWizard = ref(null)
 
 function openCategorizationWizard() {
     // "freeze" the list of IDs of payees that are currently uncategorized, for the wizard
     // so that prev/next can go back to a payee that has been categorized using the wizard
     payeeIdsForCategorizationWizard.value = uncategorizedItems.value.map(item => item.id)
+
+    // in the same order as the payeeIdsForCategorizationWizard array, get
+    // the transactions of each payee
+    transactionsForCategorizationWizard.value = 
+        payeeIdsForCategorizationWizard.value.map(payeeId => store.getTransactionsForPayeeId(payeeId))
+
     showCategorizationWizard.value = true
 }
 </script>
@@ -132,6 +139,7 @@ function openCategorizationWizard() {
     <v-dialog v-model="showCategorizationWizard">
         <CategorizationWizard
             :payeeIds="payeeIdsForCategorizationWizard"
+            :transactionsPerPayeeId="transactionsForCategorizationWizard"
             :payees="items"
             :categories="categories"
             @close="showCategorizationWizard = false"

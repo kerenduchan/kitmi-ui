@@ -1,9 +1,11 @@
 <script setup>
 import { ref, watch } from 'vue'
+import TransactionsList from '@/components/TransactionsList.vue'
 
 // props 
 const props = defineProps({
     item: Object,
+    transactions: Object,
     categories: Object
 })
 
@@ -55,13 +57,22 @@ watch(selectedSubcategoryIdx, () => {
     }
 })
 
+const showTransactionsDialog = ref(false)
+
+
 </script>
 
 <template>
     <v-card height="500px">
         <v-card-title>{{ item.name }}</v-card-title>
         <v-card-text>
-            Category:
+            <!-- transactions button -->
+            <v-btn @click="showTransactionsDialog = true">
+                Transactions
+            </v-btn>
+
+            <!-- category -->
+            <div class="pt-6">Category:</div>
             <v-item-group v-model="selectedCategoryIdx">
                 <v-container>
                     <v-row>
@@ -79,6 +90,7 @@ watch(selectedSubcategoryIdx, () => {
 
             <v-divider />
 
+            <!-- subcategory -->
             <div v-if="selectedCategoryIdx !== null">
                 Subcategory:
                 <v-item-group v-model="selectedSubcategoryIdx">
@@ -98,5 +110,10 @@ watch(selectedSubcategoryIdx, () => {
             </div>
         </v-card-text>
     </v-card>
+
+    <!-- transactions dialog -->
+    <v-dialog v-model="showTransactionsDialog">
+        <TransactionsList :items="props.transactions"/>
+    </v-dialog>
 
 </template>

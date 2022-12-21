@@ -50,6 +50,10 @@ class Store {
         this.refetchers.refetchTransactions()
     }
 
+    getTransactionsForPayeeId(payeeId) {
+        const res = this.transactions.value.filter(t => t.payee.id === payeeId)
+        return res
+    }
 }
 
 function getStore() {

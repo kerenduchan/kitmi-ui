@@ -124,7 +124,6 @@ function handleCategoryCreated(c) {
 function handleSubcategoryDeleted(s) {
     // select the deleted subcategory's category
     forceSelectedItemKey.value = 'c' + s.categoryId
-
     handleChange()
 }
 

@@ -22,9 +22,13 @@ const selectedAccount = computed(() => {
     return found ? found : null
 })
 
+// Serves in order to force the selected account to be what we want
+const forceSelectedAccountId = ref(null)
+
 // update the selected account
 function handleSelect(accountId) {
     selectedAccountId.value = accountId
+    forceSelectedAccountId.value = null
 }
 
 // edit account dialog
@@ -33,7 +37,6 @@ const showEditDialog = ref(false)
 function handleChange() {
     showEditDialog.value = false
     showDeleteDialog.value = false
-    showCreateDialog.value = false
     store.refetchAccounts()
 }
 
@@ -56,6 +59,13 @@ const isDeleteDisabled = computed(() => {
     // - The selected account is used in one or more transactions.
     return !selectedAccountId.value || usedAccountIds.value.includes(selectedAccountId.value)
 })
+
+function handleAccountCreated(accountId) {
+    // select the newly created account
+    forceSelectedAccountId.value = accountId
+    showCreateDialog.value = false
+    store.refetchAccounts()
+}
 
 </script>
 
@@ -102,6 +112,7 @@ const isDeleteDisabled = computed(() => {
     <!-- List (table) of accounts -->
     <AccountsList 
         :accounts="accounts" 
+        :forceSelectedAccountId="forceSelectedAccountId"
         @select="handleSelect" />
 
     <!-- Edit selected account dialog -->
@@ -126,7 +137,7 @@ const isDeleteDisabled = computed(() => {
         <CreateAccount 
             :accounts="accounts"
             @close="showCreateDialog = false"
-            @created="handleChange" 
+            @created="handleAccountCreated" 
         />
     </v-dialog>
 

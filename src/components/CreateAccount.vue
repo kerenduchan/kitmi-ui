@@ -37,8 +37,9 @@ function save() {
     })
 }
 
-onDone(() => {
-    emit('created')
+onDone((res) => {
+    const accountId = res.data.createAccount.id
+    emit('created', accountId)
 })
 
 onError((e) => {

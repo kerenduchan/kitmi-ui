@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 
 // props 
 const props = defineProps({
-    accounts: Object
+    accounts: Object,
+    forceSelectedAccountId: String
 })
 
 // emits
@@ -27,8 +28,22 @@ function getClassForRow(account) {
 // handle click on a row in the table (select the account)
 function select(account) {
     selectedAccountId.value = account.id
-    emit('select', selectedAccountId.value)
 }
+
+watchEffect(() => {
+    if(props.forceSelectedAccountId !== null) {
+        if(selectedAccountId.value === null || 
+        (selectedAccountId.value != props.forceSelectedAccountId)) {
+            // the parent component forced an account to be selected.
+            // this happens when a new account is created.
+            selectedAccountId.value = props.forceSelectedAccountId
+        }
+    }
+})
+
+watch(selectedAccountId, () => {
+    emit('select', selectedAccountId.value)
+})
 
 </script>
 

@@ -11,40 +11,37 @@ const store = getStore()
 const accounts = store.accounts
 
 // the ID of the selected account
-const selectedAccountId = ref(null)
+const selectedAccountId = ref(undefined)
 
 // The selected account
 const selectedAccount = computed(() => {
-    if(selectedAccountId.value === null) {
-        return null
+    if(!selectedAccountId.value) {
+        return undefined
     }
-    const found = accounts.value.find(a => a.id === selectedAccountId.value)
-    return found ? found : null
+    return accounts.value.find(a => a.id === selectedAccountId.value)
 })
-
-// Serves in order to force the selected account to be what we want
-const forceSelectedAccountId = ref(null)
 
 // update the selected account
 function handleSelect(accountId) {
     selectedAccountId.value = accountId
-    forceSelectedAccountId.value = null
 }
 
 // edit account dialog
 const showEditDialog = ref(false)
 
-function handleChange() {
+function handleAccountEdited() {
     showEditDialog.value = false
-    showDeleteDialog.value = false
     store.refetchAccounts()
 }
 
-// create account dialog
-const showCreateDialog = ref(false)
-
 // delete account dialog
 const showDeleteDialog = ref(false)
+
+function handleAccountDeleted() {
+    selectedAccountId.value = undefined
+    showDeleteDialog.value = false
+    store.refetchAccounts()
+}
 
 // IDs of accounts used by one or more transactions
 const usedAccountIds = computed(() => {
@@ -60,9 +57,12 @@ const isDeleteDisabled = computed(() => {
     return !selectedAccountId.value || usedAccountIds.value.includes(selectedAccountId.value)
 })
 
+// create account dialog
+const showCreateDialog = ref(false)
+
 function handleAccountCreated(accountId) {
     // select the newly created account
-    forceSelectedAccountId.value = accountId
+    selectedAccountId.value = accountId
     showCreateDialog.value = false
     store.refetchAccounts()
 }
@@ -78,7 +78,7 @@ function handleAccountCreated(accountId) {
                 <ButtonWithTooltip 
                     tooltip="Edit account" 
                     icon="mdi-pencil"
-                    :disabled="selectedAccountId === null"
+                    :disabled="!selectedAccountId"
                     @click="showEditDialog = true"
                 />
             </div>
@@ -111,8 +111,8 @@ function handleAccountCreated(accountId) {
 
     <!-- List (table) of accounts -->
     <AccountsList 
+        :selectedAccountId="selectedAccountId"
         :accounts="accounts" 
-        :forceSelectedAccountId="forceSelectedAccountId"
         @select="handleSelect" />
 
     <!-- Edit selected account dialog -->
@@ -121,7 +121,7 @@ function handleAccountCreated(accountId) {
             :account="selectedAccount"
             :accounts="accounts"
             @close="showEditDialog = false"
-            @save="handleChange" />
+            @save="handleAccountEdited" />
     </v-dialog>
 
     <!-- Delete selected account dialog -->
@@ -129,7 +129,7 @@ function handleAccountCreated(accountId) {
         <DeleteAccount 
             :account="selectedAccount"
             @close="showDeleteDialog = false"
-            @deleted="handleChange" />
+            @deleted="handleAccountDeleted()" />
     </v-dialog>
 
     <!-- Create account dialog -->

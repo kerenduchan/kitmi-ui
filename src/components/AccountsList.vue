@@ -4,7 +4,7 @@ import { ref, watch, watchEffect } from 'vue'
 // props 
 const props = defineProps({
     accounts: Object,
-    forceSelectedAccountId: String
+    selectedAccountId: String
 })
 
 // emits
@@ -17,33 +17,15 @@ const headers = ref([
     'Source',
 ])
 
-// the ID of the selected account
-const selectedAccountId = ref(null)
-
 // get the class for a selected row in the table
 function getClassForRow(account) {
-    return selectedAccountId.value === account.id ? 'selected-row' : ''
+    return props.selectedAccountId === account.id ? 'selected-row' : ''
 }
 
 // handle click on a row in the table (select the account)
-function select(account) {
-    selectedAccountId.value = account.id
+function handleRowClicked(account) {
+    emit('select', account.id)
 }
-
-watchEffect(() => {
-    if(props.forceSelectedAccountId !== null) {
-        if(selectedAccountId.value === null || 
-        (selectedAccountId.value != props.forceSelectedAccountId)) {
-            // the parent component forced an account to be selected.
-            // this happens when a new account is created.
-            selectedAccountId.value = props.forceSelectedAccountId
-        }
-    }
-})
-
-watch(selectedAccountId, () => {
-    emit('select', selectedAccountId.value)
-})
 
 </script>
 
@@ -61,7 +43,7 @@ watch(selectedAccountId, () => {
             <tr v-for="a in accounts" 
                 :key="a.id"
                 :class="getClassForRow(a)" 
-                @click="select(a)"
+                @click="handleRowClicked(a)"
             >
                 <td>{{ a.name }}</td>
                 <td>{{ a.source }}</td>

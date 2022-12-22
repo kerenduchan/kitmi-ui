@@ -1,112 +1,54 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import SubcategoriesList from '@/components/SubcategoriesList.vue';
 import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 
 // props 
 const props = defineProps({
+    selectedCategoryId: String,
+    selectedSubcategoryId: String,
     categories: Object
 })
 
 // emits
 const emit = defineEmits([
-    'select'
+    'selectCategory',
+    'selectSubcategory'
 ])
 
-// the selected category ID (v-model for the v-expansion-panels)
-const selectedCategoryId = ref(null)
-
-// the selected subcategory ID
-const selectedSubcategoryId = ref(null)
-
-const selectedCategory = computed(() => {
-    if(selectedCategoryId.value === null) {
-        return null
-    }
-    const found = props.categories.find(c => c.id === selectedCategoryId.value)
-    return found ? found : null
-}) 
-
-const selectedSubcategory = computed(() => {
-    if(selectedSubcategoryId.value === null || selectedCategory.value === null) {
-        return null
-    }
-    const found = selectedCategory.value.subcategories.find(
-        s => s.id === selectedSubcategoryId.value)
-    return found ? found : null
-}) 
-
-const selectedItem = computed(() => {
-    if(selectedSubcategory.value !== null) {
-        return selectedSubcategory.value
-    }
-    return selectedCategory.value
-})
-
-watch(selectedCategoryId, () => {
-    selectedSubcategoryId.value = null
-})
-
-watch(selectedItem, () => {
-    emit('select', selectedItem.value)
-})
+const expansionPanelModel = ref(undefined)
 
 function handleSubcategorySelected(subcategoryId) {
-    selectedSubcategoryId.value = subcategoryId
-    forceSelectSubcategoryId.value = null
+    emit('selectSubcategory', subcategoryId)
 }
 
 function handleExpansionPanelClicked() {
-    forceSelectSubcategoryId.value = null
+    emit('selectCategory', expansionPanelModel.value)
 }
 
-function selectCategory(categoryId) {
-    selectedCategoryId.value = categoryId
-}
-
-const forceSelectSubcategoryId = ref(null)
-
-function selectSubcategory(subcategoryId) {
-    // find the category containing this subcategory
-    const found = props.categories.find(
-        c => c.subcategories.find(
-            s => s.id === subcategoryId) !== undefined)
-    if(found !== undefined) {
-        selectedCategoryId.value = found.id
-        // can't select a subcategory ID at this point since the 
-        // SubcategoriesList child component hasn't been rendered yet. It will
-        // be rendered after the expansion panel for the category is expanded, 
-        // as an indirect result of setting selectedCategoryId.
-        forceSelectSubcategoryId.value = subcategoryId
+watchEffect(() => {
+    if(props.selectedCategoryId !== expansionPanelModel.value) {
+        expansionPanelModel.value = props.selectedCategoryId
     }
-}
-
-// exposing these functions so that the parent component can force
-// select a category / subcategory
-defineExpose({
-    selectCategory,
-    selectSubcategory
 })
 
 </script>
 
 <template>
-
-    <v-expansion-panels class="pa-4" v-model="selectedCategoryId">
+    <v-expansion-panels class="pa-4" v-model="expansionPanelModel">
 
         <!-- Category -->
-        <v-expansion-panel  v-for="c in categories" :value="c.id" @click="handleExpansionPanelClicked">
-            <v-expansion-panel-title>
+        <v-expansion-panel v-for="c in categories" :value="c.id">
+            <v-expansion-panel-title @click="handleExpansionPanelClicked()">
                 <span class="category-type-icon">
                     <TypeExpenseOrIncomeIcon :type="c.type" />
                 </span>
                 {{ c.name }}
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-
                 <!-- Subcategories of the current category -->
                 <SubcategoriesList
-                    :forceSelectSubcategoryId="forceSelectSubcategoryId"
+                    :selectedSubcategoryId="selectedSubcategoryId"
                     :subcategories="c.subcategories"
                     @select="handleSubcategorySelected"
                 />

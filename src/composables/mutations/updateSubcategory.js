@@ -7,6 +7,10 @@ function updateSubcategory() {
         mutation updateSubcategory ($subcategoryId: ID!, $name: String!, $categoryId: ID!) {
             updateSubcategory (subcategoryId: $subcategoryId, name: $name, categoryId: $categoryId) {
                 id
+                name
+                category {
+                    id
+                }
             }
         }
     `)

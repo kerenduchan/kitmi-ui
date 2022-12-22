@@ -51,7 +51,7 @@ function close() {
 </script>
 
 <template>
-    <v-card v-if="isReady">
+    <v-card v-if="subcategory && isReady">
         <v-card-title>Delete Subcategory '{{ subcategory.name }}'</v-card-title>
         <v-card-text>
             {{ message }}

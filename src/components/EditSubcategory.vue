@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import Subcategory from '@/composables/model/Subcategory'
 import updateSubcategory from '@/composables/mutations/updateSubcategory'
 
 // props 
@@ -47,8 +48,9 @@ function close() {
     emit('close')
 }
 
-onDone(() => {
-    emit('save')
+onDone((res) => {
+    const s = new Subcategory(res.data.updateSubcategory)
+    emit('save', s)
 })
 
 onError((e) => {
@@ -58,7 +60,7 @@ onError((e) => {
 </script>
 
 <template>
-    <v-card>
+    <v-card v-if="subcategory">
         <v-card-title>Edit Subcategory '{{ subcategory.name }}'</v-card-title>
         <v-card-text>
             <v-form>

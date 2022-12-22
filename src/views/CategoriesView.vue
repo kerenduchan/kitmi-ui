@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import EditCategory from '@/components/EditCategory.vue'
 import EditSubcategory from '@/components/EditSubcategory.vue'
 import CreateCategory from '@/components/CreateCategory.vue'
@@ -16,126 +16,146 @@ import getStore from '@/composables/store'
 const store = getStore()
 const categories = store.categories
 
-// a selected category or subcategory
-const selectedItem = ref(null)
+// The ID of the selected category (undefined if none is selected)
+const selectedCategoryId = ref(undefined)
 
-const selectedItemTypeStr = ref('')
+// The selected category (undefined if none is selected)
+const selectedCategory = computed(() => {
+    if(!selectedCategoryId) {
+        return undefined
+    }
+    return categories.value.find(c => c.id === selectedCategoryId.value)
+})
+
+// The ID of the selected subcategory (undefined if none is selected)
+const selectedSubcategoryId = ref(undefined)
+
+// The selected category (undefined if none is selected)
+function getSelectedSubcategory() {
+    if(!selectedCategory.value || !selectedSubcategoryId.value) {
+        return undefined
+    }
+    return selectedCategory.value.subcategories.find(s => s.id === selectedSubcategoryId.value)
+}
+
+function getCategoryIdBySubcategoryId(subcategoryId) {
+    const found = categories.value.find(c => c.subcategories.find(s => s.id === subcategoryId))
+    return found ? found.id : undefined
+}
+// for the action buttons' tooltips
+const selectedItemTypeStr = computed(() => {
+    if(selectedSubcategoryId.value) {
+        return 'subcategory'
+    } 
+    if(selectedCategoryId.value) {
+        return 'category'
+    }
+    return ''
+})
 
 const isDeleteDisabled = computed(() => {
-    if(!selectedItem.value) {
-        // no item is selected
-        return true
-    }
-    if(selectedItem.value.objClass == 'Subcategory') {
+    if(selectedSubcategoryId.value) {
+        // The selected item is a subcategory.
+        // Subcategories can always be deleted.
         return false
     }
-    
-    // selected item is a category -
-    // can't delete a category with subcategories
-    return selectedItem.value.hasSubcategories
-})
-
-function handleSelect(item) {
-    selectedItem.value = item ? item : null
-}
-
-watch(selectedItem, () => {
-    if(!selectedItem.value) {
-        selectedItemTypeStr.value =  ''
-    } else {
-        selectedItemTypeStr.value = 
-            selectedItem.value.objClass == 'Subcategory' ? 
-            'subcategory' :
-            'category'
+    if(selectedCategoryId.value) {
+        // The selected item is a category.
+        // Can't delete a category with subcategories.
+        return selectedCategory.value.hasSubcategories
     }
+    
+    // No item is selected. Delete should be disabled.
+    return true
+
 })
-
-function handleChange() {
-    // close any and all dialogs
-    showCreateCategoryDialog.value = false
-    showCreateSubcategoryDialog.value = false
-    showDeleteCategoryDialog.value = false
-    showDeleteSubcategoryDialog.value = false
-    showEditCategoryDialog.value = false
-    showEditSubcategoryDialog.value = false
-
-    // refetch categories from server
-    store.refetchCategories()
-}
 
 // create category dialog
 const showCreateCategoryDialog = ref(false)
 
+function handleCategoryCreated(category) {
+    // force-select the newly created category in the list
+    selectedCategoryId.value = category.id
+    showCreateCategoryDialog.value = false
+    store.refetchCategories()
+}
+
 // create subcategory dialog
 const showCreateSubcategoryDialog = ref(false)
-    
+  
+function handleSubcategoryCreated() {
+    showCreateSubcategoryDialog.value = false
+    store.refetchCategories()
+}
+
 const isCreateSubcategoryHidden = computed(() => {
     // can't create a subcategory for a subcategory
-    return selectedItem.value && selectedItem.value.objClass == 'Subcategory'
+    return selectedSubcategoryId.value !== undefined
 })
 
 // delete category dialog
 const showDeleteCategoryDialog = ref(false)
-const categoryToDelete = ref(null)
 
-function openDeleteCategoryDialog() {
-    categoryToDelete.value = selectedItem.value
-    showDeleteCategoryDialog.value = true
+function handleCategoryDeleted() {
+    selectedCategoryId.value = undefined
+    showDeleteCategoryDialog.value = false
+    store.refetchCategories()
 }
 
 // delete subcategory dialog
 const showDeleteSubcategoryDialog = ref(false)
-const subcategoryToDelete = ref(null)
 
-function openDeleteSubcategoryDialog() {
-    subcategoryToDelete.value = selectedItem.value
-    showDeleteSubcategoryDialog.value = true
+function handleSubcategoryDeleted() {
+    selectedSubcategoryId.value = undefined
+    showDeleteSubcategoryDialog.value = false
+    store.refetchCategories()
 }
 
 // edit category
 const showEditCategoryDialog = ref(false)
 
+function handleCategoryEdited() {
+    showEditCategoryDialog.value = false
+    store.refetchCategories()
+}
+
 // edit subcategory
 const showEditSubcategoryDialog = ref(false)
 
+function handleSubcategoryEdited(subcategory) {
+    // update the selectedCategoryId, 
+    // in case the subcategory moved to a different category
+    selectedCategoryId.value = subcategory.category.id
+    showEditSubcategoryDialog.value = false
+    store.refetchCategories()
+}
+
 function openDeleteCategoryOrDeleteSubcategoryDialog() {
-    if(selectedItem.value.objClass == 'Subcategory') {
-        openDeleteSubcategoryDialog()
+    if(selectedSubcategoryId.value) {
+        showDeleteSubcategoryDialog.value = true
     } else {
-        openDeleteCategoryDialog()
+        showDeleteCategoryDialog.value = true
     }
 }
 
 function openEditCategoryOrEditSubcategoryDialog() {
-    if(selectedItem.value.objClass == 'Subcategory') {
+    if(selectedSubcategoryId.value) {
         showEditSubcategoryDialog.value = true
     } else {
         showEditCategoryDialog.value = true
     }
 }
 
-function handleCategoryCreated(category) {
-    // select the newly created category
-    categoriesListComponent.value.selectCategory(category.id)
-    handleChange()
-}
-
-function handleSubcategoryDeleted(subcategory) {
-    // select the deleted subcategory's category
-    categoriesListComponent.value.selectCategory(subcategory.categoryId)
-    handleChange()
-}
-
 const isMoveCategoryButtonVisible = computed(() => {
-    return selectedItem.value === null || 
-        (selectedItem.value.objClass == 'Category')
+    // should be visible unless a subcategory is selected
+    return !selectedSubcategoryId.value
 })
 
 const { gqlMoveCategoryDown, onDone: onMoveCategoryDownDone } = moveCategoryDown()
 
 function doMoveCategoryDown() {
     gqlMoveCategoryDown({
-        categoryId: selectedItem.value.id
+        categoryId: selectedCategoryId.value
     })
 }
 
@@ -147,7 +167,7 @@ const { gqlMoveCategoryUp, onDone: onMoveCategoryUpDone } = moveCategoryUp()
 
 function doMoveCategoryUp() {
     gqlMoveCategoryUp({
-        categoryId: selectedItem.value.id
+        categoryId: selectedCategoryId.value
     })
 }
 
@@ -156,38 +176,37 @@ onMoveCategoryUpDone(() => {
 })
 
 function isMoveCategoryDownDisabled() {
-    if(!selectedItem.value || categories.value.length === 0) {
-        return true
-    }
-    if(selectedItem.value.id === categories.value[categories.value.length - 1].id) {
-        // can't move the category any further down
-        return true
-    }
-    return false
+    // Move category down is disabled if no category is selected or 
+    // the selected category can't move any further down
+    return !selectedCategoryId.value ||
+    selectedCategoryId.value === categories.value[categories.value.length - 1].id
 }
 
 function isMoveCategoryUpDisabled() {
-    if(!selectedItem.value || categories.value.length === 0) {
-        return true
-    }
-    if(selectedItem.value.id === categories.value[0].id) {
-        // can't move the category any further up
-        return true
-    }
-    return false
+    // Move category up is disabled if no category is selected or 
+    // the selected category can't move any further up
+    return !selectedCategoryId.value ||
+    selectedCategoryId.value === categories.value[0].id
 }
 
 // find subcategory
 const showFindSubcategoryDialog = ref(false)
 
 function handleFindSubcategory(subcategoryId) {
-    categoriesListComponent.value.selectSubcategory(subcategoryId)
+    // force-select the found subcategory
+    selectedCategoryId.value = getCategoryIdBySubcategoryId(subcategoryId)
+    selectedSubcategoryId.value = subcategoryId
     showFindSubcategoryDialog.value = false
 }
 
-// references the CategoriesList component, in order to force it to select
-// a category or subcategory when needed (find, after create/delete, etc)
-const categoriesListComponent = ref(null)
+function handleSelectCategory(categoryId) {
+    selectedCategoryId.value = categoryId
+    selectedSubcategoryId.value = undefined
+}
+
+function handleSelectSubcategory(subcategoryId) {
+    selectedSubcategoryId.value = subcategoryId
+}
 
 </script>
 
@@ -200,7 +219,7 @@ const categoriesListComponent = ref(null)
                 <ButtonWithTooltip 
                     :tooltip="'Edit ' + selectedItemTypeStr" 
                     icon="mdi-pencil"
-                    :disabled="!selectedItem"
+                    :disabled="!selectedCategoryId && !selectedSubcategoryId"
                     @click="openEditCategoryOrEditSubcategoryDialog"
                 />
             </div>
@@ -210,7 +229,7 @@ const categoriesListComponent = ref(null)
                 <ButtonWithTooltip 
                     tooltip="Create subcategory" 
                     icon="mdi-plus"
-                    :disabled="!selectedItem"
+                    :disabled="!selectedCategoryId && !selectedSubcategoryId"
                     @click="showCreateSubcategoryDialog = true"
                 />
             </div>
@@ -272,26 +291,30 @@ const categoriesListComponent = ref(null)
     <v-divider />
 
     <!-- List of categories -->
-    <CategoriesList ref="categoriesListComponent"
+    <CategoriesList 
+        :selectedCategoryId="selectedCategoryId"
+        :selectedSubcategoryId="selectedSubcategoryId"
         :categories="categories"
-        @select="handleSelect"/>
+        @selectCategory="handleSelectCategory"
+        @selectSubcategory="handleSelectSubcategory"
+    />
 
     <!-- Edit category dialog -->
     <v-dialog v-model="showEditCategoryDialog">
         <EditCategory
-            :category="selectedItem"
+            :category="selectedCategory"
             :categories="categories"
             @close="showEditCategoryDialog = false"
-            @save="handleChange" />
+            @save="handleCategoryEdited" />
     </v-dialog>
 
     <!-- Edit subcategory dialog -->
     <v-dialog v-model="showEditSubcategoryDialog">
         <EditSubcategory
-            :subcategory="selectedItem"
+            :subcategory="getSelectedSubcategory()"
             :categories="categories"
             @close="showEditSubcategoryDialog = false"
-            @save="handleChange" />
+            @save="handleSubcategoryEdited" />
     </v-dialog>
 
     <!-- Create category dialog -->
@@ -313,23 +336,23 @@ const categoriesListComponent = ref(null)
     <!-- Create subcategory dialog -->
     <v-dialog v-model="showCreateSubcategoryDialog">
         <CreateSubcategory
-            :category="selectedItem"
+            :category="selectedCategory"
             @close="showCreateSubcategoryDialog = false"
-            @save="handleChange" />
+            @save="handleSubcategoryCreated" />
     </v-dialog>
 
     <!-- Delete category dialog -->
     <v-dialog v-model="showDeleteCategoryDialog">
         <DeleteCategory
-            :category="categoryToDelete"
+            :category="selectedCategory"
             @close="showDeleteCategoryDialog = false"
-            @deleted="handleChange" />
+            @deleted="handleCategoryDeleted" />
     </v-dialog>
 
     <!-- Delete subcategory dialog -->
     <v-dialog v-model="showDeleteSubcategoryDialog">
         <DeleteSubcategory
-            :subcategory="subcategoryToDelete"
+            :subcategory="getSelectedSubcategory()"
             @close="showDeleteSubcategoryDialog = false"
             @deleted="handleSubcategoryDeleted" />
     </v-dialog>

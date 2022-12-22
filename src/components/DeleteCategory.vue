@@ -34,7 +34,7 @@ function close() {
 </script>
 
 <template>
-    <v-card>
+    <v-card v-if="category">
         <v-card-title>Delete Category '{{ category.name }}'</v-card-title>
         <v-card-text>
             Are you sure?

@@ -1,9 +1,9 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
+
 // props
 const props = defineProps({
-    forceSelectSubcategoryId: String,
-    subcategories: Object
+    subcategories: Object,
+    selectedSubcategoryId: String
 })
 
 // emits
@@ -11,32 +11,21 @@ const emit = defineEmits([
     'select'
 ])
 
-// the selected subcategory
-const selectedSubcategoryId = ref(null)
-
-watchEffect(() => {
-    if(props.forceSelectSubcategoryId !== null) {
-        selectedSubcategoryId.value = props.forceSelectSubcategoryId
-    }
-})
-
 // get the class for a selected row in the table
 function getClassForRow(subcategory) {
-    if(!selectedSubcategoryId.value) {
+    if(!props.selectedSubcategoryId === undefined) {
         return ''
     }
-    return selectedSubcategoryId.value === subcategory.id ? 'selected-row' : ''
+    return props.selectedSubcategoryId === subcategory.id ? 'selected-row' : ''
+}
+
+function selectSubcategory(subcategoryId) {
+    emit('select', subcategoryId)
 }
 
 // handle click on a row in the table (select/deselect the subcategory)
-function toggleSelect(subcategory) {
-    if(selectedSubcategoryId.value === subcategory.id) {
-        // deselect
-        selectedSubcategoryId.value = null
-    } else {
-        selectedSubcategoryId.value = subcategory.id
-    }
-    emit('select', selectedSubcategoryId.value)
+function toggleSelect(subcategoryId) {
+    selectSubcategory((props.selectedSubcategoryId === subcategoryId) ? null : subcategoryId)
 }
 
 </script>
@@ -47,7 +36,7 @@ function toggleSelect(subcategory) {
             <tr v-for="s in subcategories" 
                 :key="s.id"
                 :class="getClassForRow(s)" 
-                @click="toggleSelect(s)"
+                @click="toggleSelect(s.id)"
             >
                 <td>{{ s.name }}</td>
             </tr>

@@ -11,14 +11,15 @@ const store = getStore()
 const accounts = store.accounts
 
 // the ID of the selected account
-const selectedAccountId = ref(undefined)
+const selectedAccountId = ref(null)
 
 // The selected account
 const selectedAccount = computed(() => {
     if(!selectedAccountId.value) {
-        return undefined
+        return null
     }
-    return accounts.value.find(a => a.id === selectedAccountId.value)
+    const found = accounts.value.find(a => a.id === selectedAccountId.value)
+    return found ? found : null
 })
 
 // update the selected account
@@ -38,7 +39,7 @@ function handleAccountEdited() {
 const showDeleteDialog = ref(false)
 
 function handleAccountDeleted() {
-    selectedAccountId.value = undefined
+    selectedAccountId.value = null
     showDeleteDialog.value = false
     store.refetchAccounts()
 }

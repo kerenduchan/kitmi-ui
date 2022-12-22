@@ -26,14 +26,15 @@ const filteredPayees = computed(() => {
 })
 
 // the ID of the selected payee
-const selectedPayeeId = ref(undefined)
+const selectedPayeeId = ref(null)
 
 // The selected payee
 const selectedPayee = computed(() => {
     if(!selectedPayeeId.value) {
-        return undefined
+        return null
     }
-    return filteredPayees.value.find(p => p.id === selectedPayeeId.value)
+    const found = filteredPayees.value.find(p => p.id === selectedPayeeId.value)
+    return found ? found : null
 })
 
 // update the selected payee
@@ -51,8 +52,8 @@ function handleChange() {
 
 const showCategorizationWizard = ref(false)
 
-const payeeIdsForCategorizationWizard = ref(undefined)
-const transactionsForCategorizationWizard = ref(undefined)
+const payeeIdsForCategorizationWizard = ref(null)
+const transactionsForCategorizationWizard = ref(null)
 
 function openCategorizationWizard() {
     // "freeze" the list of IDs of payees that are currently uncategorized, for the wizard

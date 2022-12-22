@@ -16,7 +16,7 @@ const emit = defineEmits([
     'selectSubcategory'
 ])
 
-const expansionPanelModel = ref(undefined)
+const expansionPanelModel = ref(null)
 
 function handleSubcategorySelected(subcategoryId) {
     emit('selectSubcategory', subcategoryId)

@@ -57,7 +57,7 @@ function findCategoryById(id) {
     if (id !== null) {
         c = categories.value.find(c => c.id === id)
     }
-    return c
+    return c ? c : null
 }
 
 // find subcategory by subcategory ID
@@ -66,7 +66,7 @@ function findSubcategoryById(id) {
     if (id !== null) {
         s = subcategories.value.find(s => s.id === id)
     }
-    return s
+    return s ? s : null
 }
 
 // handle a change in the selected categoryId

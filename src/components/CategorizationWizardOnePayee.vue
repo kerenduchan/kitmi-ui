@@ -53,7 +53,7 @@ function getCategoryIdxById(categoryId) {
         return null
     }
     const foundIdx = props.categories.findIndex(c => c.id === categoryId)
-    return foundIdx !== null ? foundIdx : null
+    return foundIdx === -1 ? null : foundIdx
 }
 
 // get the index in the subcategories array of the category with the given ID
@@ -62,12 +62,12 @@ function getSubcategoryIdxById(subcategoryId) {
         return null
     }
     const foundIdx = subcategories.value.findIndex(s => s.id === subcategoryId)
-    return foundIdx !== null ? foundIdx : null
+    return foundIdx === -1 ? null : foundIdx
 }
 
 
 watch(selectedCategoryIdx, () => {
-    if (selectedCategoryIdx.value === undefined) {
+    if (selectedCategoryIdx.value === null) {
         // The selected category has been deselected. Clear the selected category.
         clearSelectedCategory()
     }
@@ -76,7 +76,7 @@ watch(selectedCategoryIdx, () => {
 })
 
 watch(selectedSubcategoryIdx, () => {
-    if (selectedSubcategoryIdx.value === undefined) {
+    if (selectedSubcategoryIdx.value === null) {
         // The selected subcategory has been deselected. Clear the selected subcategory.
         clearSelectedSubcategory()
     }

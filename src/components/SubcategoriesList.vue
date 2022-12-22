@@ -13,7 +13,7 @@ const emit = defineEmits([
 
 // get the class for a selected row in the table
 function getClassForRow(subcategory) {
-    if(!props.selectedSubcategoryId === undefined) {
+    if(!props.selectedSubcategoryId) {
         return ''
     }
     return props.selectedSubcategoryId === subcategory.id ? 'selected-row' : ''

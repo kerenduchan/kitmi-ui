@@ -25,7 +25,7 @@ function getClassForRow(account) {
 // handle click on a row in the table (select the account)
 function handleRowClicked(account) {
     // select or deselect
-    emit('select', (account.id === props.selectedAccountId) ? undefined : account.id)
+    emit('select', (account.id === props.selectedAccountId) ? null : account.id)
 }
 
 </script>

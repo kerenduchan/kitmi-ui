@@ -16,31 +16,33 @@ import getStore from '@/composables/store'
 const store = getStore()
 const categories = store.categories
 
-// The ID of the selected category (undefined if none is selected)
-const selectedCategoryId = ref(undefined)
+// The ID of the selected category (null if none is selected)
+const selectedCategoryId = ref(null)
 
-// The selected category (undefined if none is selected)
+// The selected category (null if none is selected)
 const selectedCategory = computed(() => {
     if(!selectedCategoryId) {
-        return undefined
+        return null
     }
-    return categories.value.find(c => c.id === selectedCategoryId.value)
+    const found = categories.value.find(c => c.id === selectedCategoryId.value)
+    return found ? found : null
 })
 
-// The ID of the selected subcategory (undefined if none is selected)
-const selectedSubcategoryId = ref(undefined)
+// The ID of the selected subcategory (null if none is selected)
+const selectedSubcategoryId = ref(null)
 
-// The selected category (undefined if none is selected)
+// The selected category (null if none is selected)
 function getSelectedSubcategory() {
     if(!selectedCategory.value || !selectedSubcategoryId.value) {
-        return undefined
+        return null
     }
-    return selectedCategory.value.subcategories.find(s => s.id === selectedSubcategoryId.value)
+    const found = selectedCategory.value.subcategories.find(s => s.id === selectedSubcategoryId.value)
+    return found ? found : null
 }
 
 function getCategoryIdBySubcategoryId(subcategoryId) {
     const found = categories.value.find(c => c.subcategories.find(s => s.id === subcategoryId))
-    return found ? found.id : undefined
+    return found ? found.id : null
 }
 // for the action buttons' tooltips
 const selectedItemTypeStr = computed(() => {
@@ -90,14 +92,14 @@ function handleSubcategoryCreated() {
 
 const isCreateSubcategoryHidden = computed(() => {
     // can't create a subcategory for a subcategory
-    return selectedSubcategoryId.value !== undefined
+    return selectedSubcategoryId.value !== null
 })
 
 // delete category dialog
 const showDeleteCategoryDialog = ref(false)
 
 function handleCategoryDeleted() {
-    selectedCategoryId.value = undefined
+    selectedCategoryId.value = null
     showDeleteCategoryDialog.value = false
     store.refetchCategories()
 }
@@ -106,7 +108,7 @@ function handleCategoryDeleted() {
 const showDeleteSubcategoryDialog = ref(false)
 
 function handleSubcategoryDeleted() {
-    selectedSubcategoryId.value = undefined
+    selectedSubcategoryId.value = null
     showDeleteSubcategoryDialog.value = false
     store.refetchCategories()
 }

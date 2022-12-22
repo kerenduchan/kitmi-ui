@@ -28,7 +28,8 @@ function getClassForRow(payee) {
 
 // handle click on a row in the table (select the payee)
 function handleRowClicked(payee) {
-    emit('select', payee.id)
+    // select or deselect
+    emit('select', (payee.id === props.selectedPayeeId) ? undefined : payee.id)
 }
 
 </script>

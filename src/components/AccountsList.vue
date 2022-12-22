@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, watchEffect } from 'vue'
+import { ref } from 'vue'
 
 // props 
 const props = defineProps({
@@ -24,7 +24,8 @@ function getClassForRow(account) {
 
 // handle click on a row in the table (select the account)
 function handleRowClicked(account) {
-    emit('select', account.id)
+    // select or deselect
+    emit('select', (account.id === props.selectedAccountId) ? undefined : account.id)
 }
 
 </script>

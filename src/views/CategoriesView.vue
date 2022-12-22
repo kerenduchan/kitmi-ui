@@ -85,7 +85,10 @@ function handleCategoryCreated(category) {
 // create subcategory dialog
 const showCreateSubcategoryDialog = ref(false)
   
-function handleSubcategoryCreated() {
+function handleSubcategoryCreated(subcategory) {
+    // force-select the newly created subcategory in the list
+    selectedSubcategoryId.value = subcategory.id
+
     showCreateSubcategoryDialog.value = false
     store.refetchCategories()
 }
@@ -203,7 +206,7 @@ function handleFindSubcategory(subcategoryId) {
 
 function handleSelectCategory(categoryId) {
     selectedCategoryId.value = categoryId
-    selectedSubcategoryId.value = undefined
+    selectedSubcategoryId.value = null
 }
 
 function handleSelectSubcategory(subcategoryId) {
@@ -340,7 +343,7 @@ function handleSelectSubcategory(subcategoryId) {
         <CreateSubcategory
             :category="selectedCategory"
             @close="showCreateSubcategoryDialog = false"
-            @save="handleSubcategoryCreated" />
+            @created="handleSubcategoryCreated" />
     </v-dialog>
 
     <!-- Delete category dialog -->

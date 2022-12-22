@@ -5,6 +5,7 @@ import { formatNumber } from '@/composables/utils'
 
 // props 
 const props = defineProps({
+    selectedTransactionId: String,
     transactions: Object
 })
 
@@ -22,18 +23,15 @@ const headers = ref([
     'Subcategory'
 ])
 
-// the ID of the selected transaction
-const selectedTransactionId = ref(null)
-
 // get the class for a selected row in the table
 function getClassForRow(transaction) {
-    return selectedTransactionId.value === transaction.id ? 'selected-row' : ''
+    return props.selectedTransactionId === transaction.id ? 'selected-row' : ''
 }
 
 // handle click on a row in the table (select the transaction)
-function select(transaction) {
-    selectedTransactionId.value = transaction.id
-    emit('select', selectedTransactionId.value)
+function handleRowClicked(transaction) {
+    // select or deselect
+    emit('select', (transaction.id === props.selectedTransactionId) ? null : transaction.id)
 }
 
 // the computed sum of the rows
@@ -58,7 +56,7 @@ const sum = computed(() => {
             <tr v-for="t in transactions" 
                 :key="t.id"
                 :class="getClassForRow(t)" 
-                @click="select(t)"
+                @click="handleRowClicked(t)"
             >
                 <td><TypeExpenseOrIncomeIcon :type="t.type"/></td>
                 <td>{{ t.formattedDate }}</td>

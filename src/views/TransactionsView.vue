@@ -87,6 +87,7 @@ function handleTransactionChange() {
 
     <!-- List (table) of transactions -->
     <TransactionsList 
+        :selectedTransactionId="selectedTransactionId"
         :transactions="filteredTransactions" 
         @select="handleSelect"/>
 

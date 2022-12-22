@@ -56,6 +56,10 @@ function handleSubcategorySelected(subcategoryId) {
     forceSelectSubcategoryId.value = null
 }
 
+function handleExpansionPanelClicked() {
+    forceSelectSubcategoryId.value = null
+}
+
 function selectCategory(categoryId) {
     selectedCategoryId.value = categoryId
 }
@@ -91,7 +95,7 @@ defineExpose({
     <v-expansion-panels class="pa-4" v-model="selectedCategoryId">
 
         <!-- Category -->
-        <v-expansion-panel  v-for="c in categories" :value="c.id">
+        <v-expansion-panel  v-for="c in categories" :value="c.id" @click="handleExpansionPanelClicked">
             <v-expansion-panel-title>
                 <span class="category-type-icon">
                     <TypeExpenseOrIncomeIcon :type="c.type" />

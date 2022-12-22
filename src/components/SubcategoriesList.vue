@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 // props
 const props = defineProps({
+    forceSelectSubcategoryId: String,
     subcategories: Object
 })
 
@@ -12,6 +13,12 @@ const emit = defineEmits([
 
 // the selected subcategory
 const selectedSubcategoryId = ref(null)
+
+watchEffect(() => {
+    if(props.forceSelectSubcategoryId !== null) {
+        selectedSubcategoryId.value = props.forceSelectSubcategoryId
+    }
+})
 
 // get the class for a selected row in the table
 function getClassForRow(subcategory) {

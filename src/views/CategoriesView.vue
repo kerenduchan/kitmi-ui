@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import EditCategory from '@/components/EditCategory.vue'
 import EditSubcategory from '@/components/EditSubcategory.vue'
 import CreateCategory from '@/components/CreateCategory.vue'
+import FindSubcategory from '@/components/FindSubcategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import DeleteCategory from '@/components/DeleteCategory.vue'
 import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
@@ -36,7 +37,6 @@ const isDeleteDisabled = computed(() => {
 
 function handleSelect(item) {
     selectedItem.value = item ? item : null
-    forceSelectedCategoryId.value = null
 }
 
 watch(selectedItem, () => {
@@ -114,16 +114,15 @@ function openEditCategoryOrEditSubcategoryDialog() {
     }
 }
 
-const forceSelectedCategoryId = ref(null)
-
-function handleCategoryCreated(c) {
-    forceSelectedCategoryId.value = c.id
+function handleCategoryCreated(category) {
+    // select the newly created category
+    categoriesListComponent.value.selectCategory(category.id)
     handleChange()
 }
 
-function handleSubcategoryDeleted(s) {
+function handleSubcategoryDeleted(subcategory) {
     // select the deleted subcategory's category
-    forceSelectedCategoryId.value = s.categoryId
+    categoriesListComponent.value.selectCategory(subcategory.categoryId)
     handleChange()
 }
 
@@ -177,6 +176,18 @@ function isMoveCategoryUpDisabled() {
     }
     return false
 }
+
+// find subcategory
+const showFindSubcategoryDialog = ref(false)
+
+function handleFindSubcategory(subcategoryId) {
+    categoriesListComponent.value.selectSubcategory(subcategoryId)
+    showFindSubcategoryDialog.value = false
+}
+
+// references the CategoriesList component, in order to force it to select
+// a category or subcategory when needed (find, after create/delete, etc)
+const categoriesListComponent = ref(null)
 
 </script>
 
@@ -238,6 +249,15 @@ function isMoveCategoryUpDisabled() {
 
         <div class="top-bar-right">
 
+            <!-- Find subcategory button -->
+            <div class="top-bar-action">
+                <ButtonWithTooltip 
+                    tooltip="Find subcategory" 
+                    icon="mdi-folder-search"
+                    @click="showFindSubcategoryDialog = true"
+                />
+            </div>
+
             <!-- Create category button -->
             <div class="top-bar-action">
                 <ButtonWithTooltip 
@@ -246,14 +266,14 @@ function isMoveCategoryUpDisabled() {
                     @click="showCreateCategoryDialog = true"
                 />
             </div>
+
         </div>
     </div>
     <v-divider />
 
     <!-- List of categories -->
-    <CategoriesList 
+    <CategoriesList ref="categoriesListComponent"
         :categories="categories"
-        :forceSelectedCategoryId="forceSelectedCategoryId"
         @select="handleSelect"/>
 
     <!-- Edit category dialog -->
@@ -280,6 +300,14 @@ function isMoveCategoryUpDisabled() {
             :categories="categories"
             @close="showCreateCategoryDialog = false"
             @created="handleCategoryCreated" />
+    </v-dialog>
+
+    <!-- Search for subcategory dialog -->
+    <v-dialog v-model="showFindSubcategoryDialog">
+        <FindSubcategory
+            :categories="categories"
+            @close="showFindSubcategoryDialog = false"
+            @find="handleFindSubcategory" />
     </v-dialog>
 
     <!-- Create subcategory dialog -->

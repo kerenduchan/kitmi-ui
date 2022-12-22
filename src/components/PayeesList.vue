@@ -4,6 +4,7 @@ import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 
 // props 
 const props = defineProps({
+    selectedPayeeId: String,
     payees: Object
 })
 
@@ -20,18 +21,14 @@ const headers = ref([
     'Subcategory'
 ])
 
-// the ID of the selected payee
-const selectedPayeeId = ref(null)
-
 // get the class for a selected row in the table
 function getClassForRow(payee) {
-    return selectedPayeeId.value === payee.id ? 'selected-row' : ''
+    return props.selectedPayeeId === payee.id ? 'selected-row' : ''
 }
 
 // handle click on a row in the table (select the payee)
-function select(payee) {
-    selectedPayeeId.value = payee.id
-    emit('select', selectedPayeeId.value)
+function handleRowClicked(payee) {
+    emit('select', payee.id)
 }
 
 </script>
@@ -49,7 +46,7 @@ function select(payee) {
             <tr v-for="p in payees" 
                 :key="p.id" 
                 :class="getClassForRow(p)" 
-                @click="select(p)"
+                @click="handleRowClicked(p)"
             >
                 <td><TypeExpenseOrIncomeIcon :type="p.type"/></td>
                 <td>{{ p.name}}</td>

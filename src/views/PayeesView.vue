@@ -26,15 +26,14 @@ const filteredPayees = computed(() => {
 })
 
 // the ID of the selected payee
-const selectedPayeeId = ref(null)
+const selectedPayeeId = ref(undefined)
 
 // The selected payee
 const selectedPayee = computed(() => {
-    if(selectedPayeeId.value === null) {
-        return null
+    if(!selectedPayeeId.value) {
+        return undefined
     }
-    const found = filteredPayees.value.find(p => p.id === selectedPayeeId.value)
-    return found ? found : null
+    return filteredPayees.value.find(p => p.id === selectedPayeeId.value)
 })
 
 // update the selected payee
@@ -52,8 +51,8 @@ function handleChange() {
 
 const showCategorizationWizard = ref(false)
 
-const payeeIdsForCategorizationWizard = ref(null)
-const transactionsForCategorizationWizard = ref(null)
+const payeeIdsForCategorizationWizard = ref(undefined)
+const transactionsForCategorizationWizard = ref(undefined)
 
 function openCategorizationWizard() {
     // "freeze" the list of IDs of payees that are currently uncategorized, for the wizard
@@ -78,7 +77,7 @@ function openCategorizationWizard() {
                 <ButtonWithTooltip 
                     tooltip="Edit payee" 
                     icon="mdi-pencil"
-                    :disabled="selectedPayee === null"
+                    :disabled="!selectedPayee"
                     @click="showEditDialog = true"
                 />
             </div>
@@ -117,6 +116,7 @@ function openCategorizationWizard() {
 
     <!-- List (table) of payees -->
     <PayeesList 
+        :selectedPayeeId="selectedPayeeId"
         :payees="filteredPayees" 
         @select="handleSelect" />
 

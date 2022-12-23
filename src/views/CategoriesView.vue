@@ -9,7 +9,7 @@ import EditSubcategory from '@/components/EditSubcategory.vue'
 import CreateCategory from '@/components/CreateCategory.vue'
 import FindSubcategory from '@/components/FindSubcategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
-import DeleteCategory from '@/components/DeleteCategory.vue'
+import AreYouSure from '@/components/AreYouSure.vue'
 import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 
@@ -17,6 +17,7 @@ import CategoriesList from '@/components/CategoriesList.vue'
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import getCreateCategory from '@/composables/mutations/createCategory'
+import deleteCategory from '@/composables/mutations/deleteCategory'
 import moveCategoryUp from '@/composables/mutations/moveCategoryUp'
 import moveCategoryDown from '@/composables/mutations/moveCategoryDown'
 
@@ -83,13 +84,7 @@ function handleSelectSubcategory(subcategoryId) {
 // ----------------------------------------------------------------------------
 // delete category / subcategory
 
-function openDeleteCategoryOrDeleteSubcategoryDialog() {
-    if(selectedSubcategoryId.value) {
-        showDeleteSubcategoryDialog.value = true
-    } else {
-        showDeleteCategoryDialog.value = true
-    }
-}
+const showDeleteDialog = ref(false)
 
 const isDeleteDisabled = computed(() => {
     if(selectedSubcategoryId.value) {
@@ -108,16 +103,44 @@ const isDeleteDisabled = computed(() => {
 
 })
 
-// ----------------------------------------------------------------------------
-// delete category
-
-const showDeleteCategoryDialog = ref(false)
-
-function handleCategoryDeleted() {
-    selectedCategoryId.value = null
-    showDeleteCategoryDialog.value = false
-    store.refetchCategories()
+function getDeleteDialogTitle() {
+    if(selectedSubcategoryId.value) {
+        return "Delete subcategory '" + getSelectedSubcategory().name + "'"
+    }
+    if(selectedCategory.value) {
+        return "Delete category '" + selectedCategory.value.name + "'"
+    }
+    return ''
 }
+
+const { 
+    gqlDeleteCategory, 
+    onDone: onDeleteCategoryDone, 
+    onError: onDeleteCategoryError 
+} = deleteCategory()
+
+function handleDelete() {
+    if(selectedSubcategoryId.value) {
+        // delete subcategory
+    } else {
+        gqlDeleteCategory({
+            categoryId: selectedCategoryId.value
+        })
+    }
+}
+
+onDeleteCategoryDone(() => {
+    const name = selectedCategory.value.name
+    selectedCategoryId.value = null
+    showDeleteDialog.value = false
+    store.refetchCategories()
+    displaySnackbar("Category '" + name + "' deleted.")
+})
+
+onDeleteCategoryError((e) => {
+    displaySnackbar("Failed to delete category.")
+    console.error(e)
+})
 
 // ----------------------------------------------------------------------------
 // delete subcategory
@@ -148,7 +171,6 @@ function createCategory(category) {
 onCreateCategoryDone((res) => {
     const category = res.data.createCategory
     // force-select the newly created category in the list
-    console.log('category ID: ' + category.id)
     selectedCategoryId.value = category.id
     showCreateCategoryDialog.value = false
     store.refetchCategories()    
@@ -335,7 +357,7 @@ function handleFindSubcategory(subcategoryId) {
                     :tooltip="'Delete ' + selectedItemTypeStr"
                     icon="mdi-delete"
                     :disabled="isDeleteDisabled"
-                    @click="openDeleteCategoryOrDeleteSubcategoryDialog"
+                    @click="showDeleteDialog = true"
                 />
             </div>
         </div>
@@ -423,12 +445,13 @@ function handleFindSubcategory(subcategoryId) {
             @created="handleSubcategoryCreated" />
     </v-dialog>
 
-    <!-- Delete category dialog -->
-    <v-dialog v-model="showDeleteCategoryDialog">
-        <DeleteCategory
-            :category="selectedCategory"
-            @close="showDeleteCategoryDialog = false"
-            @deleted="handleCategoryDeleted" />
+    <!-- Delete category / subcategory dialog -->
+    <v-dialog v-model="showDeleteDialog">
+        <AreYouSure 
+            :title="getDeleteDialogTitle()"
+            @cancel="showDeleteDialog = false"
+            @yes="handleDelete" 
+        />
     </v-dialog>
 
     <!-- Delete subcategory dialog -->

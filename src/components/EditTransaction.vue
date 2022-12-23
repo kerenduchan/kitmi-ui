@@ -30,7 +30,7 @@ const {
     filteredSubcategories,
     handleCategorySelected,
     handleSubcategorySelected
-} = subcategorySelect(props.categories, props.transaction)
+} = subcategorySelect(props.categories, props.transaction, props.transaction.amount <= 0)
 
 const isSubcategoryOverridden = computed(() => {
     if(props.transaction) {

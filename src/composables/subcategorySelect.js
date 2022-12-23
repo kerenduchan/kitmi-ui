@@ -11,11 +11,17 @@ function subcategorySelect(categories, defaults, showExpenseCategoriesFirst = tr
         const expenseCategories = categories.filter(c => c.isExpense && c.hasSubcategories)
         const incomeCategories = categories.filter(c => !c.isExpense && c.hasSubcategories)
 
-        if (showExpenseCategoriesFirst) {
-            return expenseCategories.concat(incomeCategories)
-        }
+        const first = showExpenseCategoriesFirst ? expenseCategories : incomeCategories
+        const second = showExpenseCategoriesFirst ? incomeCategories : expenseCategories
 
-        return incomeCategories.concat(expenseCategories)
+        const divider = {
+            name: '-',
+            disabled: true,
+            value: 0
+        }
+        let res = first
+        res.push(divider)
+        return res.concat(second)
     })
 
     // The subcategories that should appear in the select.

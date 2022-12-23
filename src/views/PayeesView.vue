@@ -10,6 +10,7 @@ import EditPayee from '@/components/EditPayee.vue'
 
 // composables
 import getStore from '@/composables/store'
+import snackbar from '@/composables/snackbar'
 import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 
 const store = getStore()
@@ -50,13 +51,7 @@ function handleSelect(id) {
 
 // ----------------------------------------------------------------------------
 // snackbar
-const showSnackbar = ref(false)
-const snackbarText = ref('')
-
-function displaySnackbar(text) {
-    snackbarText.value = text
-    showSnackbar.value = true
-}
+const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
 
 // ----------------------------------------------------------------------------
 // edit payee

@@ -10,6 +10,7 @@ import AreYouSure from '@/components/AreYouSure.vue'
 
 // composables
 import getStore from '@/composables/store'
+import snackbar from '@/composables/snackbar'
 import getCreateAccount from '@/composables/mutations/createAccount'
 import getUpdateAccount from '@/composables/mutations/updateAccount'
 import getDeleteAccount from '@/composables/mutations/deleteAccount'
@@ -19,13 +20,7 @@ const accounts = store.accounts
 
 // ----------------------------------------------------------------------------
 // snackbar
-const showSnackbar = ref(false)
-const snackbarText = ref('')
-
-function displaySnackbar(text) {
-    snackbarText.value = text
-    showSnackbar.value = true
-}
+const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
 
 // ----------------------------------------------------------------------------
 // selected account

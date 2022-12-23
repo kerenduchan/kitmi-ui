@@ -12,6 +12,8 @@ import getCreateAccount from '@/composables/mutations/createAccount'
 const store = getStore()
 const accounts = store.accounts
 
+// ----------------------------------------------------------------------------
+// snackbar
 const showSnackbar = ref(false)
 const snackbarText = ref('')
 
@@ -19,6 +21,10 @@ function displaySnackbar(text) {
     snackbarText.value = text
     showSnackbar.value = true
 }
+
+// ----------------------------------------------------------------------------
+// selected account
+
 // the ID of the selected account
 const selectedAccountId = ref(null)
 
@@ -36,7 +42,8 @@ function handleSelect(accountId) {
     selectedAccountId.value = accountId
 }
 
-// edit account dialog
+// ----------------------------------------------------------------------------
+// edit account
 const showEditDialog = ref(false)
 
 function handleAccountEdited() {
@@ -44,7 +51,8 @@ function handleAccountEdited() {
     store.refetchAccounts()
 }
 
-// delete account dialog
+// ----------------------------------------------------------------------------
+// delete account
 const showDeleteDialog = ref(false)
 
 function handleAccountDeleted() {
@@ -67,6 +75,7 @@ const isDeleteDisabled = computed(() => {
     return !selectedAccountId.value || usedAccountIds.value.includes(selectedAccountId.value)
 })
 
+// ----------------------------------------------------------------------------
 // create account
 const showCreateDialog = ref(false)
 

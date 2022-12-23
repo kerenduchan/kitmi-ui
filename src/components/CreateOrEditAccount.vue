@@ -27,7 +27,11 @@ const isNameAlreadyExists = computed(() => {
 })
 
 const isSaveDisabled = computed(() => {
-    return name.value.length === 0 || isNameAlreadyExists.value === true
+    return name.value.length === 0 || 
+        isNameAlreadyExists.value === true ||
+        source.value.length === 0 ||
+        username.value.length === 0 ||
+        password.value.length === 0
 })
 
 const title = computed(() => {

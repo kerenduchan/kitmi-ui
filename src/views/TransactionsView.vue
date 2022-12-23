@@ -1,13 +1,23 @@
 <script setup>
 import { ref, computed } from 'vue'
+
+// components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
 import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
+
+// composables
 import getStore from '@/composables/store'
+
+// ----------------------------------------------------------------------------
+// store
 
 const store = getStore()
 const categories = store.categories
 const transactions = store.transactions
+
+// ----------------------------------------------------------------------------
+// show only uncategorized transactions
 
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
@@ -19,6 +29,9 @@ const filteredTransactions = computed(() => {
     }
     return transactions.value
 })
+
+// ----------------------------------------------------------------------------
+// selected transaction
 
 // The ID of the selected transaction
 const selectedTransactionId = ref(null)
@@ -36,6 +49,9 @@ const selectedTransaction = computed(() => {
 function handleSelect(id) {
     selectedTransactionId.value = id
 }
+
+// ----------------------------------------------------------------------------
+// edit transaction
 
 // edit dialog
 const showEditDialog = ref(false)

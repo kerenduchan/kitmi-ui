@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 // props 
 const props = defineProps({
+    // account is null for create or an object for edit
     account: Object,
     accounts: Object
 })
@@ -31,7 +32,7 @@ const isSaveDisabled = computed(() => {
         isNameAlreadyExists.value === true ||
         source.value.length === 0 ||
         username.value.length === 0 ||
-        password.value.length === 0
+        (!props.account && password.value.length === 0)
 })
 
 const title = computed(() => {
@@ -46,7 +47,8 @@ function save() {
         name: name.value,
         source: source.value,
         username: username.value,
-        password: password.value
+        // null for password in edit mode means don't change password
+        password: (password.length === 0 ? null : password.value)
     }
     emit('save', account)
 }
@@ -61,6 +63,15 @@ const sources = ref([
         id: 'LEUMI'
     }
 ])
+
+const passwordRules = computed(() => {
+    if(props.account) {
+        // edit account - leaving the password field empty is valid (don't update password)
+        return []
+    }
+    return [ n => n.length > 0 || 'Password must not be empty' ]
+})
+
 </script>
 
 <template>
@@ -83,9 +94,12 @@ const sources = ref([
                 ]" />
 
                 <!-- Password -->
-                <v-text-field type="password" label="Password" v-model="password" :rules="[
-                    n => n.length > 0 || 'Password must not be empty'
-                ]" />
+                <v-text-field 
+                    type="password" 
+                    autocomplete="on"
+                    label="Password" 
+                    v-model="password" 
+                    :rules="passwordRules" />
 
 
             </v-form>

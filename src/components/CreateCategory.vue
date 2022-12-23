@@ -1,7 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import createCategory from '@/composables/mutations/createCategory'
-import Category from '@/composables/model/Category'
 
 // props 
 const props = defineProps({
@@ -10,13 +8,13 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'created'
+    'save'
 ])
 
-const { gqlCreateCategory, onDone, onError } = createCategory()
-
+// v-models for form fields
 const name = ref('')
 const isExpense = ref(true)
+
 const isNameAlreadyExists = computed(() => {
     return (props.categories.find(c => c.name == name.value) !== undefined)
 })
@@ -26,23 +24,11 @@ const isSaveDisabled = computed(() => {
 })
 
 function save() {
-    gqlCreateCategory({
+    emit('save', 
+    { 
         name: name.value,
         isExpense: isExpense.value
     })
-}
-
-onDone((res) => {
-    const c = new Category(res.data.createCategory)
-    emit('created', c)
-})
-
-onError((e) => {
-    console.error(e)
-})
-
-function close() {
-    emit('close')
 }
 
 </script>
@@ -70,7 +56,7 @@ function close() {
         </v-card-text>
         <v-card-actions>
             <v-btn color="primary" :disabled="isSaveDisabled" @click="save">Save</v-btn>
-            <v-btn color="primary" @click="close">Close</v-btn>
+            <v-btn color="primary" @click="emit('close')">Close</v-btn>
             
         </v-card-actions>
     </v-card>

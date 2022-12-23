@@ -16,6 +16,7 @@ import CategoriesList from '@/components/CategoriesList.vue'
 // composables
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
+import getCreateCategory from '@/composables/mutations/createCategory'
 import moveCategoryUp from '@/composables/mutations/moveCategoryUp'
 import moveCategoryDown from '@/composables/mutations/moveCategoryDown'
 
@@ -96,7 +97,7 @@ const isDeleteDisabled = computed(() => {
         // Subcategories can always be deleted.
         return false
     }
-    if(selectedCategoryId.value) {
+    if(selectedCategory.value) {
         // The selected item is a category.
         // Can't delete a category with subcategories.
         return selectedCategory.value.hasSubcategories
@@ -134,12 +135,31 @@ function handleSubcategoryDeleted() {
 
 const showCreateCategoryDialog = ref(false)
 
-function handleCategoryCreated(category) {
+const { 
+    gqlCreateCategory,
+    onDone: onCreateCategoryDone,
+    onError: onCreateCategoryError
+} = getCreateCategory()
+
+function createCategory(category) {
+    gqlCreateCategory(category)
+}
+
+onCreateCategoryDone((res) => {
+    const category = res.data.createCategory
     // force-select the newly created category in the list
+    console.log('category ID: ' + category.id)
     selectedCategoryId.value = category.id
     showCreateCategoryDialog.value = false
-    store.refetchCategories()
-}
+    store.refetchCategories()    
+    displaySnackbar("Category '" + category.name + "' created.")
+
+})
+
+onCreateCategoryError((e) => {
+    displaySnackbar("Failed to create category.")
+    console.error(e)
+})
 
 // ----------------------------------------------------------------------------
 // create subcategory
@@ -384,7 +404,7 @@ function handleFindSubcategory(subcategoryId) {
         <CreateCategory 
             :categories="categories"
             @close="showCreateCategoryDialog = false"
-            @created="handleCategoryCreated" />
+            @save="createCategory" />
     </v-dialog>
 
     <!-- Search for subcategory dialog -->

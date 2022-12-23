@@ -12,6 +12,7 @@ import AreYouSure from '@/components/AreYouSure.vue'
 // composables
 import getStore from '@/composables/store'
 import getCreateAccount from '@/composables/mutations/createAccount'
+import getUpdateAccount from '@/composables/mutations/updateAccount'
 import getDeleteAccount from '@/composables/mutations/deleteAccount'
 
 const store = getStore()
@@ -51,10 +52,34 @@ function handleSelect(accountId) {
 // edit account
 const showEditDialog = ref(false)
 
-function handleAccountEdited() {
+const { 
+    gqlUpdateAccount, 
+    onDone: onUpdateAccountDone, 
+    onError: onUpdateAccountError
+} = getUpdateAccount()
+
+function updateAccount(account) {
+    gqlUpdateAccount({
+        accountId: selectedAccountId.value,
+        name: account.name,
+    })
     showEditDialog.value = false
     store.refetchAccounts()
 }
+
+onUpdateAccountDone((res) => {
+    const account = res.data.updateAccount
+    const name = account.name
+    showEditDialog.value = false
+    store.refetchAccounts()
+    displaySnackbar("Account '" + name + "' updated.")
+})
+
+onUpdateAccountError((e) => {
+    showEditDialog.value = false
+    displaySnackbar("Failed to update account '" + selectedAccount.value.name + "'.")
+    console.error(e)
+})
 
 // ----------------------------------------------------------------------------
 // delete account
@@ -116,6 +141,15 @@ const {
     onError: onCreateAccountError
 } = getCreateAccount()
 
+function createAccount(account) {
+    gqlCreateAccount({
+        name: account.name,
+        source: account.source,
+        username: account.username,
+        password: account.password,
+    })
+}
+
 onCreateAccountDone((res) => {
     const account = res.data.createAccount
     selectedAccountId.value = account.id
@@ -128,15 +162,6 @@ onCreateAccountError((e) => {
     displaySnackbar("Failed to create account.")
     console.error(e)
 })
-
-function createAccount(account) {
-    gqlCreateAccount({
-        name: account.name,
-        source: account.source,
-        username: account.username,
-        password: account.password,
-    })
-}
 
 </script>
 
@@ -198,7 +223,7 @@ function createAccount(account) {
             :account="selectedAccount"
             :accounts="accounts"
             @close="showEditDialog = false"
-            @save="handleAccountEdited" />
+            @save="updateAccount" />
     </v-dialog>
 
     <!-- Delete selected account dialog -->

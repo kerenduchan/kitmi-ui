@@ -1,8 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import updateAccount from '@/composables/mutations/updateAccount'
-
-const { gqlUpdateAccount, onDone, onError } = updateAccount()
 
 // props 
 const props = defineProps({
@@ -16,6 +13,7 @@ const emit = defineEmits([
     'save'
 ])
 
+// v-model for the form fields
 const name = ref(props.account.name)
 
 const isNameAlreadyExists = computed(() => {
@@ -28,19 +26,11 @@ const isSaveDisabled = computed(() => {
 })
 
 function save() {
-    gqlUpdateAccount({
-        accountId: props.account.id,
+    const account = { 
         name: name.value,
-    })
+    }
+    emit('save', account)
 }
-
-onDone(() => {
-    emit('save')
-})
-
-onError((e) => {
-    console.error(e)
-})
 
 </script>
 

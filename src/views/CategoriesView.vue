@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 
 // components
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
+import Snackbar from '@/components/Snackbar.vue'
 import EditCategory from '@/components/EditCategory.vue'
 import EditSubcategory from '@/components/EditSubcategory.vue'
 import CreateCategory from '@/components/CreateCategory.vue'
@@ -9,18 +11,22 @@ import FindSubcategory from '@/components/FindSubcategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import DeleteCategory from '@/components/DeleteCategory.vue'
 import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
-import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 
 // composables
+import getStore from '@/composables/store'
+import snackbar from '@/composables/snackbar'
 import moveCategoryUp from '@/composables/mutations/moveCategoryUp'
 import moveCategoryDown from '@/composables/mutations/moveCategoryDown'
-import getStore from '@/composables/store'
 
 // ----------------------------------------------------------------------------
 // store
 const store = getStore()
 const categories = store.categories
+
+// ----------------------------------------------------------------------------
+// snackbar
+const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
 
 // ----------------------------------------------------------------------------
 // selected category and subcategory
@@ -346,6 +352,13 @@ function handleFindSubcategory(subcategoryId) {
         :categories="categories"
         @selectCategory="handleSelectCategory"
         @selectSubcategory="handleSelectSubcategory"
+    />
+
+    <!-- snackbar -->
+    <Snackbar 
+        :show="showSnackbar" 
+        :text="snackbarText"
+        @close="showSnackbar = false"
     />
 
     <!-- Edit category dialog -->

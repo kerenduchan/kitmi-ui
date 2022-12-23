@@ -10,6 +10,8 @@ import EditTransaction from '@/components/EditTransaction.vue'
 // composables
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
+import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
+import updateTransactionSubcategory from '@/composables/mutations/updateTransactionSubcategory'
 
 // ----------------------------------------------------------------------------
 // store
@@ -63,15 +65,73 @@ function handleSelect(id) {
 // edit dialog
 const showEditDialog = ref(false)
 
-function handlePayeeChange() {
-    showEditDialog.value = false
-    store.refetchPayees()
+let isSaveOnPayee = false
+
+const { 
+    gqlUpdateTransactionSubcategory, 
+    onDone: onUpdateTransactionDone, 
+    onError: onUpdateTransactionError 
+} = updateTransactionSubcategory()
+
+const { 
+    gqlUpdatePayeeSubcategory, 
+    onDone: onUpdatePayeeDone, 
+    onError: onUpdatePayeeError 
+} = updatePayeeSubcategory()
+
+// update the given subcategory ID on the payee 
+// and clear the subcategory ID of the transaction
+function handleSaveOnPayee(subcategoryId) {
+    isSaveOnPayee = true
+    const t = selectedTransaction.value
+    // set the subcategoryId of the transaction to null
+    if(t.subcategoryId !== null) {
+        gqlUpdateTransactionSubcategory({
+            transactionId: selectedTransactionId.value, 
+            subcategoryId: null
+        })
+    }
+
+    // update the subcategoryId of the payee
+    gqlUpdatePayeeSubcategory({
+        payeeId: t.payee.id, 
+        subcategoryId
+    })
 }
 
-function handleTransactionChange() {
+onUpdatePayeeDone(() => {
+    showEditDialog.value = false
+    store.refetchPayees()
+    displaySnackbar("Transaction updated.")
+})
+
+onUpdatePayeeError(() => {
+    showEditDialog.value = false
+    displaySnackbar("Failed to update transaction.")
+})
+
+// update the given subcategory ID on the transaction
+function handleSaveOnTransaction(subcategoryId) {
+    isSaveOnPayee = false
+    gqlUpdateTransactionSubcategory({
+        transactionId: selectedTransactionId.value, 
+        subcategoryId
+    })
+}
+
+onUpdateTransactionDone(() => {
+    if(isSaveOnPayee) {
+        return
+    }
     showEditDialog.value = false
     store.refetchTransactions()
-}
+    displaySnackbar("Transaction updated.")
+})
+
+onUpdateTransactionError(() => {
+    showEditDialog.value = false
+    displaySnackbar("Failed to update transaction.")
+})
 
 </script> 
 
@@ -126,8 +186,8 @@ function handleTransactionChange() {
             :transaction="selectedTransaction"
             :categories="categories" 
             @close="showEditDialog = false"
-            @payeeChanged="handlePayeeChange" 
-            @transactionChanged="handleTransactionChange" 
+            @saveOnPayee="handleSaveOnPayee" 
+            @saveOnTransaction="handleSaveOnTransaction" 
         />
     </v-dialog>
 

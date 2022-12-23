@@ -2,14 +2,7 @@
 import { ref, computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import TransactionSubcategorySaveOptions from '@/components/TransactionSubcategorySaveOptions.vue'
-import updateTransactionSubcategory from '@/composables/mutations/updateTransactionSubcategory'
 import subcategorySelect from '@/composables/subcategorySelect'
-
-const { 
-    gqlUpdateTransactionSubcategory, 
-    onDone: onUpdateTransactionDone, 
-    onError: onUpdateTransactionError 
-} = updateTransactionSubcategory()
 
 // props 
 const props = defineProps({
@@ -19,8 +12,8 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'payeeChanged',
-    'transactionChanged'
+    'saveOnPayee',
+    'saveOnTransaction',
 ])
 
 const {
@@ -49,18 +42,18 @@ function save() {
     showTransactionSubcategorySaveOptionsDialog.value = true
 }
 
-function handlePayeeChange() {
+function handleSaveOnPayee() {
     showTransactionSubcategorySaveOptionsDialog.value = false
-    emit('payeeChanged')
+    emit('saveOnPayee', selectedSubcategoryId.value)
 }
 
-function handleTransactionChange() {
+function handleSaveOnTransaction() {
     showTransactionSubcategorySaveOptionsDialog.value = false
-    emit('transactionChanged')
+    emit('saveOnTransaction', selectedSubcategoryId.value)
 }
 
-function close() {
-    emit('close')
+function handleUsePayeeSubcategory() {
+    emit('saveOnTransaction', null)
 }
 
 const fields = ref([
@@ -77,23 +70,6 @@ const fields = ref([
         value: props.transaction.formattedDate
     }
 ])
-
-function usePayeeSubcategory() {
-    // set the subcategoryId of the transaction to null
-    gqlUpdateTransactionSubcategory({
-        transactionId: props.transaction.id, 
-        subcategoryId: null
-    })
-}
-
-onUpdateTransactionDone(() => {
-    emit('transactionChanged')
-})
-
-onUpdateTransactionError((e) => {
-    console.error('failed to update transaction')
-    console.error(e)
-})
 
 const payeeCategorization = computed(() => {
     if(!props.transaction.payee.subcategory) {
@@ -128,13 +104,13 @@ const payeeCategorization = computed(() => {
 
             <div v-if="isSubcategoryOverridden">
                 <p>The categorization for this transaction overrides the categorization of the payee ({{ payeeCategorization }})</p>
-                <v-btn @click="usePayeeSubcategory">Use Payee Subcategory</v-btn>
+                <v-btn @click="handleUsePayeeSubcategory">Use Payee Subcategory</v-btn>
             </div>
             
         </v-card-text>
         <v-card-actions>
             <v-btn color="primary" :disabled="isSaveDisabled" @click="save">Save</v-btn>
-            <v-btn color="primary" @click="close">Close</v-btn>
+            <v-btn color="primary" @click="emit('close')">Close</v-btn>
             
         </v-card-actions>
     </v-card>
@@ -145,8 +121,8 @@ const payeeCategorization = computed(() => {
             :transaction="transaction"
             :subcategoryId="selectedSubcategoryId"
             @close="showTransactionSubcategorySaveOptionsDialog = false"
-            @payeeChanged="handlePayeeChange" 
-            @transactionChanged="handleTransactionChange" 
+            @saveOnPayee="handleSaveOnPayee" 
+            @saveOnTransaction="handleSaveOnTransaction" 
         />
     </v-dialog>
 </template>

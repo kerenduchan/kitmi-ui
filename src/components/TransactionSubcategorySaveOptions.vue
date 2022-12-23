@@ -1,7 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
-import updateTransactionSubcategory from '@/composables/mutations/updateTransactionSubcategory'
 
 const props = defineProps({
     transaction: Object,
@@ -9,78 +7,14 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-    'payeeChanged',
-    'transactionChanged',
+    'saveOnPayee',
+    'saveOnTransaction',
     'close'
 ])
 
-const { 
-    gqlUpdatePayeeSubcategory, 
-    onDone: onUpdatePayeeDone, 
-    onError: onUpdatePayeeError 
-} = updatePayeeSubcategory()
-
-const { 
-    gqlUpdateTransactionSubcategory, 
-    onDone: onUpdateTransactionDone, 
-    onError: onUpdateTransactionError 
-} = updateTransactionSubcategory()
-
 function save() {
-    if(isApplyToPayee.value === true) {
-        saveOnPayee()
-    } else {
-        saveOnTransaction()
-    }
+    emit(isApplyToPayee.value ? 'saveOnPayee' : 'saveOnTransaction')
 }
-
-function close() {
-    emit('close')
-}
-
-onUpdatePayeeDone(() => {
-    emit('payeeChanged')
-})
-
-onUpdatePayeeError((e) => {
-    console.error('failed to update payee')
-    console.error(e)
-})
-
-function saveOnPayee() {
-
-    // set the subcategoryId of the transaction to null
-    if(props.transaction.subcategoryId !== null) {
-        gqlUpdateTransactionSubcategory({
-            transactionId: props.transaction.id, 
-            subcategoryId: null
-        })
-    }
-
-    // update the subcategoryId of the payee
-    gqlUpdatePayeeSubcategory({
-        payeeId: props.transaction.payee.id, 
-        subcategoryId: props.subcategoryId
-    })
-}
-
-function saveOnTransaction() {
-    gqlUpdateTransactionSubcategory({
-        transactionId: props.transaction.id, 
-        subcategoryId: props.subcategoryId
-    })
-}
-
-onUpdateTransactionDone(() => {
-    if(isApplyToPayee.value === false) {
-        emit('transactionChanged')
-    }
-})
-
-onUpdateTransactionError((e) => {
-    console.error('failed to update transaction')
-    console.error(e)
-})
 
 const isApplyToPayee = ref(true)
 
@@ -104,7 +38,7 @@ const payeeLabel = computed(() => {
         </v-card-text>
         <v-card-actions>
             <v-btn color="primary" @click="save">Save</v-btn>
-            <v-btn color="primary" @click="close">Cancel</v-btn>
+            <v-btn color="primary" @click="emit('close')">Cancel</v-btn>
             
         </v-card-actions>
     </v-card>

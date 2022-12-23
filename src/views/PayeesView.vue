@@ -1,10 +1,16 @@
 <script setup>
 import { ref, computed } from 'vue'
-import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
-import CategorizationWizard from '@/components/CategorizationWizard.vue';
+
+// components
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
+import Snackbar from '@/components/Snackbar.vue'
+import CategorizationWizard from '@/components/CategorizationWizard.vue'
 import PayeesList from '@/components/PayeesList.vue'
 import EditPayee from '@/components/EditPayee.vue'
+
+// composables
 import getStore from '@/composables/store'
+import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 
 const store = getStore()
 const categories = store.categories
@@ -42,14 +48,47 @@ function handleSelect(id) {
     selectedPayeeId.value = id
 }
 
-// edit dialog
-const showEditDialog = ref(false)
+// ----------------------------------------------------------------------------
+// snackbar
+const showSnackbar = ref(false)
+const snackbarText = ref('')
 
-function handleChange() {
-    showEditDialog.value = false
-    store.refetchPayees()
+function displaySnackbar(text) {
+    snackbarText.value = text
+    showSnackbar.value = true
 }
 
+// ----------------------------------------------------------------------------
+// edit payee
+const showEditDialog = ref(false)
+
+const { 
+    gqlUpdatePayeeSubcategory, 
+    onDone: onUpdatePayeeDone, 
+    onError: onUpdatePayeeError 
+} = updatePayeeSubcategory()
+
+function updatePayee(payee) {
+    gqlUpdatePayeeSubcategory({
+        payeeId: selectedPayeeId.value,
+        subcategoryId: payee.subcategoryId
+    })
+}
+
+onUpdatePayeeDone((res) => {
+    const name = res.data.updatePayeeSubcategory.name
+    showEditDialog.value = false
+    store.refetchPayees()
+    displaySnackbar("Payee '" + selectedPayee.value.name + "' updated.")
+})
+
+onUpdatePayeeError(() => {
+    displaySnackbar("Failed to update payee '" + selectedPayee.value.name + "'.")
+    console.error(e)
+})
+
+// ----------------------------------------------------------------------------
+// categorization wizard
 const showCategorizationWizard = ref(false)
 
 const payeeIdsForCategorizationWizard = ref(null)
@@ -121,13 +160,19 @@ function openCategorizationWizard() {
         :payees="filteredPayees" 
         @select="handleSelect" />
 
+    <!-- snackbar -->
+    <Snackbar 
+        :show="showSnackbar" 
+        :text="snackbarText"
+        @close="showSnackbar = false"/>
+
     <!-- Edit selected payee dialog -->
     <v-dialog v-model="showEditDialog">
         <EditPayee 
             :payee="selectedPayee"
             :categories="categories"
             @close="showEditDialog = false"
-            @change="handleChange" />
+            @save="updatePayee" />
     </v-dialog>
 
     <!-- Categorization wizard -->

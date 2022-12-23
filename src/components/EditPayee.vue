@@ -1,7 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
-import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 import subcategorySelect from '@/composables/subcategorySelect'
 
 // props 
@@ -12,7 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
-    'change'
+    'save'
 ])
 const {
     selectedCategoryId,
@@ -23,34 +22,15 @@ const {
     handleSubcategorySelected
 } = subcategorySelect(props.categories, props.payee)
 
-const { 
-    gqlUpdatePayeeSubcategory, 
-    onDone: onUpdatePayeeDone, 
-    onError: onUpdatePayeeError 
-} = updatePayeeSubcategory()
-
 const isSaveDisabled = computed(() => {
     return selectedSubcategoryId.value === null
 })
 
 function save() {
-    gqlUpdatePayeeSubcategory({
-        payeeId: props.payee.id, 
+    const payee = { 
         subcategoryId: selectedSubcategoryId.value
-    })
-}
-
-onUpdatePayeeDone(() => {
-    emit('change')
-})
-
-onUpdatePayeeError((e) => {
-    console.error('failed to update payee')
-    console.error(e)
-})
-
-function close() {
-    emit('close')
+    }
+    emit('save', payee)
 }
 
 </script>
@@ -72,7 +52,7 @@ function close() {
         </v-card-text>
         <v-card-actions>
             <v-btn color="primary" :disabled="isSaveDisabled" @click="save">Save</v-btn>
-            <v-btn color="primary" @click="close">Close</v-btn>
+            <v-btn color="primary" @click="emit('close')">Close</v-btn>
             
         </v-card-actions>
     </v-card>

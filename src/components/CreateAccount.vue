@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import createAccount from '@/composables/mutations/createAccount'
 
 // props 
 const props = defineProps({
@@ -10,9 +9,10 @@ const props = defineProps({
 // emits
 const emit = defineEmits([
     'close',
-    'created'
+    'save'
 ])
 
+// v-models for the form fields
 const name = ref('')
 const source = ref('')
 const username = ref('')
@@ -26,25 +26,15 @@ const isSaveDisabled = computed(() => {
     return name.value.length === 0 || isNameAlreadyExists.value === true
 })
 
-const { gqlCreateAccount, onDone, onError } = createAccount()
-
 function save() {
-    gqlCreateAccount({
+    const account = { 
         name: name.value,
         source: source.value,
         username: username.value,
-        password: password.value,
-    })
+        password: password.value
+    }
+    emit('save', account)
 }
-
-onDone((res) => {
-    const accountId = res.data.createAccount.id
-    emit('created', accountId)
-})
-
-onError((e) => {
-    console.error(e)
-})
 
 const sources = ref([
     {

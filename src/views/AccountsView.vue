@@ -1,15 +1,24 @@
 <script setup>
 import { ref, computed } from 'vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
+import Snackbar from '@/components/Snackbar.vue'
 import AccountsList from '@/components/AccountsList.vue'
 import EditAccount from '@/components/EditAccount.vue'
 import DeleteAccount from '@/components/DeleteAccount.vue'
 import CreateAccount from '@/components/CreateAccount.vue'
 import getStore from '@/composables/store'
+import getCreateAccount from '@/composables/mutations/createAccount'
 
 const store = getStore()
 const accounts = store.accounts
 
+const showSnackbar = ref(false)
+const snackbarText = ref('')
+
+function displaySnackbar(text) {
+    snackbarText.value = text
+    showSnackbar.value = true
+}
 // the ID of the selected account
 const selectedAccountId = ref(null)
 
@@ -58,14 +67,35 @@ const isDeleteDisabled = computed(() => {
     return !selectedAccountId.value || usedAccountIds.value.includes(selectedAccountId.value)
 })
 
-// create account dialog
+// create account
 const showCreateDialog = ref(false)
 
-function handleAccountCreated(accountId) {
-    // select the newly created account
-    selectedAccountId.value = accountId
+const { 
+    gqlCreateAccount, 
+    onDone: onCreateAccountDone, 
+    onError: onCreateAccountError
+} = getCreateAccount()
+
+onCreateAccountDone((res) => {
+    const account = res.data.createAccount
+    selectedAccountId.value = account.id
     showCreateDialog.value = false
     store.refetchAccounts()
+    displaySnackbar("Account '" + account.name + "' created.")
+})
+
+onCreateAccountError((e) => {
+    displaySnackbar("Failed to create account.")
+    console.error(e)
+})
+
+function createAccount(account) {
+    gqlCreateAccount({
+        name: account.name,
+        source: account.source,
+        username: account.username,
+        password: account.password,
+    })
 }
 
 </script>
@@ -116,6 +146,12 @@ function handleAccountCreated(accountId) {
         :accounts="accounts" 
         @select="handleSelect" />
 
+    <!-- snackbar -->
+    <Snackbar 
+        :show="showSnackbar" 
+        :text="snackbarText"
+        @close="showSnackbar = false"/>
+
     <!-- Edit selected account dialog -->
     <v-dialog v-model="showEditDialog">
         <EditAccount 
@@ -138,7 +174,7 @@ function handleAccountCreated(accountId) {
         <CreateAccount 
             :accounts="accounts"
             @close="showCreateDialog = false"
-            @created="handleAccountCreated" 
+            @save="createAccount" 
         />
     </v-dialog>
 

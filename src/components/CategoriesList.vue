@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import SubcategoriesList from '@/components/SubcategoriesList.vue';
 import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
 

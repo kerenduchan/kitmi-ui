@@ -2,12 +2,14 @@
 import { ref, computed } from 'vue'
 
 // components
-import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue';
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
+import Snackbar from '@/components/Snackbar.vue'
 import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
 
 // composables
 import getStore from '@/composables/store'
+import snackbar from '@/composables/snackbar'
 
 // ----------------------------------------------------------------------------
 // store
@@ -15,6 +17,11 @@ import getStore from '@/composables/store'
 const store = getStore()
 const categories = store.categories
 const transactions = store.transactions
+
+// ----------------------------------------------------------------------------
+// snackbar
+
+const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
 
 // ----------------------------------------------------------------------------
 // show only uncategorized transactions
@@ -106,6 +113,12 @@ function handleTransactionChange() {
         :selectedTransactionId="selectedTransactionId"
         :transactions="filteredTransactions" 
         @select="handleSelect"/>
+
+    <!-- snackbar -->
+    <Snackbar 
+        :show="showSnackbar" 
+        :text="snackbarText"
+        @close="showSnackbar = false"/>
 
     <!-- Edit selected transaction dialog -->
     <v-dialog v-model="showEditDialog">

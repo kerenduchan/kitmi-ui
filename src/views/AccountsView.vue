@@ -1,13 +1,18 @@
 <script setup>
 import { ref, computed } from 'vue'
+
+// components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import AccountsList from '@/components/AccountsList.vue'
-import EditAccount from '@/components/EditAccount.vue'
-import DeleteAccount from '@/components/DeleteAccount.vue'
 import CreateAccount from '@/components/CreateAccount.vue'
+import EditAccount from '@/components/EditAccount.vue'
+import AreYouSure from '@/components/AreYouSure.vue'
+
+// composables
 import getStore from '@/composables/store'
 import getCreateAccount from '@/composables/mutations/createAccount'
+import getDeleteAccount from '@/composables/mutations/deleteAccount'
 
 const store = getStore()
 const accounts = store.accounts
@@ -55,12 +60,12 @@ function handleAccountEdited() {
 // delete account
 const showDeleteDialog = ref(false)
 
-function handleAccountDeleted() {
-    selectedAccountId.value = null
-    showDeleteDialog.value = false
-    store.refetchAccounts()
-}
-
+function getDeleteAccountTitle() {
+    if(selectedAccount.value) {
+        return "Delete Account '" + selectedAccount.value.name + "'"
+    }
+    return ''
+} 
 // IDs of accounts used by one or more transactions
 const usedAccountIds = computed(() => {
     const allAccountIds = accounts.value.map(a => a.id)
@@ -73,6 +78,32 @@ const isDeleteDisabled = computed(() => {
     // - No account is selected, or 
     // - The selected account is used in one or more transactions.
     return !selectedAccountId.value || usedAccountIds.value.includes(selectedAccountId.value)
+})
+
+const { 
+    gqlDeleteAccount, 
+    onDone: onDeleteAccountDone, 
+    onError: onDeleteAccountError
+} = getDeleteAccount()
+
+function deleteAccount() {
+    gqlDeleteAccount({
+        accountId: selectedAccountId.value
+    })
+}
+
+onDeleteAccountDone((res) => {
+    const name = selectedAccount.value.name
+    selectedAccountId.value = null
+    showDeleteDialog.value = false
+    store.refetchAccounts()
+    displaySnackbar("Account '" + name + "' deleted.")
+})
+
+onDeleteAccountError((e) => {
+    showDeleteDialog.value = false
+    displaySnackbar("Failed to delete account '" + selectedAccount.value.name + "'.")
+    console.error(e)
 })
 
 // ----------------------------------------------------------------------------
@@ -172,10 +203,11 @@ function createAccount(account) {
 
     <!-- Delete selected account dialog -->
     <v-dialog v-model="showDeleteDialog">
-        <DeleteAccount 
-            :account="selectedAccount"
-            @close="showDeleteDialog = false"
-            @deleted="handleAccountDeleted()" />
+        <AreYouSure 
+            :title="getDeleteAccountTitle()"
+            @cancel="showDeleteDialog = false"
+            @yes="deleteAccount" 
+        />
     </v-dialog>
 
     <!-- Create account dialog -->

@@ -10,7 +10,6 @@ import CreateCategory from '@/components/CreateCategory.vue'
 import FindSubcategory from '@/components/FindSubcategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import AreYouSure from '@/components/AreYouSure.vue'
-import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 
 // composables

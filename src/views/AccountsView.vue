@@ -15,6 +15,9 @@ import getCreateAccount from '@/composables/mutations/createAccount'
 import getUpdateAccount from '@/composables/mutations/updateAccount'
 import getDeleteAccount from '@/composables/mutations/deleteAccount'
 
+// ----------------------------------------------------------------------------
+// snackbar
+
 const store = getStore()
 const accounts = store.accounts
 

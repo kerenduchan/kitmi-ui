@@ -13,9 +13,20 @@ import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
 
+// ----------------------------------------------------------------------------
+// store
+
 const store = getStore()
 const categories = store.categories
 const payees = store.payees
+
+// ----------------------------------------------------------------------------
+// snackbar
+
+const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
+
+// ----------------------------------------------------------------------------
+// show only uncategorized payees
 
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
@@ -31,6 +42,9 @@ const filteredPayees = computed(() => {
     }
     return payees.value
 })
+
+// ----------------------------------------------------------------------------
+// selected payee
 
 // the ID of the selected payee
 const selectedPayeeId = ref(null)
@@ -50,11 +64,8 @@ function handleSelect(id) {
 }
 
 // ----------------------------------------------------------------------------
-// snackbar
-const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
-
-// ----------------------------------------------------------------------------
 // edit payee
+
 const showEditDialog = ref(false)
 
 const { 
@@ -84,6 +95,7 @@ onUpdatePayeeError(() => {
 
 // ----------------------------------------------------------------------------
 // categorization wizard
+
 const showCategorizationWizard = ref(false)
 
 const payeeIdsForCategorizationWizard = ref(null)

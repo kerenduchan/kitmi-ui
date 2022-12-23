@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
+import subcategorySelect from '@/composables/subcategorySelect'
 
 // props 
 const props = defineProps({
@@ -13,6 +14,14 @@ const emit = defineEmits([
     'close',
     'change'
 ])
+const {
+    selectedCategoryId,
+    selectedSubcategoryId,
+    filteredCategories,
+    filteredSubcategories,
+    handleCategorySelected,
+    handleSubcategorySelected
+} = subcategorySelect(props.categories, props.payee)
 
 const { 
     gqlUpdatePayeeSubcategory, 
@@ -20,21 +29,14 @@ const {
     onError: onUpdatePayeeError 
 } = updatePayeeSubcategory()
 
-const subcategoryId = ref(props.payee.subcategoryId)
-
-
-function handleSubcategorySelected(id) {
-    subcategoryId.value = id
-}
-
 const isSaveDisabled = computed(() => {
-    return subcategoryId.value === null
+    return selectedSubcategoryId.value === null
 })
 
 function save() {
     gqlUpdatePayeeSubcategory({
         payeeId: props.payee.id, 
-        subcategoryId: subcategoryId.value
+        subcategoryId: selectedSubcategoryId.value
     })
 }
 
@@ -59,9 +61,11 @@ function close() {
         <v-card-text>
             <v-form>
                 <SubcategorySelect 
-                    :defaults="payee" 
-                    :categories="categories"
-                    :showExpenseCategoriesFirst="true"
+                    :categoryId="selectedCategoryId"
+                    :subcategoryId="selectedSubcategoryId"
+                    :categories="filteredCategories"
+                    :subcategories="filteredSubcategories"
+                    @categorySelected="handleCategorySelected"
                     @subcategorySelected="handleSubcategorySelected"
                 />
             </v-form>

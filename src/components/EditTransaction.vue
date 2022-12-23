@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import TransactionSubcategorySaveOptions from '@/components/TransactionSubcategorySaveOptions.vue'
 import updateTransactionSubcategory from '@/composables/mutations/updateTransactionSubcategory'
+import subcategorySelect from '@/composables/subcategorySelect'
 
 const { 
     gqlUpdateTransactionSubcategory, 
@@ -22,7 +23,14 @@ const emit = defineEmits([
     'transactionChanged'
 ])
 
-const subcategoryId = ref(props.transaction.subcategoryId)
+const {
+    selectedCategoryId,
+    selectedSubcategoryId,
+    filteredCategories,
+    filteredSubcategories,
+    handleCategorySelected,
+    handleSubcategorySelected
+} = subcategorySelect(props.categories, props.transaction)
 
 const isSubcategoryOverridden = computed(() => {
     if(props.transaction) {
@@ -31,12 +39,8 @@ const isSubcategoryOverridden = computed(() => {
     return false
 })
 
-function handleSubcategorySelected(id) {
-    subcategoryId.value = id
-}
-
 const isSaveDisabled = computed(() => {
-    return subcategoryId.value === null
+    return selectedSubcategoryId.value === null
 })
 
 const showTransactionSubcategorySaveOptionsDialog = ref(false)
@@ -113,13 +117,14 @@ const payeeCategorization = computed(() => {
                 </tbody>
             </v-table>
 
-            <v-form>
-                <SubcategorySelect 
-                    :defaults="transaction" 
-                    :categories="categories"
+            <SubcategorySelect 
+                    :categoryId="selectedCategoryId"
+                    :subcategoryId="selectedSubcategoryId"
+                    :categories="filteredCategories"
+                    :subcategories="filteredSubcategories"
+                    @categorySelected="handleCategorySelected"
                     @subcategorySelected="handleSubcategorySelected"
                 />
-            </v-form>
 
             <div v-if="isSubcategoryOverridden">
                 <p>The categorization for this transaction overrides the categorization of the payee ({{ payeeCategorization }})</p>
@@ -138,7 +143,7 @@ const payeeCategorization = computed(() => {
     <v-dialog v-model="showTransactionSubcategorySaveOptionsDialog">
         <TransactionSubcategorySaveOptions
             :transaction="transaction"
-            :subcategoryId="subcategoryId"
+            :subcategoryId="selectedSubcategoryId"
             @close="showTransactionSubcategorySaveOptionsDialog = false"
             @payeeChanged="handlePayeeChange" 
             @transactionChanged="handleTransactionChange" 

@@ -5,8 +5,7 @@ import { ref, computed } from 'vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import AccountsList from '@/components/AccountsList.vue'
-import CreateAccount from '@/components/CreateAccount.vue'
-import EditAccount from '@/components/EditAccount.vue'
+import CreateOrEditAccount from '@/components/CreateOrEditAccount.vue'
 import AreYouSure from '@/components/AreYouSure.vue'
 
 // composables
@@ -49,8 +48,63 @@ function handleSelect(accountId) {
 }
 
 // ----------------------------------------------------------------------------
+// create / edit account
+
+const showCreateOrEditDialog = ref(false)
+
+// null for create, the selected account for edit
+const accountForCreateOrEditDialog = ref(null)
+
+function openCreateOrEditDialog(isCreate) {
+    accountForCreateOrEditDialog.value = isCreate ? null : selectedAccount.value
+    showCreateOrEditDialog.value = true
+}
+
+function closeCreateOrEditDialog() {
+    showCreateOrEditDialog.value = false
+}
+
+function handleSaveOnCreateOrEditAccount(account) {
+    if(accountForCreateOrEditDialog.value) {
+        updateAccount(account)
+    } else {
+        createAccount(account)
+    }
+}
+
+// ----------------------------------------------------------------------------
+// create account
+
+const { 
+    gqlCreateAccount, 
+    onDone: onCreateAccountDone, 
+    onError: onCreateAccountError
+} = getCreateAccount()
+
+function createAccount(account) {
+    gqlCreateAccount({
+        name: account.name,
+        source: account.source,
+        username: account.username,
+        password: account.password,
+    })
+}
+
+onCreateAccountDone((res) => {
+    const account = res.data.createAccount
+    selectedAccountId.value = account.id
+    closeCreateOrEditDialog()
+    store.refetchAccounts()
+    displaySnackbar("Account '" + account.name + "' created.")
+})
+
+onCreateAccountError((e) => {
+    displaySnackbar("Failed to create account.")
+    console.error(e)
+})
+
+// ----------------------------------------------------------------------------
 // edit account
-const showEditDialog = ref(false)
 
 const { 
     gqlUpdateAccount, 
@@ -63,20 +117,17 @@ function updateAccount(account) {
         accountId: selectedAccountId.value,
         name: account.name,
     })
-    showEditDialog.value = false
-    store.refetchAccounts()
 }
 
 onUpdateAccountDone((res) => {
     const account = res.data.updateAccount
     const name = account.name
-    showEditDialog.value = false
+    closeCreateOrEditDialog()
     store.refetchAccounts()
     displaySnackbar("Account '" + name + "' updated.")
 })
 
 onUpdateAccountError((e) => {
-    showEditDialog.value = false
     displaySnackbar("Failed to update account '" + selectedAccount.value.name + "'.")
     console.error(e)
 })
@@ -131,38 +182,6 @@ onDeleteAccountError((e) => {
     console.error(e)
 })
 
-// ----------------------------------------------------------------------------
-// create account
-const showCreateDialog = ref(false)
-
-const { 
-    gqlCreateAccount, 
-    onDone: onCreateAccountDone, 
-    onError: onCreateAccountError
-} = getCreateAccount()
-
-function createAccount(account) {
-    gqlCreateAccount({
-        name: account.name,
-        source: account.source,
-        username: account.username,
-        password: account.password,
-    })
-}
-
-onCreateAccountDone((res) => {
-    const account = res.data.createAccount
-    selectedAccountId.value = account.id
-    showCreateDialog.value = false
-    store.refetchAccounts()
-    displaySnackbar("Account '" + account.name + "' created.")
-})
-
-onCreateAccountError((e) => {
-    displaySnackbar("Failed to create account.")
-    console.error(e)
-})
-
 </script>
 
 <template>
@@ -175,7 +194,7 @@ onCreateAccountError((e) => {
                     tooltip="Edit account" 
                     icon="mdi-pencil"
                     :disabled="!selectedAccountId"
-                    @click="showEditDialog = true"
+                    @click="openCreateOrEditDialog(false)"
                 />
             </div>
 
@@ -198,7 +217,7 @@ onCreateAccountError((e) => {
                 <ButtonWithTooltip 
                     tooltip="Create account"
                     icon="mdi-plus"
-                    @click="showCreateDialog = true"
+                    @click="openCreateOrEditDialog(true)"
                 />
             </div>
         </div>
@@ -217,13 +236,14 @@ onCreateAccountError((e) => {
         :text="snackbarText"
         @close="showSnackbar = false"/>
 
-    <!-- Edit selected account dialog -->
-    <v-dialog v-model="showEditDialog">
-        <EditAccount 
-            :account="selectedAccount"
+    <!-- Create or edit account dialog -->
+    <v-dialog v-model="showCreateOrEditDialog">
+        <CreateOrEditAccount
+            :account="accountForCreateOrEditDialog"
             :accounts="accounts"
-            @close="showEditDialog = false"
-            @save="updateAccount" />
+            @close="closeCreateOrEditDialog()"
+            @save="handleSaveOnCreateOrEditAccount" 
+        />
     </v-dialog>
 
     <!-- Delete selected account dialog -->
@@ -232,15 +252,6 @@ onCreateAccountError((e) => {
             :title="getDeleteAccountTitle()"
             @cancel="showDeleteDialog = false"
             @yes="deleteAccount" 
-        />
-    </v-dialog>
-
-    <!-- Create account dialog -->
-    <v-dialog v-model="showCreateDialog">
-        <CreateAccount 
-            :accounts="accounts"
-            @close="showCreateDialog = false"
-            @save="createAccount" 
         />
     </v-dialog>
 

@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 // props 
 const props = defineProps({
+    account: Object,
     accounts: Object
 })
 
@@ -13,17 +14,27 @@ const emit = defineEmits([
 ])
 
 // v-models for the form fields
-const name = ref('')
-const source = ref('')
-const username = ref('')
-const password = ref('')
+const name = ref(props.account ? props.account.name : '')
+const source = ref(props.account ? props.account.source : '')
+const username = ref(props.account ? props.account.username : '')
+const password = ref(props.account ? props.account.password : '')
 
 const isNameAlreadyExists = computed(() => {
+    if(props.account && name.value == props.account.name) {
+        return false
+    }
     return props.accounts.find(a => a.name == name.value) !== undefined
 })
 
 const isSaveDisabled = computed(() => {
     return name.value.length === 0 || isNameAlreadyExists.value === true
+})
+
+const title = computed(() => {
+    if(props.account) {
+        return "Edit Account '" + props.account.name + "'"
+    }
+    return "Create Account"
 })
 
 function save() {
@@ -45,13 +56,12 @@ const sources = ref([
         name: 'leumi',
         id: 'LEUMI'
     }
-
 ])
 </script>
 
 <template>
     <v-card>
-        <v-card-title>Create Account</v-card-title>
+        <v-card-title>{{ title }}</v-card-title>
         <v-card-text>
             <v-form>
                 <!-- Name -->

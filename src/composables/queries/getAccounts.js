@@ -9,6 +9,8 @@ function getAccounts() {
                 id
                 name
                 source
+                username
+                password
             }
         }
     `)

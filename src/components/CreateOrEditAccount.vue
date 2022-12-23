@@ -83,7 +83,7 @@ const sources = ref([
                 ]" />
 
                 <!-- Password -->
-                <v-text-field label="Password" v-model="password" :rules="[
+                <v-text-field type="password" label="Password" v-model="password" :rules="[
                     n => n.length > 0 || 'Password must not be empty'
                 ]" />
 

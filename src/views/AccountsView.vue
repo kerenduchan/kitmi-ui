@@ -116,6 +116,9 @@ function updateAccount(account) {
     gqlUpdateAccount({
         accountId: selectedAccountId.value,
         name: account.name,
+        source: account.source,
+        username: account.username,
+        password: account.password
     })
 }
 

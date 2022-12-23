@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 
     const props = defineProps({
         text: String,
@@ -17,13 +17,19 @@ import { ref, watchEffect } from 'vue';
         snackbar.value = props.show
     })
 
+    watch(snackbar, () => {
+        if(!snackbar.value) {
+            emit('close')
+        }
+    })
+
 </script>
 
 <template>
-    <v-snackbar v-model="snackbar" timeout="2000" rounded="pill" transition="fade-transition">
+    <v-snackbar v-model="snackbar" timeout="2000" transition="fade-transition">
         {{ text }}
         <template v-slot:actions>
-            <v-btn color="blue" variant="text" @close="emit('close')">
+            <v-btn color="blue" variant="text" @close="snackbar = false">
                 Close
             </v-btn>
         </template>

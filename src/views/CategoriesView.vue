@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
+
+// components
 import EditCategory from '@/components/EditCategory.vue'
 import EditSubcategory from '@/components/EditSubcategory.vue'
 import CreateCategory from '@/components/CreateCategory.vue'
@@ -9,12 +11,19 @@ import DeleteCategory from '@/components/DeleteCategory.vue'
 import DeleteSubcategory from '@/components/DeleteSubcategory.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
+
+// composables
 import moveCategoryUp from '@/composables/mutations/moveCategoryUp'
 import moveCategoryDown from '@/composables/mutations/moveCategoryDown'
 import getStore from '@/composables/store'
 
+// ----------------------------------------------------------------------------
+// store
 const store = getStore()
 const categories = store.categories
+
+// ----------------------------------------------------------------------------
+// selected category and subcategory
 
 // The ID of the selected category (null if none is selected)
 const selectedCategoryId = ref(null)
@@ -31,7 +40,7 @@ const selectedCategory = computed(() => {
 // The ID of the selected subcategory (null if none is selected)
 const selectedSubcategoryId = ref(null)
 
-// The selected category (null if none is selected)
+// The selected subcategory (null if none is selected)
 function getSelectedSubcategory() {
     if(!selectedCategory.value || !selectedSubcategoryId.value) {
         return null
@@ -55,6 +64,26 @@ const selectedItemTypeStr = computed(() => {
     return ''
 })
 
+function handleSelectCategory(categoryId) {
+    selectedCategoryId.value = categoryId
+    selectedSubcategoryId.value = null
+}
+
+function handleSelectSubcategory(subcategoryId) {
+    selectedSubcategoryId.value = subcategoryId
+}
+
+// ----------------------------------------------------------------------------
+// delete category / subcategory
+
+function openDeleteCategoryOrDeleteSubcategoryDialog() {
+    if(selectedSubcategoryId.value) {
+        showDeleteSubcategoryDialog.value = true
+    } else {
+        showDeleteCategoryDialog.value = true
+    }
+}
+
 const isDeleteDisabled = computed(() => {
     if(selectedSubcategoryId.value) {
         // The selected item is a subcategory.
@@ -72,7 +101,31 @@ const isDeleteDisabled = computed(() => {
 
 })
 
-// create category dialog
+// ----------------------------------------------------------------------------
+// delete category
+
+const showDeleteCategoryDialog = ref(false)
+
+function handleCategoryDeleted() {
+    selectedCategoryId.value = null
+    showDeleteCategoryDialog.value = false
+    store.refetchCategories()
+}
+
+// ----------------------------------------------------------------------------
+// delete subcategory
+
+const showDeleteSubcategoryDialog = ref(false)
+
+function handleSubcategoryDeleted() {
+    selectedSubcategoryId.value = null
+    showDeleteSubcategoryDialog.value = false
+    store.refetchCategories()
+}
+
+// ----------------------------------------------------------------------------
+// create category
+
 const showCreateCategoryDialog = ref(false)
 
 function handleCategoryCreated(category) {
@@ -82,9 +135,16 @@ function handleCategoryCreated(category) {
     store.refetchCategories()
 }
 
-// create subcategory dialog
+// ----------------------------------------------------------------------------
+// create subcategory
+
 const showCreateSubcategoryDialog = ref(false)
   
+const isCreateSubcategoryHidden = computed(() => {
+    // can't create a subcategory for a subcategory
+    return selectedSubcategoryId.value !== null
+})
+
 function handleSubcategoryCreated(subcategory) {
     // force-select the newly created subcategory in the list
     selectedSubcategoryId.value = subcategory.id
@@ -93,30 +153,20 @@ function handleSubcategoryCreated(subcategory) {
     store.refetchCategories()
 }
 
-const isCreateSubcategoryHidden = computed(() => {
-    // can't create a subcategory for a subcategory
-    return selectedSubcategoryId.value !== null
-})
+// ----------------------------------------------------------------------------
+// edit category / subcategory
 
-// delete category dialog
-const showDeleteCategoryDialog = ref(false)
-
-function handleCategoryDeleted() {
-    selectedCategoryId.value = null
-    showDeleteCategoryDialog.value = false
-    store.refetchCategories()
+function openEditCategoryOrEditSubcategoryDialog() {
+    if(selectedSubcategoryId.value) {
+        showEditSubcategoryDialog.value = true
+    } else {
+        showEditCategoryDialog.value = true
+    }
 }
 
-// delete subcategory dialog
-const showDeleteSubcategoryDialog = ref(false)
-
-function handleSubcategoryDeleted() {
-    selectedSubcategoryId.value = null
-    showDeleteSubcategoryDialog.value = false
-    store.refetchCategories()
-}
-
+// ----------------------------------------------------------------------------
 // edit category
+
 const showEditCategoryDialog = ref(false)
 
 function handleCategoryEdited() {
@@ -124,7 +174,9 @@ function handleCategoryEdited() {
     store.refetchCategories()
 }
 
+// ----------------------------------------------------------------------------
 // edit subcategory
+
 const showEditSubcategoryDialog = ref(false)
 
 function handleSubcategoryEdited(subcategory) {
@@ -135,28 +187,28 @@ function handleSubcategoryEdited(subcategory) {
     store.refetchCategories()
 }
 
-function openDeleteCategoryOrDeleteSubcategoryDialog() {
-    if(selectedSubcategoryId.value) {
-        showDeleteSubcategoryDialog.value = true
-    } else {
-        showDeleteCategoryDialog.value = true
-    }
-}
-
-function openEditCategoryOrEditSubcategoryDialog() {
-    if(selectedSubcategoryId.value) {
-        showEditSubcategoryDialog.value = true
-    } else {
-        showEditCategoryDialog.value = true
-    }
-}
+// ----------------------------------------------------------------------------
+// move category
 
 const isMoveCategoryButtonVisible = computed(() => {
     // should be visible unless a subcategory is selected
     return !selectedSubcategoryId.value
 })
 
-const { gqlMoveCategoryDown, onDone: onMoveCategoryDownDone } = moveCategoryDown()
+// ----------------------------------------------------------------------------
+// move category down
+
+function isMoveCategoryDownDisabled() {
+    // Move category down is disabled if no category is selected or 
+    // the selected category can't move any further down
+    return !selectedCategoryId.value ||
+    selectedCategoryId.value === categories.value[categories.value.length - 1].id
+}
+
+const { 
+    gqlMoveCategoryDown, 
+    onDone: onMoveCategoryDownDone 
+} = moveCategoryDown()
 
 function doMoveCategoryDown() {
     gqlMoveCategoryDown({
@@ -168,7 +220,20 @@ onMoveCategoryDownDone(() => {
     store.refetchCategories()
 })
 
-const { gqlMoveCategoryUp, onDone: onMoveCategoryUpDone } = moveCategoryUp()
+// ----------------------------------------------------------------------------
+// move category up
+
+function isMoveCategoryUpDisabled() {
+    // Move category up is disabled if no category is selected or 
+    // the selected category can't move any further up
+    return !selectedCategoryId.value ||
+    selectedCategoryId.value === categories.value[0].id
+}
+
+const { 
+    gqlMoveCategoryUp, 
+    onDone: onMoveCategoryUpDone 
+} = moveCategoryUp()
 
 function doMoveCategoryUp() {
     gqlMoveCategoryUp({
@@ -180,21 +245,9 @@ onMoveCategoryUpDone(() => {
     store.refetchCategories()
 })
 
-function isMoveCategoryDownDisabled() {
-    // Move category down is disabled if no category is selected or 
-    // the selected category can't move any further down
-    return !selectedCategoryId.value ||
-    selectedCategoryId.value === categories.value[categories.value.length - 1].id
-}
-
-function isMoveCategoryUpDisabled() {
-    // Move category up is disabled if no category is selected or 
-    // the selected category can't move any further up
-    return !selectedCategoryId.value ||
-    selectedCategoryId.value === categories.value[0].id
-}
-
+// ----------------------------------------------------------------------------
 // find subcategory
+
 const showFindSubcategoryDialog = ref(false)
 
 function handleFindSubcategory(subcategoryId) {
@@ -202,15 +255,6 @@ function handleFindSubcategory(subcategoryId) {
     selectedCategoryId.value = getCategoryIdBySubcategoryId(subcategoryId)
     selectedSubcategoryId.value = subcategoryId
     showFindSubcategoryDialog.value = false
-}
-
-function handleSelectCategory(categoryId) {
-    selectedCategoryId.value = categoryId
-    selectedSubcategoryId.value = null
-}
-
-function handleSelectSubcategory(subcategoryId) {
-    selectedSubcategoryId.value = subcategoryId
 }
 
 </script>

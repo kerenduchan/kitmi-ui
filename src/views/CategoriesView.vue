@@ -82,6 +82,88 @@ function handleSelectSubcategory(subcategoryId) {
 }
 
 // ----------------------------------------------------------------------------
+// create category
+
+const showCreateCategoryDialog = ref(false)
+
+const { 
+    gqlCreateCategory,
+    onDone: onCreateCategoryDone,
+    onError: onCreateCategoryError
+} = getCreateCategory()
+
+function createCategory(category) {
+    gqlCreateCategory(category)
+}
+
+onCreateCategoryDone((res) => {
+    const category = res.data.createCategory
+    // force-select the newly created category in the list
+    selectedCategoryId.value = category.id
+    showCreateCategoryDialog.value = false
+    store.refetchCategories()    
+    displaySnackbar("Category '" + category.name + "' created.")
+
+})
+
+onCreateCategoryError((e) => {
+    displaySnackbar("Failed to create category.")
+    console.error(e)
+})
+
+// ----------------------------------------------------------------------------
+// create subcategory
+
+const showCreateSubcategoryDialog = ref(false)
+  
+const isCreateSubcategoryHidden = computed(() => {
+    // can't create a subcategory for a subcategory
+    return selectedSubcategoryId.value !== null
+})
+
+function handleSubcategoryCreated(subcategory) {
+    // force-select the newly created subcategory in the list
+    selectedSubcategoryId.value = subcategory.id
+
+    showCreateSubcategoryDialog.value = false
+    store.refetchCategories()
+}
+
+// ----------------------------------------------------------------------------
+// edit category / subcategory
+
+function openEditCategoryOrEditSubcategoryDialog() {
+    if(selectedSubcategoryId.value) {
+        showEditSubcategoryDialog.value = true
+    } else {
+        showEditCategoryDialog.value = true
+    }
+}
+
+// ----------------------------------------------------------------------------
+// edit category
+
+const showEditCategoryDialog = ref(false)
+
+function handleCategoryEdited() {
+    showEditCategoryDialog.value = false
+    store.refetchCategories()
+}
+
+// ----------------------------------------------------------------------------
+// edit subcategory
+
+const showEditSubcategoryDialog = ref(false)
+
+function handleSubcategoryEdited(subcategory) {
+    // update the selectedCategoryId, 
+    // in case the subcategory moved to a different category
+    selectedCategoryId.value = subcategory.category.id
+    showEditSubcategoryDialog.value = false
+    store.refetchCategories()
+}
+
+// ----------------------------------------------------------------------------
 // delete category / subcategory
 
 const showDeleteDialog = ref(false)
@@ -168,88 +250,6 @@ onDeleteSubcategoryError((e) => {
     displaySnackbar("Failed to delete subcategory.")
     console.error(e)
 })
-
-// ----------------------------------------------------------------------------
-// create category
-
-const showCreateCategoryDialog = ref(false)
-
-const { 
-    gqlCreateCategory,
-    onDone: onCreateCategoryDone,
-    onError: onCreateCategoryError
-} = getCreateCategory()
-
-function createCategory(category) {
-    gqlCreateCategory(category)
-}
-
-onCreateCategoryDone((res) => {
-    const category = res.data.createCategory
-    // force-select the newly created category in the list
-    selectedCategoryId.value = category.id
-    showCreateCategoryDialog.value = false
-    store.refetchCategories()    
-    displaySnackbar("Category '" + category.name + "' created.")
-
-})
-
-onCreateCategoryError((e) => {
-    displaySnackbar("Failed to create category.")
-    console.error(e)
-})
-
-// ----------------------------------------------------------------------------
-// create subcategory
-
-const showCreateSubcategoryDialog = ref(false)
-  
-const isCreateSubcategoryHidden = computed(() => {
-    // can't create a subcategory for a subcategory
-    return selectedSubcategoryId.value !== null
-})
-
-function handleSubcategoryCreated(subcategory) {
-    // force-select the newly created subcategory in the list
-    selectedSubcategoryId.value = subcategory.id
-
-    showCreateSubcategoryDialog.value = false
-    store.refetchCategories()
-}
-
-// ----------------------------------------------------------------------------
-// edit category / subcategory
-
-function openEditCategoryOrEditSubcategoryDialog() {
-    if(selectedSubcategoryId.value) {
-        showEditSubcategoryDialog.value = true
-    } else {
-        showEditCategoryDialog.value = true
-    }
-}
-
-// ----------------------------------------------------------------------------
-// edit category
-
-const showEditCategoryDialog = ref(false)
-
-function handleCategoryEdited() {
-    showEditCategoryDialog.value = false
-    store.refetchCategories()
-}
-
-// ----------------------------------------------------------------------------
-// edit subcategory
-
-const showEditSubcategoryDialog = ref(false)
-
-function handleSubcategoryEdited(subcategory) {
-    // update the selectedCategoryId, 
-    // in case the subcategory moved to a different category
-    selectedCategoryId.value = subcategory.category.id
-    showEditSubcategoryDialog.value = false
-    store.refetchCategories()
-}
 
 // ----------------------------------------------------------------------------
 // move category

@@ -18,6 +18,9 @@ const name = ref(props.category ? props.category.name : '')
 const isExpense = ref(props.category ? props.category.isExpense : true)
 
 const isNameAlreadyExists = computed(() => {
+    if(props.category && name.value == props.category.name) {
+        return false
+    }
     return (props.categories.find(c => c.name == name.value) !== undefined)
 })
 

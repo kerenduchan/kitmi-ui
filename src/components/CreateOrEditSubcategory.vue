@@ -28,7 +28,7 @@ const categoryId = ref(props.subcategory ? props.subcategory.categoryId : props.
 const subcategories = computed(() => {
     let res = []
     props.categories.forEach(c => { 
-        res.concat(c.subcategories) 
+        res = res.concat(c.subcategories) 
     })
     return res
 })
@@ -38,6 +38,9 @@ const isNameAlreadyExists = computed(() => {
 })
 
 const isSaveDisabled = computed(() => {
+    if(props.subcategory && name.value == props.subcategory.name) {
+        return false
+    }
     return name.value.length === 0 || isNameAlreadyExists.value === true
 })
 

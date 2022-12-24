@@ -4,9 +4,8 @@ import { ref, computed } from 'vue'
 // components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
-import EditCategory from '@/components/EditCategory.vue'
 import EditSubcategory from '@/components/EditSubcategory.vue'
-import CreateCategory from '@/components/CreateCategory.vue'
+import CreateOrEditCategory from '@/components/CreateOrEditCategory.vue'
 import FindSubcategory from '@/components/FindSubcategory.vue'
 import CreateSubcategory from '@/components/CreateSubcategory.vue'
 import AreYouSure from '@/components/AreYouSure.vue'
@@ -16,6 +15,8 @@ import CategoriesList from '@/components/CategoriesList.vue'
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import getCreateCategory from '@/composables/mutations/createCategory'
+import getUpdateCategory from '@/composables/mutations/updateCategory'
+
 import deleteCategory from '@/composables/mutations/deleteCategory'
 import deleteSubcategory from '@/composables/mutations/deleteSubcategory'
 import moveCategoryUp from '@/composables/mutations/moveCategoryUp'
@@ -82,9 +83,28 @@ function handleSelectSubcategory(subcategoryId) {
 }
 
 // ----------------------------------------------------------------------------
-// create category
+// create / edit category
 
-const showCreateCategoryDialog = ref(false)
+const showCreateOrEditCategoryDialog = ref(false)
+
+// null for create, the selected category for edit
+const categoryForCreateOrEditCategoryDialog = ref(null)
+
+function openCreateOrEditCategoryDialog(isCreate) {
+    categoryForCreateOrEditCategoryDialog.value = isCreate ? null : selectedCategory.value
+    showCreateOrEditCategoryDialog.value = true
+}
+
+function handleSaveOnCreateOrEditCategory(category) {
+    if(categoryForCreateOrEditCategoryDialog.value) {
+        updateCategory(category)
+    } else {
+        createCategory(category)
+    }
+}
+
+// ----------------------------------------------------------------------------
+// create category
 
 const { 
     gqlCreateCategory,
@@ -100,7 +120,7 @@ onCreateCategoryDone((res) => {
     const category = res.data.createCategory
     // force-select the newly created category in the list
     selectedCategoryId.value = category.id
-    showCreateCategoryDialog.value = false
+    showCreateOrEditCategoryDialog.value = false
     store.refetchCategories()    
     displaySnackbar("Category '" + category.name + "' created.")
 
@@ -108,6 +128,32 @@ onCreateCategoryDone((res) => {
 
 onCreateCategoryError((e) => {
     displaySnackbar("Failed to create category.")
+    console.error(e)
+})
+
+// ----------------------------------------------------------------------------
+// edit category
+
+const { 
+    gqlUpdateCategory, 
+    onDone: onUpdateCategoryDone, 
+    onError: onUpdateCategoryError
+} = getUpdateCategory()
+
+
+function updateCategory(category) {
+    gqlUpdateCategory(category)
+}
+
+onUpdateCategoryDone((res) => {
+    const category = res.data.updateCategory
+    showCreateOrEditCategoryDialog.value = false
+    store.refetchCategories()    
+    displaySnackbar("Category '" + category.name + "' updated.")
+})
+
+onUpdateCategoryError((e) => {
+    displaySnackbar("Failed to update category.")
     console.error(e)
 })
 
@@ -136,18 +182,8 @@ function openEditCategoryOrEditSubcategoryDialog() {
     if(selectedSubcategoryId.value) {
         showEditSubcategoryDialog.value = true
     } else {
-        showEditCategoryDialog.value = true
+        openCreateOrEditCategoryDialog(false)
     }
-}
-
-// ----------------------------------------------------------------------------
-// edit category
-
-const showEditCategoryDialog = ref(false)
-
-function handleCategoryEdited() {
-    showEditCategoryDialog.value = false
-    store.refetchCategories()
 }
 
 // ----------------------------------------------------------------------------
@@ -395,7 +431,7 @@ function handleFindSubcategory(subcategoryId) {
                 <ButtonWithTooltip 
                     tooltip="Create category" 
                     icon="mdi-plus"
-                    @click="showCreateCategoryDialog = true"
+                    @click="openCreateOrEditCategoryDialog(true)"
                 />
             </div>
 
@@ -419,15 +455,6 @@ function handleFindSubcategory(subcategoryId) {
         @close="showSnackbar = false"
     />
 
-    <!-- Edit category dialog -->
-    <v-dialog v-model="showEditCategoryDialog">
-        <EditCategory
-            :category="selectedCategory"
-            :categories="categories"
-            @close="showEditCategoryDialog = false"
-            @save="handleCategoryEdited" />
-    </v-dialog>
-
     <!-- Edit subcategory dialog -->
     <v-dialog v-model="showEditSubcategoryDialog">
         <EditSubcategory
@@ -437,12 +464,13 @@ function handleFindSubcategory(subcategoryId) {
             @save="handleSubcategoryEdited" />
     </v-dialog>
 
-    <!-- Create category dialog -->
-    <v-dialog v-model="showCreateCategoryDialog">
-        <CreateCategory 
+    <!-- Create / edit category dialog -->
+    <v-dialog v-model="showCreateOrEditCategoryDialog">
+        <CreateOrEditCategory
+            :category="categoryForCreateOrEditCategoryDialog"
             :categories="categories"
-            @close="showCreateCategoryDialog = false"
-            @save="createCategory" />
+            @close="showCreateOrEditCategoryDialog = false"
+            @save="handleSaveOnCreateOrEditCategory" />
     </v-dialog>
 
     <!-- Search for subcategory dialog -->

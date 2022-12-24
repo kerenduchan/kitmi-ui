@@ -3,6 +3,8 @@ import { ref, computed } from 'vue'
 
 // props 
 const props = defineProps({
+    // category is null for create or an object for edit
+    category: Object,
     categories: Object
 })
 
@@ -12,8 +14,8 @@ const emit = defineEmits([
 ])
 
 // v-models for form fields
-const name = ref('')
-const isExpense = ref(true)
+const name = ref(props.category ? props.category.name : '')
+const isExpense = ref(props.category ? props.category.isExpense : true)
 
 const isNameAlreadyExists = computed(() => {
     return (props.categories.find(c => c.name == name.value) !== undefined)
@@ -23,19 +25,30 @@ const isSaveDisabled = computed(() => {
     return name.value.length === 0 || isNameAlreadyExists.value === true
 })
 
+const title = computed(() => {
+    if(props.category) {
+        return "Edit Category '" + props.category.name + "'"
+    }
+    return "Create Category"
+})
+
 function save() {
-    emit('save', 
-    { 
+    const category = { 
         name: name.value,
         isExpense: isExpense.value
-    })
+    }
+    if(props.category) {
+        // for update
+        category.categoryId = props.category.id
+    }
+    emit('save', category)
 }
 
 </script>
 
 <template>
     <v-card>
-        <v-card-title>Create Category</v-card-title>
+        <v-card-title>{{ title }}</v-card-title>
         <v-card-text>
             <v-form>
                 <!-- Name -->

@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 
 function getUpdateAccount() {
     // gql mutation for updating an account
-    const { mutate: gqlUpdateAccount, onDone, onError } = useMutation(gql`
+    const { mutate: updateAccount, onDone, onError } = useMutation(gql`
         mutation updateAccount (
             $accountId: ID!, 
             $name: String, 
@@ -25,7 +25,7 @@ function getUpdateAccount() {
         }
     `)
 
-    return { gqlUpdateAccount, onDone, onError }
+    return { updateAccount, onDone, onError }
 }
 
 export default getUpdateAccount

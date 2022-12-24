@@ -74,7 +74,7 @@ function handleSaveOnCreateOrEditAccount(account) {
 // create account
 
 const { 
-    gqlCreateAccount: createAccount, 
+    createAccount, 
     onDone: onCreateAccountDone, 
     onError: onCreateAccountError
 } = getCreateAccount()
@@ -96,7 +96,7 @@ onCreateAccountError((e) => {
 // edit account
 
 const { 
-    gqlUpdateAccount: updateAccount, 
+    updateAccount, 
     onDone: onUpdateAccountDone, 
     onError: onUpdateAccountError
 } = getUpdateAccount()

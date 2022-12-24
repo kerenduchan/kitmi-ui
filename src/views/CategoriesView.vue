@@ -107,14 +107,10 @@ function handleSaveOnCreateOrEditCategory(category) {
 // create category
 
 const { 
-    gqlCreateCategory,
+    createCategory,
     onDone: onCreateCategoryDone,
     onError: onCreateCategoryError
 } = getCreateCategory()
-
-function createCategory(category) {
-    gqlCreateCategory(category)
-}
 
 onCreateCategoryDone((res) => {
     const category = res.data.createCategory
@@ -135,15 +131,10 @@ onCreateCategoryError((e) => {
 // edit category
 
 const { 
-    gqlUpdateCategory, 
+    updateCategory, 
     onDone: onUpdateCategoryDone, 
     onError: onUpdateCategoryError
 } = getUpdateCategory()
-
-
-function updateCategory(category) {
-    gqlUpdateCategory(category)
-}
 
 onUpdateCategoryDone((res) => {
     const category = res.data.updateCategory

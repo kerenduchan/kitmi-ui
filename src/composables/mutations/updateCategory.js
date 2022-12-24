@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 
 function getUpdateCategory() {
     // gql mutation for updating a category
-    const { mutate: gqlUpdateCategory, onDone, onError } = useMutation(gql`
+    const { mutate: updateCategory, onDone, onError } = useMutation(gql`
         mutation updateCategory ($categoryId: ID!, $name: String!, $isExpense: Boolean!) {
             updateCategory (categoryId: $categoryId, name: $name, isExpense: $isExpense) {
                 id
@@ -12,7 +12,7 @@ function getUpdateCategory() {
         }
     `)
 
-    return { gqlUpdateCategory, onDone, onError }
+    return { updateCategory, onDone, onError }
 }
 
 export default getUpdateCategory

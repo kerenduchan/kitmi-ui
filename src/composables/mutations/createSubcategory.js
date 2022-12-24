@@ -1,17 +1,19 @@
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 
-function createSubcategory() {
+function getCreateSubcategory() {
     // gql mutation for creating a category
-    const { mutate: gqlCreateSubcategory, onDone, onError } = useMutation(gql`
+    const { mutate: createSubcategory, onDone, onError } = useMutation(gql`
         mutation createSubcategory ($name: String!, $categoryId: ID!) {
             createSubcategory (name: $name, categoryId: $categoryId) {
                 id
+                name
+                categoryId
             }
         }
     `)
 
-    return { gqlCreateSubcategory, onDone, onError }
+    return { createSubcategory, onDone, onError }
 }
 
-export default createSubcategory
+export default getCreateSubcategory

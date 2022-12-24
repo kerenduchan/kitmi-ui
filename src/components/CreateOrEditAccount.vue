@@ -50,6 +50,10 @@ function save() {
         // null for password in edit mode means don't change password
         password: (password.length === 0 ? null : password.value)
     }
+    if(props.account) {
+        // for update
+        account.accountId = props.account.id
+    }
     emit('save', account)
 }
 

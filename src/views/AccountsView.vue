@@ -74,19 +74,10 @@ function handleSaveOnCreateOrEditAccount(account) {
 // create account
 
 const { 
-    gqlCreateAccount, 
+    gqlCreateAccount: createAccount, 
     onDone: onCreateAccountDone, 
     onError: onCreateAccountError
 } = getCreateAccount()
-
-function createAccount(account) {
-    gqlCreateAccount({
-        name: account.name,
-        source: account.source,
-        username: account.username,
-        password: account.password,
-    })
-}
 
 onCreateAccountDone((res) => {
     const account = res.data.createAccount
@@ -105,20 +96,11 @@ onCreateAccountError((e) => {
 // edit account
 
 const { 
-    gqlUpdateAccount, 
+    gqlUpdateAccount: updateAccount, 
     onDone: onUpdateAccountDone, 
     onError: onUpdateAccountError
 } = getUpdateAccount()
 
-function updateAccount(account) {
-    gqlUpdateAccount({
-        accountId: selectedAccountId.value,
-        name: account.name,
-        source: account.source,
-        username: account.username,
-        password: account.password
-    })
-}
 
 onUpdateAccountDone((res) => {
     const account = res.data.updateAccount

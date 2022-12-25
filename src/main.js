@@ -1,6 +1,7 @@
 import { createApp, provide, h } from 'vue'
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
+import VueApexCharts from "vue3-apexcharts"
 import App from './App.vue'
 import router from './router'
 import '@mdi/font/css/materialdesignicons.css'
@@ -43,6 +44,7 @@ const app = createApp({
 
 app.use(router)
 app.use(vuetify)
+app.use(VueApexCharts)
 
 app.mount('#app')
 

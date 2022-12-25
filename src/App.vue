@@ -64,6 +64,12 @@ const links = ref([
         to: '/summary',
         icon: 'mdi-star'
     },
+    {
+        title: 'Charts',
+        value: 'charts',
+        to: '/charts',
+        icon: 'mdi-graph'
+    },
 ])
 
 // fetch accounts, categories, payees, transactions from the server

@@ -68,7 +68,7 @@ const links = ref([
         title: 'Charts',
         value: 'charts',
         to: '/charts',
-        icon: 'mdi-graph'
+        icon: 'mdi-poll'
     },
 ])
 

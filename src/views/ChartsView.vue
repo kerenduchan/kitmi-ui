@@ -4,16 +4,11 @@ import { ref, computed } from 'vue'
 // components
 import { formatDate } from '@/composables/utils'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
-import Snackbar from '@/components/Snackbar.vue'
 import StackedBarChart from '@/components/charts/StackedBarChart.vue'
 import Filter from '@/components/charts/Filter.vue'
 
 // composables
-import snackbar from '@/composables/snackbar'
 import getSummary from '@/composables/queries/getSummary'
-
-// snackbar
-const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
 
 // Labels for the x-axis
 const xaxis = ref(null)
@@ -90,11 +85,5 @@ function handleFilter(filter) {
             @close="showFilterDialog = false"
             @filter="handleFilter" />
     </v-dialog>
-
-    <!-- snackbar -->
-    <Snackbar 
-        :show="showSnackbar" 
-        :text="snackbarText" 
-        @close="showSnackbar = false" />
 
 </template>

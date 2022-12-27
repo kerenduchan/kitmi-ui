@@ -1,10 +1,12 @@
 <script setup>
-import moment from 'moment'
 import { ref, computed } from 'vue'
 
 // components
+import { formatDate } from '@/composables/utils'
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import StackedBarChart from '@/components/charts/StackedBarChart.vue'
+import Filter from '@/components/charts/Filter.vue'
 
 // composables
 import snackbar from '@/composables/snackbar'
@@ -22,24 +24,24 @@ const isReady = ref(false)
 // The stacked data (y-axis values) for the bar chart
 const series = ref(null)
 
-// start date (v-model for input)
-const startDate = ref("2022-01-01")
-
-// end date (v-model for input)
-const endDate = ref("2022-12-31")
-
-// group by category/subcategory = v-model for the v-select
-const groupBy = ref('category')
-
-const params = computed(() => {
-    return {
-        groupBy: groupBy.value,
-        startDate: startDate.value,
-        endDate: endDate.value,
-    }
+// filter params
+const filterParams = ref({
+    startDate: "2022-01-01",
+    endDate: "2022-12-31",
+    groupBy: 'category'
 })
 
-const { onResult, refetch } = getSummary(params.value)
+const title = computed(() => {
+    const f = filterParams.value
+    return formatDate(new Date(f.startDate)) + ' - ' 
+        + formatDate(new Date(f.endDate)) 
+        + ' (by ' + f.groupBy + ')'
+})
+
+// show filter dialog
+const showFilterDialog = ref(false)
+
+const { onResult, refetch } = getSummary(filterParams.value)
 
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
@@ -47,73 +49,52 @@ onResult(queryResult => {
         xaxis.value = summary.xAxis
         series.value = summary.groups
         isReady.value = true
-
+        showFilterDialog.value = false   
     }
 })
 
-function refetchData() {
-
-    if (!isValidDate(startDate.value)) {
-        displaySnackbar('Start date is not valid.')
-        return
-    }
-
-    if (!isValidDate(endDate.value)) {
-        displaySnackbar('End date is not valid.')
-        return
-    }
-
-    if (countMonths() > 12) {
-        displaySnackbar('Date range should be no greater than one year.')
-        return
-    }
-    console.log('refetch data ' + startDate.value + ' ' + endDate.value)
+function handleFilter(filter) {
+    filterParams.value = filter
     isReady.value = false
-
-
-    refetch(params.value)
-}
-
-function isValidDate(str) {
-    const d = new Date(str)
-    return moment(str, "YYYY-MM-DD", true).isValid() && (d.getFullYear() > 2010)
-}
-
-function countMonths() {
-    const start = new Date(startDate.value)
-    const end = new Date(endDate.value)
-
-    console.log(end.getMonth() + ' ' + end.getFullYear())
-    return (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth()
+    refetch(filter)
 }
 
 </script>
 
 <template>
     <div class="top-bar">
+
+        <div class="top-bar-left">
+
+            <!-- Filter button -->
+            <div class="top-bar-action">
+                <ButtonWithTooltip tooltip="Filter" icon="mdi-filter" @click="showFilterDialog = true" />
+            </div>
+
+        </div>
+        <v-divider />
     </div>
-    <v-divider />
 
-    <form>
-        <div>
-            <label for="start">Start date:</label>
-            <input type="date" id="start" v-model="startDate">
-        </div>
-        <div>
-            <label for="end">End date:</label>
-            <input type="date" id="end" v-model="endDate">
-        </div>
-
-        <!-- Group by category/subcategory -->
-        <v-select label="Group By" :items="['category', 'subcategory']" v-model="groupBy" />
-
-        <v-btn @click="refetchData">Refresh</v-btn>
-    </form>
-
+    {{ title }}
     <!-- the stacked bar chart -->
-    <StackedBarChart v-if="isReady" :xaxis="xaxis" :series="series" />
+    <StackedBarChart 
+        v-if="isReady" 
+        :xaxis="xaxis" 
+        :series="series" 
+    />
+
+    <!-- Filter dialog -->
+        <v-dialog v-model="showFilterDialog">
+        <Filter
+            :defaults="filterParams"
+            @close="showFilterDialog = false"
+            @filter="handleFilter" />
+    </v-dialog>
 
     <!-- snackbar -->
-    <Snackbar :show="showSnackbar" :text="snackbarText" @close="showSnackbar = false" />
+    <Snackbar 
+        :show="showSnackbar" 
+        :text="snackbarText" 
+        @close="showSnackbar = false" />
 
 </template>

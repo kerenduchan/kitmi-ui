@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 const props = defineProps({
-    months: Object,
+    xaxis: Object,
     series: Object
 })
 
@@ -12,7 +12,7 @@ const options = ref({
         stacked: true
     },
     xaxis: {
-        categories: props.months
+        categories: props.xaxis
     }
 })
 

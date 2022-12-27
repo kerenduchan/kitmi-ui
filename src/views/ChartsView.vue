@@ -1,6 +1,6 @@
 <script setup>
 import moment from 'moment'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 // components
 import Snackbar from '@/components/Snackbar.vue'
@@ -31,11 +31,15 @@ const endDate = ref("2022-12-31")
 // group by category/subcategory = v-model for the v-select
 const groupBy = ref('category')
 
-const { onResult, refetch } = getSummary({
-    groupBy: groupBy.value,
-    startDate: startDate.value,
-    endDate: endDate.value,
+const params = computed(() => {
+    return {
+        groupBy: groupBy.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+    }
 })
+
+const { onResult, refetch } = getSummary(params.value)
 
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
@@ -59,7 +63,7 @@ function refetchData() {
         return
     }
 
-    if(countMonths() > 12) {
+    if (countMonths() > 12) {
         displaySnackbar('Date range should be no greater than one year.')
         return
     }
@@ -67,11 +71,7 @@ function refetchData() {
     isReady.value = false
 
 
-    refetch({
-        groupBy: "subcategory",
-        startDate: startDate.value,
-        endDate: endDate.value
-    })
+    refetch(params.value)
 }
 
 function isValidDate(str) {
@@ -105,11 +105,7 @@ function countMonths() {
         </div>
 
         <!-- Group by category/subcategory -->
-        <v-select 
-            label="Group By" 
-            :items="['category', 'subcategory']" 
-            v-model="groupBy" 
-    />
+        <v-select label="Group By" :items="['category', 'subcategory']" v-model="groupBy" />
 
         <v-btn @click="refetchData">Refresh</v-btn>
     </form>
@@ -118,10 +114,6 @@ function countMonths() {
     <StackedBarChart v-if="isReady" :xaxis="xaxis" :series="series" />
 
     <!-- snackbar -->
-    <Snackbar 
-        :show="showSnackbar" 
-        :text="snackbarText"
-        @close="showSnackbar = false"
-    />
+    <Snackbar :show="showSnackbar" :text="snackbarText" @close="showSnackbar = false" />
 
 </template>

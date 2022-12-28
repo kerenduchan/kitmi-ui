@@ -16,7 +16,7 @@ function save() {
     emit(isApplyToPayee.value ? 'saveOnPayee' : 'saveOnTransaction')
 }
 
-const isApplyToPayee = ref(true)
+const isApplyToPayee = ref(false)
 
 const payeeLabel = computed(() => {
     return 'Apply the changes to the payee (' + props.transaction.payee.name + ')'
@@ -31,8 +31,8 @@ const payeeLabel = computed(() => {
         <v-card-text>            
             <v-form>
                 <v-radio-group v-model="isApplyToPayee">
+                    <v-radio :value="false" label="Apply the changes only to this transaction"></v-radio>
                     <v-radio :value="true" :label="payeeLabel"></v-radio>
-                    <v-radio :value="false" label="Apply the changes only to this transaction (override the payee)"></v-radio>
                 </v-radio-group>
             </v-form>
         </v-card-text>

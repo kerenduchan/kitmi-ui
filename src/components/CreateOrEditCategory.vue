@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import ExpenseOrIncomeRadioGroup from './ExpenseOrIncomeRadioGroup.vue';
 
 // props 
 const props = defineProps({
@@ -47,6 +48,10 @@ function save() {
     emit('save', category)
 }
 
+function handleTypeChange(value) {
+    isExpense.value = value
+}
+
 </script>
 
 <template>
@@ -63,11 +68,8 @@ function save() {
                         n => !isNameAlreadyExists || 'Name already used'
                         ]" />
 
-                    <!-- Type -->
-                <v-radio-group label="Type" v-model="isExpense">
-                    <v-radio :value="true" label="Expense"></v-radio>
-                    <v-radio :value="false" label="Income"></v-radio>
-                </v-radio-group>
+                <!-- Type -->
+                <ExpenseOrIncomeRadioGroup :isExpense="isExpense" @change="handleTypeChange"/>
             </v-form>
         </v-card-text>
         <v-card-actions>

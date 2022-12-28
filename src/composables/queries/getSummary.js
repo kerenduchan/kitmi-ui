@@ -4,8 +4,8 @@ import { ref } from 'vue'
 
 function getSummary(vars) {
     const { onResult, refetch } = useQuery(gql`
-        query getSummary($groupBy: String!, $startDate: Date!, $endDate: Date!) {
-            summary(groupBy: $groupBy, startDate: $startDate, endDate: $endDate) {
+        query getSummary($groupBy: String!, $startDate: Date!, $endDate: Date!, $isExpense: Boolean) {
+            summary(startDate: $startDate, endDate: $endDate, groupBy: $groupBy, isExpense: $isExpense) {
                 xAxis,
                     groups {
                     groupId

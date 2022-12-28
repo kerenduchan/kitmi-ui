@@ -195,11 +195,10 @@ const {
 onCreateSubcategoryDone((res) => {
     const subcategory = res.data.createSubcategory
 
-    // force-select the newly created subcategory in the list (note that it
-    // could have been created under a different category than the selected 
-    // one)
+    // force-select the category of the newly created subcategory in the list 
+    // (note that it could have been created under a different category than 
+    // the selected one)
     selectedCategoryId.value = subcategory.categoryId
-    selectedSubcategoryId.value = subcategory.id
 
     showCreateOrEditSubcategoryDialog.value = false
     store.refetchCategories()    

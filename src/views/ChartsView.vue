@@ -23,14 +23,16 @@ const series = ref(null)
 const filterParams = ref({
     startDate: "2022-01-01",
     endDate: "2022-12-31",
-    groupBy: 'category'
+    groupBy: 'category',
+    isExpense: true
 })
 
 const title = computed(() => {
     const f = filterParams.value
-    return formatDate(new Date(f.startDate)) + ' - ' 
-        + formatDate(new Date(f.endDate)) 
-        + ' (by ' + f.groupBy + ')'
+    return (f.isExpense ? "Expenses" : "Income") 
+        + ' by ' + f.groupBy
+        + ' for ' + formatDate(new Date(f.startDate)) + ' - ' 
+        + formatDate(new Date(f.endDate))
 })
 
 // show filter dialog

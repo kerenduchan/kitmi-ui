@@ -72,7 +72,14 @@ class Transaction {
     }
 
     get type() {
-        return this.isExpense ? "Expense" : "Income"
+        if(this.amount > 0) {
+            return 'Income'
+        }
+        if(this.amount < 0) {
+            return 'Expense'
+        }
+        // t.amount === 0
+        return this.payee.type
     }
 }
 

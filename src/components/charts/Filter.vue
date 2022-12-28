@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import moment from 'moment'
+import ExpenseOrIncomeRadioGroup from '../ExpenseOrIncomeRadioGroup.vue'
+import expenseOrIncome from '@/composables/expenseOrIncome'
 
 const props = defineProps({
     defaults: Object
@@ -19,6 +21,10 @@ const endDate = ref(props.defaults.endDate)
 
 // group by category/subcategory = v-model for the v-select
 const groupBy = ref(props.defaults.groupBy)
+
+// for the type (expense/income)
+const { isExpense, handleTypeChange} = 
+    expenseOrIncome(props.category ? props.category.isExpense : true)
 
 const startDateError = computed(() => {
     if (!isValidDate(startDate.value)) {
@@ -58,7 +64,8 @@ function handleFilterClicked() {
     emit('filter', {
         startDate: startDate.value,
         endDate: endDate.value,
-        groupBy: groupBy.value
+        groupBy: groupBy.value,
+        isExpense: isExpense.value
     })
 }
 
@@ -69,11 +76,14 @@ function handleFilterClicked() {
         <v-card-title>Filter</v-card-title>
         <v-card-text>
             <form>
+                <!-- Start date -->
                 <div>
                     <label for="start">Start date:</label>
                     <input type="date" id="start" v-model="startDate">
                     {{ startDateError }}
                 </div>
+
+                <!-- End date -->
                 <div>
                     <label for="end">End date:</label>
                     <input type="date" id="end" v-model="endDate">
@@ -82,6 +92,12 @@ function handleFilterClicked() {
 
                 <!-- Group by category/subcategory -->
                 <v-select label="Group By" :items="['category', 'subcategory']" v-model="groupBy" />
+
+                <!-- Type (expense/income)-->
+                <ExpenseOrIncomeRadioGroup 
+                    :isExpense="isExpense" 
+                    @change="handleTypeChange"/>
+
             </form>
 
         </v-card-text>

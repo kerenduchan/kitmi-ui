@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
-import ExpenseOrIncomeRadioGroup from './ExpenseOrIncomeRadioGroup.vue';
+import ExpenseOrIncomeRadioGroup from './ExpenseOrIncomeRadioGroup.vue'
+import expenseOrIncome from '@/composables/expenseOrIncome'
 
 // props 
 const props = defineProps({
@@ -16,7 +17,10 @@ const emit = defineEmits([
 
 // v-models for form fields
 const name = ref(props.category ? props.category.name : '')
-const isExpense = ref(props.category ? props.category.isExpense : true)
+
+// for the type (expense/income)
+const { isExpense, handleTypeChange} = 
+    expenseOrIncome(props.category ? props.category.isExpense : true)
 
 const isNameAlreadyExists = computed(() => {
     if(props.category && name.value == props.category.name) {
@@ -48,10 +52,6 @@ function save() {
     emit('save', category)
 }
 
-function handleTypeChange(value) {
-    isExpense.value = value
-}
-
 </script>
 
 <template>
@@ -69,7 +69,9 @@ function handleTypeChange(value) {
                         ]" />
 
                 <!-- Type -->
-                <ExpenseOrIncomeRadioGroup :isExpense="isExpense" @change="handleTypeChange"/>
+                <ExpenseOrIncomeRadioGroup 
+                    :isExpense="isExpense" 
+                    @change="handleTypeChange"/>
             </v-form>
         </v-card-text>
         <v-card-actions>

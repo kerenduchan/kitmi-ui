@@ -25,7 +25,7 @@ const {
 const ignore = ref(props.payee.ignore)
 
 const isSaveDisabled = computed(() => {
-    return selectedSubcategoryId.value === null
+    return selectedSubcategoryId.value === null && selectedCategoryId.value !== null
 })
 
 function save() {

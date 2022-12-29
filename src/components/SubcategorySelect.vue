@@ -50,6 +50,7 @@ watch(subcategoryId, () => {
     <!-- Category select -->
     <v-select
         label="Category" 
+        clearable
         :items="categories" 
         :disabled="disabled || categories.length === 0"
         item-title="name" 
@@ -60,6 +61,7 @@ watch(subcategoryId, () => {
     <!-- Subcategory select -->
     <v-select 
         label="Subcategory" 
+        clearable
         :items="subcategories" 
         :disabled="disabled || categoryId === null"
         item-title="name" 

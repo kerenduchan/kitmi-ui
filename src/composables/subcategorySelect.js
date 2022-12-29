@@ -26,6 +26,12 @@ function subcategorySelect(categories, defaults, showExpenseCategoriesFirst = tr
 
     // Handle a change in the selected category ID.
     watch(selectedCategoryId, () => {
+        if (selectedCategoryId.value === null) {
+            // The category ID selection was cleared.
+            selectedSubcategoryId.value = null
+            return
+        }
+
         if (selectedCategoryId.value === defaults.categoryId) {
             // The selected category ID is now the default value.
             // Set the selected subcategory ID to the default value as well.

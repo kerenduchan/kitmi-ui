@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import SubcategorySelect from './SubcategorySelect.vue';
 import subcategorySelect from '@/composables/subcategorySelect'
 
@@ -22,6 +22,8 @@ const {
     handleSubcategorySelected
 } = subcategorySelect(props.categories, props.payee)
 
+const ignore = ref(props.payee.ignore)
+
 const isSaveDisabled = computed(() => {
     return selectedSubcategoryId.value === null
 })
@@ -29,7 +31,8 @@ const isSaveDisabled = computed(() => {
 function save() {
     const payee = { 
         payeeId: props.payee.id,
-        subcategoryId: selectedSubcategoryId.value
+        subcategoryId: selectedSubcategoryId.value,
+        ignore: ignore.value
     }
     emit('save', payee)
 }
@@ -41,6 +44,8 @@ function save() {
         <v-card-title>{{ props.payee.name }}</v-card-title>
         <v-card-text>
             <v-form>
+
+                <!-- Category and subcategory -->
                 <SubcategorySelect 
                     :categoryId="selectedCategoryId"
                     :subcategoryId="selectedSubcategoryId"
@@ -49,6 +54,9 @@ function save() {
                     @categorySelected="handleCategorySelected"
                     @subcategorySelected="handleSubcategorySelected"
                 />
+
+                <!-- Ignore -->
+                <v-checkbox label="Ignore" v-model="ignore"></v-checkbox>
             </v-form>
         </v-card-text>
         <v-card-actions>

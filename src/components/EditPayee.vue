@@ -47,6 +47,7 @@ function save() {
 
                 <!-- Category and subcategory -->
                 <SubcategorySelect 
+                    :disabled="ignore"
                     :categoryId="selectedCategoryId"
                     :subcategoryId="selectedSubcategoryId"
                     :categories="filteredCategories"

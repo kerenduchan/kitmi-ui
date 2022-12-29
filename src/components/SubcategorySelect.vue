@@ -6,7 +6,8 @@ const props = defineProps({
     categoryId: String,
     subcategoryId: String,
     categories: Object,
-    subcategories: Object
+    subcategories: Object,
+    disabled: Boolean
 })
 
 // emits
@@ -47,10 +48,10 @@ watch(subcategoryId, () => {
     </div>
     
     <!-- Category select -->
-    <v-select 
+    <v-select
         label="Category" 
         :items="categories" 
-        :disabled="categories.length === 0"
+        :disabled="disabled || categories.length === 0"
         item-title="name" 
         item-value="id" 
         v-model="categoryId" 
@@ -60,7 +61,7 @@ watch(subcategoryId, () => {
     <v-select 
         label="Subcategory" 
         :items="subcategories" 
-        :disabled="categoryId === null"
+        :disabled="disabled || categoryId === null"
         item-title="name" 
         item-value="id" 
         v-model="subcategoryId" 

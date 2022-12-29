@@ -33,7 +33,7 @@ const isSubcategoryOverridden = computed(() => {
 })
 
 const isSaveDisabled = computed(() => {
-    return selectedSubcategoryId.value === null
+    return selectedSubcategoryId.value === null && selectedCategoryId.value !== null
 })
 
 const showTransactionSubcategorySaveOptionsDialog = ref(false)
@@ -44,7 +44,12 @@ function save() {
 
 function handleSaveOnPayee() {
     showTransactionSubcategorySaveOptionsDialog.value = false
-    emit('saveOnPayee', selectedSubcategoryId.value)
+    const payee = {
+        payeeId: props.transaction.payee.id,
+        subcategoryId: selectedSubcategoryId.value,
+        ignore: null
+    }
+    emit('saveOnPayee', payee)
 }
 
 function handleSaveOnTransaction() {

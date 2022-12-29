@@ -79,9 +79,8 @@ const {
     onError: onUpdatePayeeError 
 } = getUpdatePayee()
 
-// update the given subcategory ID on the payee 
-// and clear the subcategory ID of the transaction
-function handleSaveOnPayee(subcategoryId) {
+// update the payee 
+function handleSaveOnPayee(payee) {
     isSaveOnPayee = true
     const t = selectedTransaction.value
     // set the subcategoryId of the transaction to null
@@ -92,11 +91,8 @@ function handleSaveOnPayee(subcategoryId) {
         })
     }
 
-    // update the subcategoryId of the payee
-    updatePayee({
-        payeeId: t.payee.id, 
-        subcategoryId
-    })
+    // update the payee
+    updatePayee(payee)
 }
 
 onUpdatePayeeDone(() => {
@@ -105,8 +101,9 @@ onUpdatePayeeDone(() => {
     displaySnackbar("Transaction updated.")
 })
 
-onUpdatePayeeError(() => {
+onUpdatePayeeError((e) => {
     showEditDialog.value = false
+    console.log(e)
     displaySnackbar("Failed to update transaction.")
 })
 
@@ -128,8 +125,9 @@ onUpdateTransactionDone(() => {
     displaySnackbar("Transaction updated.")
 })
 
-onUpdateTransactionError(() => {
+onUpdateTransactionError((e) => {
     showEditDialog.value = false
+    console.log(e)
     displaySnackbar("Failed to update transaction.")
 })
 

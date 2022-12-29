@@ -11,7 +11,7 @@ import EditPayee from '@/components/EditPayee.vue'
 // composables
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
-import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
+import getUpdatePayee from '@/composables/mutations/updatePayee'
 
 // ----------------------------------------------------------------------------
 // store
@@ -69,26 +69,18 @@ function handleSelect(id) {
 const showEditDialog = ref(false)
 
 const { 
-    gqlUpdatePayeeSubcategory, 
+    updatePayee, 
     onDone: onUpdatePayeeDone, 
     onError: onUpdatePayeeError 
-} = updatePayeeSubcategory()
-
-function updatePayee(payee) {
-    gqlUpdatePayeeSubcategory({
-        payeeId: selectedPayeeId.value,
-        subcategoryId: payee.subcategoryId
-    })
-}
+} = getUpdatePayee()
 
 onUpdatePayeeDone((res) => {
-    const name = res.data.updatePayeeSubcategory.name
     showEditDialog.value = false
     store.refetchPayees()
     displaySnackbar("Payee '" + selectedPayee.value.name + "' updated.")
 })
 
-onUpdatePayeeError(() => {
+onUpdatePayeeError((e) => {
     displaySnackbar("Failed to update payee '" + selectedPayee.value.name + "'.")
     console.error(e)
 })

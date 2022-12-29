@@ -10,7 +10,7 @@ import EditTransaction from '@/components/EditTransaction.vue'
 // composables
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
-import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
+import getUpdatePayee from '@/composables/mutations/updatePayee'
 import updateTransactionSubcategory from '@/composables/mutations/updateTransactionSubcategory'
 
 // ----------------------------------------------------------------------------
@@ -74,10 +74,10 @@ const {
 } = updateTransactionSubcategory()
 
 const { 
-    gqlUpdatePayeeSubcategory, 
+    updatePayee, 
     onDone: onUpdatePayeeDone, 
     onError: onUpdatePayeeError 
-} = updatePayeeSubcategory()
+} = getUpdatePayee()
 
 // update the given subcategory ID on the payee 
 // and clear the subcategory ID of the transaction
@@ -93,7 +93,7 @@ function handleSaveOnPayee(subcategoryId) {
     }
 
     // update the subcategoryId of the payee
-    gqlUpdatePayeeSubcategory({
+    updatePayee({
         payeeId: t.payee.id, 
         subcategoryId
     })

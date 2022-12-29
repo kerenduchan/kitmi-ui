@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import CategorizationWizardOnePayee from '@/components/CategorizationWizardOnePayee.vue'
-import updatePayeeSubcategory from '@/composables/mutations/updatePayeeSubcategory'
+import getUpdatePayee from '@/composables/mutations/updatePayee'
 
 // props 
 const props = defineProps({
@@ -62,16 +62,16 @@ function close() {
 }
 
 const { 
-    gqlUpdatePayeeSubcategory, 
+    updatePayee, 
     onDone: onUpdatePayeeDone, 
     onError: onUpdatePayeeError 
-} = updatePayeeSubcategory()
+} = getUpdatePayee()
 
 function savePayeeSubcategory() {
 
     if(selectedSubcategoryId.value !== null &&
         selectedSubcategoryId.value !== currentPayee.value.subcategoryId) {
-        gqlUpdatePayeeSubcategory({
+        updatePayee({
             payeeId: currentPayee.value.id, 
             subcategoryId: selectedSubcategoryId.value
         })

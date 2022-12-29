@@ -11,7 +11,7 @@ import EditTransaction from '@/components/EditTransaction.vue'
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import getUpdatePayee from '@/composables/mutations/updatePayee'
-import updateTransactionSubcategory from '@/composables/mutations/updateTransactionSubcategory'
+import getUpdateTransaction from '@/composables/mutations/updateTransaction'
 
 // ----------------------------------------------------------------------------
 // store
@@ -68,10 +68,10 @@ const showEditDialog = ref(false)
 let isSaveOnPayee = false
 
 const { 
-    gqlUpdateTransactionSubcategory, 
+    updateTransaction, 
     onDone: onUpdateTransactionDone, 
     onError: onUpdateTransactionError 
-} = updateTransactionSubcategory()
+} = getUpdateTransaction()
 
 const { 
     updatePayee, 
@@ -86,7 +86,7 @@ function handleSaveOnPayee(subcategoryId) {
     const t = selectedTransaction.value
     // set the subcategoryId of the transaction to null
     if(t.subcategoryId !== null) {
-        gqlUpdateTransactionSubcategory({
+        updateTransaction({
             transactionId: selectedTransactionId.value, 
             subcategoryId: null
         })
@@ -113,7 +113,7 @@ onUpdatePayeeError(() => {
 // update the given subcategory ID on the transaction
 function handleSaveOnTransaction(subcategoryId) {
     isSaveOnPayee = false
-    gqlUpdateTransactionSubcategory({
+    updateTransaction({
         transactionId: selectedTransactionId.value, 
         subcategoryId
     })

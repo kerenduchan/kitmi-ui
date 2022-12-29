@@ -25,9 +25,13 @@ const iconAndColor = computed(() => {
             res.icon = 'mdi-numeric-0-circle-outline'
             res.color = 'grey'
             break
+        case 'Ignored':
+            res.icon = 'mdi-close-circle-outline'
+            res.color = '#616161'
+            break
         case 'Undefined':
             res.icon = 'mdi-help-circle-outline'
-            res.color = 'grey'
+            res.color = '#DDDDDD'
             break
         default:
             break

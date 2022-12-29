@@ -35,6 +35,9 @@ class Payee {
     }
 
     get type() {
+        if(this.ignore) {
+            return 'Ignored'
+        }
         return this.subcategory ? this.subcategory.type : 'Undefined'
     }
 

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
+import TypeIcon from '@/components/TypeIcon.vue'
 
 // props 
 const props = defineProps({
@@ -49,7 +49,7 @@ function handleRowClicked(payee) {
                 :class="getClassForRow(p)" 
                 @click="handleRowClicked(p)"
             >
-                <td><TypeExpenseOrIncomeIcon :type="p.type"/></td>
+                <td><TypeIcon :type="p.type"/></td>
                 <td>{{ p.name}}</td>
                 <td>{{ p.categoryName }}</td>
                 <td>{{ p.subcategoryName }}</td>

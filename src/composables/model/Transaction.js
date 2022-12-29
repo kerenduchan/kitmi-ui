@@ -79,7 +79,7 @@ class Transaction {
             return 'Expense'
         }
         // t.amount === 0
-        return this.payee.type
+        return 'Zero'
     }
 }
 

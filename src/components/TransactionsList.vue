@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
+import TypeIcon from '@/components/TypeIcon.vue'
 import { formatNumber } from '@/composables/utils'
 
 // props 
@@ -58,7 +58,7 @@ const sum = computed(() => {
                 :class="getClassForRow(t)" 
                 @click="handleRowClicked(t)"
             >
-                <td><TypeExpenseOrIncomeIcon :type="t.type"/></td>
+                <td><TypeIcon :type="t.type"/></td>
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>

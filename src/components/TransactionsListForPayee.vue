@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import TypeExpenseOrIncomeIcon from '@/components/TypeExpenseOrIncomeIcon.vue'
+import TypeIcon from '@/components/TypeIcon.vue'
 import { formatNumber } from '@/composables/utils'
 
 // props 
@@ -36,7 +36,7 @@ const sum = computed(() => {
             <tr v-for="t in transactions" 
                 :key="t.id"
             >
-                <td><TypeExpenseOrIncomeIcon :type="t.type"/></td>
+                <td><TypeIcon :type="t.type"/></td>
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
             </tr>

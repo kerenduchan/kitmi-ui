@@ -34,7 +34,7 @@ class Payee {
     }
 
     get type() {
-        return this.subcategory ? this.subcategory.type : ''
+        return this.subcategory ? this.subcategory.type : 'Undefined'
     }
 
     get isCategorized() {

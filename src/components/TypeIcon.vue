@@ -1,14 +1,16 @@
 <script setup>
 import { computed } from 'vue'
 
+// type icon for transaction, payee, category
+
 const props = defineProps({
     type: String
 })
 
 const iconAndColor = computed(() => {
     let res = {
-        icon: 'mdi-help-circle-outline',
-        color: 'grey'
+        icon: '',
+        color: ''
     }
     switch (props.type) {
         case 'Expense':
@@ -16,8 +18,16 @@ const iconAndColor = computed(() => {
             res.color = '#F08080'
             break
         case 'Income':
-        res.icon = 'mdi-plus-circle-outline'
+            res.icon = 'mdi-plus-circle-outline'
             res.color = '#37A0CC'
+            break
+        case 'Zero':
+            res.icon = 'mdi-numeric-0-circle-outline'
+            res.color = 'grey'
+            break
+        case 'Undefined':
+            res.icon = 'mdi-help-circle-outline'
+            res.color = 'grey'
             break
         default:
             break

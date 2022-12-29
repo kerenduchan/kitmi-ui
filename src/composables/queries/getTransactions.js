@@ -17,6 +17,7 @@ function getTransactions() {
                 payee {
                     id
                     name
+                    ignore
                     subcategory {
                         id
                         name

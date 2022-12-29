@@ -71,7 +71,14 @@ class Transaction {
         return this.amount <= 0
     }
 
+    get isIgnored() {
+        return this.ignore || (this.overridingSubcategory === null && this.payee.ignore)
+    }
+
     get type() {
+        if(this.isIgnored) {
+            return "Ignored"
+        }
         if(this.amount > 0) {
             return 'Income'
         }

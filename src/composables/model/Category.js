@@ -16,6 +16,9 @@ class Category {
     }
 
     get type() {
+        if(this.excludeFromReports) {
+            return 'Excluded'
+        }
         return this.isExpense ? 'Expense' : 'Income'
     }
 

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
 import { formatNumber, formatDate } from '@/composables/utils'
+import TypeIcon from '@/components/TypeIcon.vue'
 import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
 
 // props 
@@ -153,7 +154,10 @@ function clearSelectedSubcategory() {
                                 <v-item v-slot="{ isSelected, toggle }">
                                     <v-card :color="isSelected ? 'primary' : ''" class="d-flex align-center"
                                         @click="toggle">
-                                        <v-card-title>{{ c.name }}</v-card-title>
+                                        <v-card-title>
+                                            <TypeIcon :type="c.type" />
+                                            {{ c.name }}
+                                        </v-card-title>
                                     </v-card>
                                 </v-item>
                             </v-col>

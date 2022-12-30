@@ -4,8 +4,12 @@ import gql from 'graphql-tag'
 function getCreateCategory() {
     // gql mutation for creating a category
     const { mutate: createCategory, onDone, onError } = useMutation(gql`
-        mutation createCategory ($name: String!, $isExpense: Boolean!) {
-            createCategory (name: $name, isExpense: $isExpense) {
+        mutation createCategory ($name: String!, 
+                                 $isExpense: Boolean!, 
+                                 $excludeFromReports: Boolean!) {
+            createCategory (name: $name, 
+                            isExpense: $isExpense, 
+                            excludeFromReports: $excludeFromReports) {
                 id
                 name
             }

@@ -9,6 +9,7 @@ class Category {
         this.id = gqlCategory.id
         this.name = gqlCategory.name
         this.isExpense = gqlCategory.isExpense
+        this.excludeFromReports = gqlCategory.excludeFromReports
         this.subcategories = null
         if (gqlCategory.subcategories)
             this.subcategories = gqlCategory.subcategories.map(s => new Subcategory(s))

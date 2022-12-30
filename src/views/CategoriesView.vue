@@ -339,6 +339,9 @@ const isMoveCategoryButtonVisible = computed(() => {
 function isMoveCategoryDownDisabled() {
     // Move category down is disabled if no category is selected or 
     // the selected category can't move any further down
+    if(categories.value.length === 0) {
+        return true
+    }
     return !selectedCategoryId.value ||
     selectedCategoryId.value === categories.value[categories.value.length - 1].id
 }
@@ -364,6 +367,9 @@ onMoveCategoryDownDone(() => {
 function isMoveCategoryUpDisabled() {
     // Move category up is disabled if no category is selected or 
     // the selected category can't move any further up
+    if(categories.value.length === 0) {
+        return true
+    }
     return !selectedCategoryId.value ||
     selectedCategoryId.value === categories.value[0].id
 }

@@ -10,6 +10,7 @@ function getCategories() {
                 id
                 name
                 isExpense
+                excludeFromReports
                 subcategories {
                     id
                     name

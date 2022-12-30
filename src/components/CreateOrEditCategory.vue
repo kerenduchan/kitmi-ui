@@ -15,12 +15,15 @@ const emit = defineEmits([
     'save'
 ])
 
-// v-models for form fields
+// v-model for name
 const name = ref(props.category ? props.category.name : '')
 
-// for the type (expense/income)
+// v-model for type (expense/income)
 const { isExpense, handleTypeChange} = 
     expenseOrIncome(props.category ? props.category.isExpense : true)
+
+// v-model for "Exclude from reports" checkbox
+const excludeFromReports = ref(props.category ? props.category.excludeFromReports : false)
 
 const isNameAlreadyExists = computed(() => {
     if(props.category && name.value == props.category.name) {
@@ -43,7 +46,8 @@ const title = computed(() => {
 function save() {
     const category = { 
         name: name.value,
-        isExpense: isExpense.value
+        isExpense: isExpense.value,
+        excludeFromReports: excludeFromReports.value
     }
     if(props.category) {
         // for update
@@ -72,6 +76,9 @@ function save() {
                 <ExpenseOrIncomeRadioGroup 
                     :isExpense="isExpense" 
                     @change="handleTypeChange"/>
+
+                <!-- Exclude from reports -->
+                <v-checkbox label="Exclude from reports" v-model="excludeFromReports" />
             </v-form>
         </v-card-text>
         <v-card-actions>

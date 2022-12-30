@@ -10,7 +10,6 @@ function getPayees() {
                 id
                 name
                 subcategoryId
-                ignore
                 subcategory {
                     id
                     name

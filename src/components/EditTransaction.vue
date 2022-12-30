@@ -46,8 +46,7 @@ function handleSaveOnPayee() {
     showTransactionSubcategorySaveOptionsDialog.value = false
     const payee = {
         payeeId: props.transaction.payee.id,
-        subcategoryId: selectedSubcategoryId.value,
-        ignore: null
+        subcategoryId: selectedSubcategoryId.value
     }
     emit('saveOnPayee', payee)
 }

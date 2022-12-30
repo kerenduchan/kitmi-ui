@@ -51,8 +51,8 @@ function handleRowClicked(payee) {
             >
                 <td><TypeIcon :type="p.type"/></td>
                 <td>{{ p.name}} </td>
-                <td>{{ p.ignore ? '' : p.categoryName }}</td>
-                <td>{{ p.ignore ? '' : p.subcategoryName }}</td>
+                <td>{{ p.categoryName }}</td>
+                <td>{{ p.subcategoryName }}</td>
             </tr>
         </tbody>
     </v-table>

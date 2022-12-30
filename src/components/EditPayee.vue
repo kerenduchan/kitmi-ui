@@ -22,8 +22,6 @@ const {
     handleSubcategorySelected
 } = subcategorySelect(props.categories, props.payee)
 
-const ignore = ref(props.payee.ignore)
-
 const isSaveDisabled = computed(() => {
     return selectedSubcategoryId.value === null && selectedCategoryId.value !== null
 })
@@ -31,8 +29,7 @@ const isSaveDisabled = computed(() => {
 function save() {
     const payee = { 
         payeeId: props.payee.id,
-        subcategoryId: selectedSubcategoryId.value,
-        ignore: ignore.value
+        subcategoryId: selectedSubcategoryId.value
     }
     emit('save', payee)
 }
@@ -47,7 +44,6 @@ function save() {
 
                 <!-- Category and subcategory -->
                 <SubcategorySelect 
-                    :disabled="ignore"
                     :categoryId="selectedCategoryId"
                     :subcategoryId="selectedSubcategoryId"
                     :categories="filteredCategories"
@@ -56,8 +52,6 @@ function save() {
                     @subcategorySelected="handleSubcategorySelected"
                 />
 
-                <!-- Ignore -->
-                <v-checkbox label="Ignore" v-model="ignore"></v-checkbox>
             </v-form>
         </v-card-text>
         <v-card-actions>

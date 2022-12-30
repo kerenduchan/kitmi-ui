@@ -62,8 +62,8 @@ const sum = computed(() => {
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>
-                <td>{{ t.isIgnored ? '' : t.categoryName }}</td>
-                <td>{{ t.isIgnored ? '' : t.subcategoryName }}</td>
+                <td>{{ t.categoryName }}</td>
+                <td>{{ t.subcategoryName }}</td>
             </tr>
         </tbody>
         <tfoot>

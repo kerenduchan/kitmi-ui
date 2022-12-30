@@ -16,14 +16,17 @@ class Transaction {
         this.payee = new Payee(gqlTransaction.payee)
         this.accountId = gqlTransaction.account.id
         this.account = new Account(gqlTransaction.account)
+        this.overrideSubcategory = gqlTransaction.overrideSubcategory
 
-        this.overridingSubcategory = gqlTransaction.subcategory ?
-            new Subcategory(gqlTransaction.subcategory) :
-            null
+        this.overridingSubcategory = null
+        
+        if(this.overrideSubcategory && gqlTransaction.subcategoryId !== null) {
+            this.overridingSubcategory = new Subcategory(gqlTransaction.subcategory)
+        }
 
         // The actual subcategory for the transaction - 
         // either the payee's subcategory or the overriding subcategory
-        this.subcategory = this.overridingSubcategory ?
+        this.subcategory = this.overrideSubcategory ?
             this.overridingSubcategory :
             this.payee.subcategory;
     }

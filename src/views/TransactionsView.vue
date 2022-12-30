@@ -87,6 +87,7 @@ function handleSaveOnPayee(payee) {
     if(t.subcategoryId !== null) {
         updateTransaction({
             transactionId: selectedTransactionId.value, 
+            overrideSubcategory: false,
             subcategoryId: null
         })
     }
@@ -108,12 +109,9 @@ onUpdatePayeeError((e) => {
 })
 
 // update the given subcategory ID on the transaction
-function handleSaveOnTransaction(subcategoryId) {
+function handleSaveOnTransaction(transaction) {
     isSaveOnPayee = false
-    updateTransaction({
-        transactionId: selectedTransactionId.value, 
-        subcategoryId
-    })
+    updateTransaction(transaction)
 }
 
 onUpdateTransactionDone(() => {

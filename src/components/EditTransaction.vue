@@ -27,7 +27,7 @@ const {
 
 const isSubcategoryOverridden = computed(() => {
     if(props.transaction) {
-        return props.transaction.overridingSubcategory !== null
+        return props.transaction.overrideSubcategory
     }
     return false
 })
@@ -53,11 +53,21 @@ function handleSaveOnPayee() {
 
 function handleSaveOnTransaction() {
     showTransactionSubcategorySaveOptionsDialog.value = false
-    emit('saveOnTransaction', selectedSubcategoryId.value)
+    const transaction = {
+        transactionId: props.transaction.id,
+        overrideSubcategory: true,
+        subcategoryId: selectedSubcategoryId.value
+    }
+    emit('saveOnTransaction', transaction)
 }
 
 function handleUsePayeeSubcategory() {
-    emit('saveOnTransaction', null)
+    const transaction = {
+        transactionId: props.transaction.id,
+        overrideSubcategory: false,
+        subcategoryId: null
+    }
+    emit('saveOnTransaction', transaction)
 }
 
 const fields = ref([

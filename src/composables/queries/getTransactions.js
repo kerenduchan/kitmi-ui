@@ -10,6 +10,8 @@ function getTransactions() {
                 id
                 date
                 amount
+                overrideSubcategory
+                subcategoryId
                 account {
                     id
                     name

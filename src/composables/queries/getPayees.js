@@ -17,6 +17,7 @@ function getPayees() {
                         id
                         name
                         isExpense
+                        excludeFromReports
                     }
                 }
             }

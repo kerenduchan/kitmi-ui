@@ -72,6 +72,9 @@ class Transaction {
     }
 
     get type() {
+        if(this.category && this.category.excludeFromReports) {
+            return 'Excluded'
+        }
         if(this.amount > 0) {
             return 'Income'
         }

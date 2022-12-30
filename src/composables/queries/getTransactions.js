@@ -24,6 +24,7 @@ function getTransactions() {
                             id
                             name
                             isExpense
+                            excludeFromReports
                         }
                     }
                 }
@@ -34,6 +35,7 @@ function getTransactions() {
                         id
                         name
                         isExpense
+                        excludeFromReports
                     }
                 }
             }

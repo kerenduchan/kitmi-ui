@@ -40,6 +40,10 @@ class Payee {
     get isCategorized() {
         return this.subcategory !== null
     }
+
+    get excludeFromReports() {
+        return this.subcategory === null || this.category.excludeFromReports
+    }
 }
 
 export default Payee

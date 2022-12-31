@@ -49,7 +49,7 @@ function handleRowClicked(payee) {
                 :class="getClassForRow(p)" 
                 @click="handleRowClicked(p)"
             >
-                <td><TypeIcon :type="p.type"/></td>
+                <td><TypeIcon :type="p.type" :isExcluded="p.excludeFromReports"/></td>
                 <td>{{ p.name}} </td>
                 <td>{{ p.categoryName }}</td>
                 <td>{{ p.subcategoryName }}</td>

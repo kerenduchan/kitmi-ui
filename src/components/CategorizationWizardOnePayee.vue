@@ -155,7 +155,7 @@ function clearSelectedSubcategory() {
                                     <v-card :color="isSelected ? 'primary' : ''" class="d-flex align-center"
                                         @click="toggle">
                                         <v-card-title>
-                                            <TypeIcon :type="c.type" />
+                                            <TypeIcon :type="c.type" :isExcluded="c.excludeFromReports"/>
                                             {{ c.name }}
                                         </v-card-title>
                                     </v-card>

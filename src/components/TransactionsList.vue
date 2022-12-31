@@ -58,7 +58,7 @@ const sum = computed(() => {
                 :class="getClassForRow(t)" 
                 @click="handleRowClicked(t)"
             >
-                <td><TypeIcon :type="t.type"/></td>
+                <td><TypeIcon :type="t.type"  :isExcluded="t.excludeFromReports"/></td>
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>

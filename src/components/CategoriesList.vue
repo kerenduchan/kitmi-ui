@@ -41,7 +41,7 @@ watchEffect(() => {
         <v-expansion-panel v-for="c in categories" :value="c.id">
             <v-expansion-panel-title @click="handleExpansionPanelClicked()">
                 <span class="category-type-icon">
-                    <TypeIcon :type="c.type" />
+                    <TypeIcon :type="c.type" :isExcluded="c.excludeFromReports"/>
                 </span>
                 {{ c.name }}
             </v-expansion-panel-title>

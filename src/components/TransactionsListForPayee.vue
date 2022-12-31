@@ -36,7 +36,7 @@ const sum = computed(() => {
             <tr v-for="t in transactions" 
                 :key="t.id"
             >
-                <td><TypeIcon :type="t.type"/></td>
+                <td><TypeIcon :type="t.type"  :isExcluded="t.excludeFromReports"/></td>
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
             </tr>

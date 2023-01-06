@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { formatMonthAndYear } from '@/composables/utils'
 
 // components
 import { formatDate } from '@/composables/utils'
@@ -43,7 +44,7 @@ const { onResult, refetch } = getSummary(filterParams.value)
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
         const summary = queryResult.data.summary
-        xaxis.value = summary.buckets
+        xaxis.value = summary.buckets.map(bucket => formatMonthAndYear(bucket))
         series.value = summary.groups
         isReady.value = true
         showFilterDialog.value = false   

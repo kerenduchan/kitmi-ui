@@ -43,7 +43,7 @@ const { onResult, refetch } = getSummary(filterParams.value)
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
         const summary = queryResult.data.summary
-        xaxis.value = summary.xAxis
+        xaxis.value = summary.buckets
         series.value = summary.groups
         isReady.value = true
         showFilterDialog.value = false   

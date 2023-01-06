@@ -62,16 +62,8 @@ const sum = computed(() => {
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
                 <td>{{ t.payeeName }}</td>
-                <td>
-                    <span :class="{ overrideCategory: t.overrideSubcategory }">
-                        {{ t.categoryName }}
-                    </span>
-                </td>
-                <td>
-                    <span :class="{ overrideCategory: t.overrideSubcategory }">
-                        {{ t.subcategoryName }}
-                    </span>
-                </td>
+                <td>{{ t.categoryName }}<span class="red" v-if="t.overrideSubcategory"> *</span></td>
+                <td>{{ t.subcategoryName }}<span class="red" v-if="t.overrideSubcategory"> *</span></td>
             </tr>
         </tbody>
         <tfoot>
@@ -89,7 +81,7 @@ const sum = computed(() => {
 </template>
 
 <style>
-.overrideCategory {
-    font-style: italic;
+.red {
+    color: red;
 }
 </style>

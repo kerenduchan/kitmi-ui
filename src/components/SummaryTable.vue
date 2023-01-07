@@ -33,7 +33,7 @@ const headers = computed(() => {
             <tr v-for="g in props.groups">
                 <td>{{ g.name }}</td>
                 <td v-for="d in g.data " class="text-right">{{ formatNumber(d, 0) }}</td>
-                <td class="text-right">{{ formatNumber(g.totalSum) }}</td>
+                <td class="text-right">{{ formatNumber(g.total, 0) }}</td>
             </tr>
         </tbody>
     </v-table>

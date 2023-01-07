@@ -21,6 +21,7 @@ function getSummary(vars) {
                     groupId
                     name
                     data
+                    total
                 }
             }
         }

@@ -24,7 +24,7 @@ const groupBy = ref(props.defaults.groupBy)
 
 // for the type (expense/income)
 const { isExpense, handleTypeChange} = 
-    expenseOrIncome(props.category ? props.category.isExpense : true)
+    expenseOrIncome(props.defaults.isExpense)
 
 const startDateError = computed(() => {
     if (!isValidDate(startDate.value)) {

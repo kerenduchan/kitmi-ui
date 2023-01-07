@@ -7,7 +7,7 @@ import SummaryTable from '../components/SummaryTable.vue'
 import Filter from '@/components/charts/Filter.vue'
 
 // composables
-import { formatDate, formatNumber, formatMonthAndYear } from '@/composables/utils'
+import { formatDate, formatMonthAndYear } from '@/composables/utils'
 import getSummary from '@/composables/queries/getSummary'
 
 // Did the data arrive from the server

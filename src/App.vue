@@ -1,12 +1,26 @@
 <template>
     <v-app v-if="isReady" id="inspire">
-        <v-navigation-drawer permanent>
+        <v-navigation-drawer 
+            v-model="drawer"
+            :rail="rail"
+            permanent
+            @click="rail = false">
             <v-list>
+                <v-list-item>
+                    <v-list-item-title>
+                        <v-btn
+                            class="rounded-0" 
+                            elevation="0"
+                            variant="text"
+                            :icon="rail ? 'mdi-chevron-right' : 'mdi-chevron-left'"
+                            @click.stop="rail = !rail"
+                        />
+                    </v-list-item-title>
+                </v-list-item>
                 <v-list-item v-for="link in links" :key="link.key" router :to="link.to">
                     <template v-slot:prepend>
                         <v-icon>{{ link.icon }}</v-icon>
                     </template>
-
                     <v-list-item-title>{{ link.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
@@ -26,6 +40,9 @@
 <script setup>
 import { ref, computed } from 'vue'
 import getStore from '@/composables/store'
+
+const rail = ref(true)
+const drawer = ref(true)
 
 const links = ref([
     {

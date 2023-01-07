@@ -39,8 +39,8 @@ const endDateError = computed(() => {
     }
     if (isValidDate(startDate.value)) {
         const count = countMonths()
-        if(count < 1 || count > 12)
-            return 'Date range should be 2-12 months'
+        if(count < 0 || count > 12)
+            return 'Date range should be 1-12 months'
     }
     return ''
 })

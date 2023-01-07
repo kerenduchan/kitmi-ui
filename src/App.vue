@@ -4,7 +4,7 @@
             v-model="drawer"
             :rail="rail"
             permanent
-            @click="rail = false">
+        >
             <v-list>
                 <v-list-item>
                     <v-list-item-title>
@@ -19,7 +19,11 @@
                 </v-list-item>
                 <v-list-item v-for="link in links" :key="link.key" router :to="link.to">
                     <template v-slot:prepend>
-                        <v-icon>{{ link.icon }}</v-icon>
+                        <v-tooltip :disabled="!rail" :text="link.title">
+                            <template v-slot:activator="{ props }">
+                                <v-icon v-bind="props">{{ link.icon }}</v-icon>
+                            </template>
+                        </v-tooltip>
                     </template>
                     <v-list-item-title>{{ link.title }}</v-list-item-title>
                 </v-list-item>

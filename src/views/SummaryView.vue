@@ -10,14 +10,10 @@ import Filter from '@/components/charts/Filter.vue'
 import { formatDate, formatNumber, formatMonthAndYear } from '@/composables/utils'
 import getSummary from '@/composables/queries/getSummary'
 
-// Labels for the buckets (x-axis)
-const buckets = ref(null)
-
 // Did the data arrive from the server
 const isReady = ref(false)
 
-// The stacked data (y-axis values) for the bar chart
-const groups = ref(null)
+const summary = ref(null)
 
 // filter params
 const filterParams = ref({
@@ -43,9 +39,12 @@ const { onResult, refetch } = getSummary(filterParams.value)
 
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
-        const summary = queryResult.data.summary
-        buckets.value = summary.buckets.map(b => formatMonthAndYear(b))
-        groups.value = summary.groups
+        const s = queryResult.data.summary
+        summary.value = {
+            buckets: s.buckets.map(b => formatMonthAndYear(b)),
+            groups: s.groups,
+            totals: s.totals
+        }
         isReady.value = true
         showFilterDialog.value = false   
     }
@@ -77,8 +76,7 @@ function handleFilter(filter) {
 
     <SummaryTable 
         v-if="isReady" 
-        :buckets="buckets"
-        :groups="groups"
+        :summary="summary"
     />
 
     <!-- Filter dialog -->

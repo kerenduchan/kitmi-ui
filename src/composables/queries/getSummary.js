@@ -23,6 +23,7 @@ function getSummary(vars) {
                     data
                     total
                 }
+                totals
             }
         }
     `, vars)

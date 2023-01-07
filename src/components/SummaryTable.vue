@@ -4,8 +4,7 @@ import { formatNumber } from '@/composables/utils'
 
 // props 
 const props = defineProps({
-    buckets: Object,
-    groups: Object
+    summary: Object,
 })
 
 console.log(props.groups)
@@ -13,7 +12,7 @@ console.log(props.groups)
 const headers = computed(() => {
     return [
         '',
-        ...props.buckets,
+        ...props.summary.buckets,
         'Total',
     ]
 })
@@ -30,12 +29,18 @@ const headers = computed(() => {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="g in props.groups">
+            <tr v-for="g in props.summary.groups">
                 <td>{{ g.name }}</td>
-                <td v-for="d in g.data " class="text-right">{{ formatNumber(d, 0) }}</td>
+                <td v-for="v in g.data " class="text-right">{{ formatNumber(v, 0) }}</td>
                 <td class="text-right">{{ formatNumber(g.total, 0) }}</td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <td>Total</td>
+                <td v-for="v in props.summary.totals" class="text-right">{{ formatNumber(v, 0) }}</td>
+            </tr>
+        </tfoot>
     </v-table>
 
 </template>

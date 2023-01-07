@@ -1,14 +1,13 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { formatMonthAndYear } from '@/composables/utils'
 
 // components
-import { formatDate } from '@/composables/utils'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import StackedBarChart from '@/components/charts/StackedBarChart.vue'
 import Filter from '@/components/charts/Filter.vue'
 
 // composables
+import { formatDate, formatNumber, formatMonthAndYear } from '@/composables/utils'
 import getSummary from '@/composables/queries/getSummary'
 
 // Labels for the x-axis
@@ -44,7 +43,7 @@ const { onResult, refetch } = getSummary(filterParams.value)
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
         const summary = queryResult.data.summary
-        xaxis.value = summary.buckets.map(bucket => formatMonthAndYear(bucket))
+        xaxis.value = summary.buckets
         series.value = summary.groups
         isReady.value = true
         showFilterDialog.value = false   
@@ -55,6 +54,10 @@ function handleFilter(filter) {
     filterParams.value = filter
     isReady.value = false
     refetch(filter)
+}
+
+function formatRoundNumber(n) {
+    return formatNumber(n, 0)
 }
 
 </script>
@@ -79,6 +82,8 @@ function handleFilter(filter) {
         v-if="isReady" 
         :xaxis="xaxis" 
         :series="series" 
+        :xaxisFormatterFunc="formatMonthAndYear"
+        :yaxisFormatterFunc="formatRoundNumber"
     />
 
     <!-- Filter dialog -->

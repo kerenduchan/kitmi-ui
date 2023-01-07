@@ -1,7 +1,7 @@
-function formatNumber(n) {
+function formatNumber(n, precisionDigits = 2) {
     return new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        minimumFractionDigits: precisionDigits,
+        maximumFractionDigits: precisionDigits,
       }).format(n)
 }
 

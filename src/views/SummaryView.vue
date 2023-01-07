@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 
 // components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
-import StackedBarChart from '@/components/charts/StackedBarChart.vue'
+import SummaryTable from '../components/SummaryTable.vue'
 import Filter from '@/components/charts/Filter.vue'
 
 // composables
@@ -25,7 +25,7 @@ const filterParams = ref({
     endDate: "2022-12-31",
     groupBy: 'category',
     isExpense: true,
-    mergeUnderThreshold: true
+    mergeUnderThreshold: false
 })
 
 const title = computed(() => {
@@ -57,10 +57,6 @@ function handleFilter(filter) {
     refetch(filter)
 }
 
-function formatRoundNumber(n) {
-    return formatNumber(n, 0)
-}
-
 </script>
 
 <template>
@@ -78,12 +74,11 @@ function formatRoundNumber(n) {
     </div>
 
     {{ title }}
-    <!-- the stacked bar chart -->
-    <StackedBarChart 
+
+    <SummaryTable 
         v-if="isReady" 
-        :xaxis="buckets" 
-        :series="groups" 
-        :yaxisFormatterFunc="formatRoundNumber"
+        :buckets="buckets"
+        :groups="groups"
     />
 
     <!-- Filter dialog -->

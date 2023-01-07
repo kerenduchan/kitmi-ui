@@ -4,7 +4,7 @@ import AccountsView from '../views/AccountsView.vue'
 import CategoriesView from '../views/CategoriesView.vue'
 import PayeesView from '../views/PayeesView.vue'
 import TransactionsView from '../views/TransactionsView.vue'
-import YearlySummaryView from '../views/YearlySummaryView.vue'
+import SummaryView from '../views/SummaryView.vue'
 import ChartsView from '../views/ChartsView.vue'
 
 const router = createRouter({
@@ -38,7 +38,7 @@ const router = createRouter({
     {
       path: '/summary',
       name: 'summary',
-      component: YearlySummaryView
+      component: SummaryView
     },
     {
       path: '/charts',

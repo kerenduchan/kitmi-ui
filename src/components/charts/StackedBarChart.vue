@@ -4,7 +4,6 @@ import { ref } from 'vue'
 const props = defineProps({
     xaxis: Object,
     series: Object,
-    xaxisFormatterFunc: Function,
     yaxisFormatterFunc: Function
 })
 
@@ -16,9 +15,6 @@ const options = ref({
     },
     xaxis: {
         categories: props.xaxis,
-        labels: {
-            formatter: props.xaxisFormatterFunc
-        }
     },
     yaxis: {
         labels: {

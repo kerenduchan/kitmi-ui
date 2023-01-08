@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { getChartColors } from '@/composables/utils'
 
 const props = defineProps({
     labels: Object,
@@ -8,19 +9,7 @@ const props = defineProps({
 
 const options = ref({
     labels: props.labels,
-    colors: [
-        '#005f73',
-        '#001219',
-        '#0a9396',
-        '#94d2bd',
-        '#ee9b00',
-        '#ca6702',
-        '#ae2012',
-        '#9b2226',
-        '#AE9E70',
-        '#1F5D76',
-        '#bb3e03',
-    ]
+    colors: getChartColors()
 })
 
 </script>

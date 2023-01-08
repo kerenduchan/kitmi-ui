@@ -16,9 +16,25 @@ function formatMonthAndYear(date_str) {
     return month + '/' + year
 }
 
+function getChartColors() {
+    return [
+        '#005f73',
+        '#001219',
+        '#0a9396',
+        '#94d2bd',
+        '#ee9b00',
+        '#ca6702',
+        '#ae2012',
+        '#9b2226',
+        '#AE9E70',
+        '#1F5D76',
+        '#bb3e03',
+    ]
 
+}
 export {
     formatNumber,
     formatDate,
-    formatMonthAndYear
+    formatMonthAndYear,
+    getChartColors
 }

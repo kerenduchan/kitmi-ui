@@ -11,10 +11,11 @@ import Filter from '@/components/charts/Filter.vue'
 import { formatDate, formatNumber, formatMonthAndYear } from '@/composables/utils'
 import getSummary from '@/composables/queries/getSummary'
 
-const summary = ref(null)
+// the data from "getSummary" for the stacked bar chart
+const summaryForStackedBarChart = ref(null)
 
-// Did the data arrive from the server
-const isReady = ref(false)
+// the data from "getSummary" for the pie chart
+const summaryForPieChart = ref(null)
 
 // filter params
 const filterParams = ref({
@@ -22,8 +23,6 @@ const filterParams = ref({
     endDate: "2022-12-31",
     groupBy: 'category',
     isExpense: true,
-    bucketSize: 'range',
-    mergeUnderThreshold: true
 })
 
 const title = computed(() => {
@@ -37,24 +36,69 @@ const title = computed(() => {
 // show filter dialog
 const showFilterDialog = ref(false)
 
-const { onResult, refetch } = getSummary(filterParams.value)
+// params for "getSummary" for the stacked bar chart
+function getStackedBarChartParams() {
+    return {
+        startDate: filterParams.value.startDate,
+        endDate: filterParams.value.endDate,
+        options: {
+            isExpense: filterParams.value.isExpense,
+            groupBy: filterParams.value.groupBy,
+            bucketBy: 'month',
+            mergeUnderThreshold: true
+        }
+    }
+}
 
-onResult(queryResult => {
+// params for "getSummary" for the pie chart
+function getPieChartParams() {
+    // the same as the stacked bar chart params, but bucket by range
+    const params = getStackedBarChartParams()
+    params.options.bucketBy = 'range'
+    return params
+}
+
+// get the summary for the stacked bar chart
+const {
+    onResult: onStackedBarChartResult,
+    refetch: refetchStackedBarChart 
+} = getSummary(getStackedBarChartParams())
+
+// get the summary for the pie chart
+const {
+    onResult: onPieChartResult,
+    refetch: refetchPieChart 
+} = getSummary(getPieChartParams())
+
+
+onStackedBarChartResult(queryResult => {
     if (queryResult && queryResult.data) {
         const s = queryResult.data.summary
-        summary.value = {
+        summaryForStackedBarChart.value = {
             buckets: s.buckets.map(b => formatMonthAndYear(b)),
             groups: s.groups
         }
-        isReady.value = true
+        showFilterDialog.value = false   
+    }
+})
+
+onPieChartResult(queryResult => {
+    if (queryResult && queryResult.data) {
+        const s = queryResult.data.summary
+        summaryForPieChart.value = {
+            buckets: s.buckets.map(b => formatMonthAndYear(b)),
+            groups: s.groups
+        }
         showFilterDialog.value = false   
     }
 })
 
 function handleFilter(filter) {
     filterParams.value = filter
-    isReady.value = false
-    refetch(filter)
+    summaryForStackedBarChart.value = null
+    summaryForPieChart.value = null
+    refetchStackedBarChart(getStackedBarChartParams())
+    refetchPieChart(getPieChartParams())
 }
 
 function formatRoundNumber(n) {
@@ -62,11 +106,11 @@ function formatRoundNumber(n) {
 }
 
 const pieChartSeries = computed(() => {
-    return summary.value.groups.map(g => g.total)
+    return summaryForPieChart.value.groups.map(g => g.total)
 })
 
 const pieChartLabels = computed(() => {
-    return summary.value.groups.map(g => g.name)
+    return summaryForPieChart.value.groups.map(g => g.name)
 })
 
 </script>
@@ -86,19 +130,17 @@ const pieChartLabels = computed(() => {
     </div>
 
     {{ title }}
-    <div v-if="isReady" >
         <!-- the stacked bar chart -->
-        <StackedBarChart
-            :xaxis="summary.buckets"
-            :series="summary.groups"
+        <StackedBarChart v-if="summaryForStackedBarChart"
+            :xaxis="summaryForStackedBarChart.buckets"
+            :series="summaryForStackedBarChart.groups"
             :yaxisFormatterFunc="formatRoundNumber"
         />
 
-        <PieChart 
+        <PieChart v-if="summaryForPieChart"
             :series="pieChartSeries"
             :labels="pieChartLabels"
         />
-    </div>
 
     <!-- Filter dialog -->
         <v-dialog v-model="showFilterDialog">

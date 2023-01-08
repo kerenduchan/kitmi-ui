@@ -5,19 +5,13 @@ import { ref } from 'vue'
 function getSummary(vars) {
     const { onResult, refetch } = useQuery(gql`
         query getSummary(
-            $groupBy: String!, 
             $startDate: Date!, 
             $endDate: Date!, 
-            $isExpense: Boolean!, 
-            $mergeUnderThreshold: Boolean!,
-            $bucketSize: String!) {
+            $options: SummaryOptions!) {
             summary(
                 startDate: $startDate, 
                 endDate: $endDate, 
-                groupBy: $groupBy, 
-                isExpense: $isExpense, 
-                mergeUnderThreshold: $mergeUnderThreshold,
-                bucketSize: $bucketSize) {
+                options: $options) {
                 buckets,
                 groups {
                     groupId

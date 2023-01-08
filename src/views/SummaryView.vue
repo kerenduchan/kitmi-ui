@@ -96,30 +96,41 @@ function handleFilter(filter) {
             </div>
 
         </div>
-        <v-divider />
     </div>
+    <v-divider />
 
-    <h1>{{ title }}</h1>
-    
-    <h2>Income</h2>
-    <SummaryTable 
-        v-if="incomeSummary" 
-        :summary="incomeSummary"
-    />
-
-    <h2>Expenses</h2>
-    
-    <SummaryTable 
-        v-if="expensesSummary" 
-        :summary="expensesSummary"
-    />
+    <h3 class="text-center">{{ title }}</h3>
+    <h4 class="text-center">by {{ filterParams.groupBy }}</h4>
+    <v-container fluid>
+        <v-row dense>
+            <v-col>
+                <v-card>
+                    <v-card-title>
+                        Income
+                    </v-card-title>
+                    <v-card-text>
+                        <SummaryTable v-if="incomeSummary" :summary="incomeSummary" />
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-card-title>
+                        Expenses
+                    </v-card-title>
+                    <v-card-text>
+                        <SummaryTable v-if="expensesSummary" :summary="expensesSummary" />
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 
     <!-- Filter dialog -->
-        <v-dialog v-model="showFilterDialog">
-        <Filter
-            :defaults="filterParams"
-            @close="showFilterDialog = false"
-            @filter="handleFilter" />
+    <v-dialog v-model="showFilterDialog">
+        <Filter :defaults="filterParams" @close="showFilterDialog = false" @filter="handleFilter" />
     </v-dialog>
 
 </template>

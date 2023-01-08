@@ -25,12 +25,15 @@ const filterParams = ref({
     isExpense: true,
 })
 
+const dateRangeStr = computed(() => {
+    const f = filterParams.value
+    return formatDate(new Date(f.startDate)) + ' - ' + 
+    formatDate(new Date(f.endDate))
+})
+
 const title = computed(() => {
     const f = filterParams.value
-    return (f.isExpense ? "Expenses" : "Income") 
-        + ' by ' + f.groupBy
-        + ' for ' + formatDate(new Date(f.startDate)) + ' - ' 
-        + formatDate(new Date(f.endDate))
+    return (f.isExpense ? "Expenses" : "Income") + ' by ' + f.groupBy
 })
 
 // show filter dialog
@@ -126,28 +129,35 @@ const pieChartLabels = computed(() => {
             </div>
 
         </div>
-        <v-divider />
     </div>
+    <v-divider />
 
-    {{ title }}
-        <!-- the stacked bar chart -->
-        <StackedBarChart v-if="summaryForStackedBarChart"
-            :xaxis="summaryForStackedBarChart.buckets"
-            :series="summaryForStackedBarChart.groups"
-            :yaxisFormatterFunc="formatRoundNumber"
-        />
+    <h3 class="text-center">{{ dateRangeStr }}</h3>
+    <h4 class="text-center">{{ title }}</h4>
 
-        <PieChart v-if="summaryForPieChart"
-            :series="pieChartSeries"
-            :labels="pieChartLabels"
-        />
+    <v-card>
+        <v-card-text>
+            <!-- the stacked bar chart -->
+            <StackedBarChart v-if="summaryForStackedBarChart"
+                :xaxis="summaryForStackedBarChart.buckets"
+                :series="summaryForStackedBarChart.groups"
+                :yaxisFormatterFunc="formatRoundNumber"
+            />
+
+            <PieChart v-if="summaryForPieChart"
+                :series="pieChartSeries"
+                :labels="pieChartLabels"
+            />
+
+        </v-card-text>
+    </v-card>
 
     <!-- Filter dialog -->
-        <v-dialog v-model="showFilterDialog">
-        <Filter
-            :defaults="filterParams"
-            @close="showFilterDialog = false"
-            @filter="handleFilter" />
+    <v-dialog v-model="showFilterDialog">
+    <Filter
+        :defaults="filterParams"
+        @close="showFilterDialog = false"
+        @filter="handleFilter" />
     </v-dialog>
 
 </template>

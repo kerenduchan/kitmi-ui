@@ -18,26 +18,26 @@ const headers = computed(() => {
 </script>
 
 <template>
-    <v-table density="compact">
+    <v-table density="compact" class="summary-table-cell">
         <thead>
             <tr>
-                <th v-for="header in headers" class="thead-cell">
+                <th v-for="header in headers" class="thead-cell summary-table-cell">
                     {{ header }}
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="g in props.summary.groups">
-                <td class="row-title-cell">{{ g.name }}</td>
-                <td v-for="v in g.data " class="number-cell">{{ formatNumber(v, 0) }}</td>
-                <td class="sum-cell">{{ formatNumber(g.total, 0) }}</td>
+                <td class="row-title-cell summary-table-cell">{{ g.name }}</td>
+                <td v-for="v in g.data " class="number-cell summary-table-cell">{{ formatNumber(v, 0) }}</td>
+                <td class="sum-cell summary-table-cell">{{ formatNumber(g.total, 0) }}</td>
             </tr>
         </tbody>
         <tfoot>
             <tr>
-                <td class="row-title-cell">Total</td>
-                <td v-for="v in props.summary.bucketTotals" class="sum-cell">{{ formatNumber(v, 0) }}</td>
-                <td class="number-cell sum-total-cell">{{ formatNumber(props.summary.sumTotal, 0) }}</td>
+                <td class="row-title-cell summary-table-cell">Total</td>
+                <td v-for="v in props.summary.bucketTotals" class="sum-cell summary-table-cell">{{ formatNumber(v, 0) }}</td>
+                <td class="number-cell sum-total-cell summary-table-cell">{{ formatNumber(props.summary.sumTotal, 0) }}</td>
             </tr>
         </tfoot>
     </v-table>
@@ -72,7 +72,7 @@ const headers = computed(() => {
         background-color: #fff2cc;
     }
 
-    table, th, td {
-  border: 0.5px solid black;
-}
+    .summary-table-cell {
+        border: 0.5px solid black;
+    }
 </style>

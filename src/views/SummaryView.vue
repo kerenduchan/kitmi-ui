@@ -10,26 +10,24 @@ import Filter from '@/components/Filter.vue'
 import { formatDate } from '@/composables/utils'
 import getSummary from '@/composables/queries/getSummary'
 
-// Did the data arrive from the server
-const isReady = ref(false)
-
-const summary = ref(null)
+const incomeSummary = ref(null)
+const expensesSummary = ref(null)
 
 // filter params
 const filterParams = ref({
     startDate: "2022-01-01",
     endDate: "2022-12-31",
     groupBy: 'category',
-    isExpense: true,
+    isExpense: null,
 })
 
-// params for "getSummary" for the stacked bar chart
-function getSummaryParams() {
+// params for "getSummary" for the expenses table
+function getExpensesSummaryParams() {
     return {
         startDate: filterParams.value.startDate,
         endDate: filterParams.value.endDate,
         options: {
-            isExpense: filterParams.value.isExpense,
+            isExpense: true,
             groupBy: filterParams.value.groupBy,
             bucketBy: 'month',
             mergeUnderThreshold: false
@@ -37,32 +35,52 @@ function getSummaryParams() {
     }
 }
 
+// params for "getSummary" for the income table
+function getIncomeSummaryParams() {
+    const params = getExpensesSummaryParams()
+    params.options.isExpense = false
+    return params
+}
+
 const title = computed(() => {
     const f = filterParams.value
-    return (f.isExpense ? "Expenses" : "Income") 
-        + ' by ' + f.groupBy
-        + ' for ' + formatDate(new Date(f.startDate)) + ' - ' 
+    return formatDate(new Date(f.startDate)) + ' - ' 
         + formatDate(new Date(f.endDate))
 })
 
 // show filter dialog
 const showFilterDialog = ref(false)
 
-const { onResult, refetch } = getSummary(getSummaryParams())
+const { 
+    onResult: onExpensesResult, 
+    refetch: refetchExpenses } = 
+    getSummary(getExpensesSummaryParams())
 
-onResult(queryResult => {
+const { 
+    onResult: onIncomeResult, 
+    refetch: refetchIncome } = 
+    getSummary(getIncomeSummaryParams())
+
+onIncomeResult(queryResult => {
     if (queryResult && queryResult.data) {
-        const s = queryResult.data.summary
-        summary.value = s
-        isReady.value = true
+        incomeSummary.value = queryResult.data.summary
+        showFilterDialog.value = false   
+    }
+})
+
+onExpensesResult(queryResult => {
+    if (queryResult && queryResult.data) {
+        expensesSummary.value = queryResult.data.summary
         showFilterDialog.value = false   
     }
 })
 
 function handleFilter(filter) {
     filterParams.value = filter
-    isReady.value = false
-    refetch(getSummaryParams())
+    incomeSummary.value = null
+    expensesSummary.value = null
+    refetchIncome(getIncomeSummaryParams())
+    refetchExpenses(getExpensesSummaryParams())
 }
 
 </script>
@@ -81,11 +99,19 @@ function handleFilter(filter) {
         <v-divider />
     </div>
 
-    {{ title }}
-
+    <h1>{{ title }}</h1>
+    
+    <h2>Income</h2>
     <SummaryTable 
-        v-if="isReady" 
-        :summary="summary"
+        v-if="incomeSummary" 
+        :summary="incomeSummary"
+    />
+
+    <h2>Expenses</h2>
+    
+    <SummaryTable 
+        v-if="expensesSummary" 
+        :summary="expensesSummary"
     />
 
     <!-- Filter dialog -->

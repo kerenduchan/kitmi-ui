@@ -63,12 +63,13 @@ const headers = computed(() => {
     .sum-cell {
         text-align: right !important;
         font-weight: bold;
+        background-color: #f3f3f3;
     }
 
     .sum-total-cell {
         text-align: right !important;
         font-weight: bold;
-        background-color: #FFF9E8;
+        background-color: #fff2cc;
     }
 
     table, th, td {

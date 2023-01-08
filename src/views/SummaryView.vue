@@ -21,8 +21,21 @@ const filterParams = ref({
     endDate: "2022-12-31",
     groupBy: 'category',
     isExpense: true,
-    mergeUnderThreshold: false
 })
+
+// params for "getSummary" for the stacked bar chart
+function getSummaryParams() {
+    return {
+        startDate: filterParams.value.startDate,
+        endDate: filterParams.value.endDate,
+        options: {
+            isExpense: filterParams.value.isExpense,
+            groupBy: filterParams.value.groupBy,
+            bucketBy: 'month',
+            mergeUnderThreshold: false
+        }
+    }
+}
 
 const title = computed(() => {
     const f = filterParams.value
@@ -35,7 +48,7 @@ const title = computed(() => {
 // show filter dialog
 const showFilterDialog = ref(false)
 
-const { onResult, refetch } = getSummary(filterParams.value)
+const { onResult, refetch } = getSummary(getSummaryParams())
 
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
@@ -53,7 +66,7 @@ onResult(queryResult => {
 function handleFilter(filter) {
     filterParams.value = filter
     isReady.value = false
-    refetch(filter)
+    refetch(getSummaryParams())
 }
 
 </script>

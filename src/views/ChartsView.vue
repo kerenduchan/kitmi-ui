@@ -3,9 +3,9 @@ import { ref, computed } from 'vue'
 
 // components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
-import StackedBarChart from '@/components/charts/StackedBarChart.vue'
-import PieChart from '@/components/charts/PieChart.vue'
-import Filter from '@/components/charts/Filter.vue'
+import StackedBarChart from '@/components/StackedBarChart.vue'
+import PieChart from '@/components/PieChart.vue'
+import Filter from '@/components/Filter.vue'
 
 // composables
 import { formatDate, formatNumber, formatMonthAndYear } from '@/composables/utils'

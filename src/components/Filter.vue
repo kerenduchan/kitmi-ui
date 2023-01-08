@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import moment from 'moment'
-import ExpenseOrIncomeRadioGroup from '../ExpenseOrIncomeRadioGroup.vue'
+import ExpenseOrIncomeRadioGroup from '@/components/ExpenseOrIncomeRadioGroup.vue'
 import expenseOrIncome from '@/composables/expenseOrIncome'
 
 const props = defineProps({

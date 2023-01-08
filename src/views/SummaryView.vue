@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 // components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import SummaryTable from '../components/SummaryTable.vue'
-import Filter from '@/components/charts/Filter.vue'
+import Filter from '@/components/Filter.vue'
 
 // composables
 import { formatDate } from '@/composables/utils'

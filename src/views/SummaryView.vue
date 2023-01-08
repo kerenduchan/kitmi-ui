@@ -7,7 +7,7 @@ import SummaryTable from '../components/SummaryTable.vue'
 import Filter from '@/components/charts/Filter.vue'
 
 // composables
-import { formatDate, formatMonthAndYear } from '@/composables/utils'
+import { formatDate } from '@/composables/utils'
 import getSummary from '@/composables/queries/getSummary'
 
 // Did the data arrive from the server
@@ -53,11 +53,7 @@ const { onResult, refetch } = getSummary(getSummaryParams())
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
         const s = queryResult.data.summary
-        summary.value = {
-            buckets: s.buckets.map(b => formatMonthAndYear(b)),
-            groups: s.groups,
-            totals: s.totals
-        }
+        summary.value = s
         isReady.value = true
         showFilterDialog.value = false   
     }

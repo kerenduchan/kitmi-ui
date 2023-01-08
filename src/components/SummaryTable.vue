@@ -1,18 +1,16 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { formatNumber } from '@/composables/utils'
+import { computed } from 'vue'
+import { formatNumber, formatMonthAndYear } from '@/composables/utils'
 
 // props 
 const props = defineProps({
     summary: Object,
 })
 
-console.log(props.groups)
-
 const headers = computed(() => {
     return [
         '',
-        ...props.summary.buckets,
+        ...props.summary.buckets.map(b => formatMonthAndYear(b)),
         'Total',
     ]
 })
@@ -23,22 +21,23 @@ const headers = computed(() => {
     <v-table density="compact">
         <thead>
             <tr>
-                <th v-for="header in headers" class="text-center table-header-cell">
+                <th v-for="header in headers" class="thead-cell">
                     {{ header }}
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="g in props.summary.groups">
-                <td class="table-header-cell">{{ g.name }}</td>
-                <td v-for="v in g.data " class="text-right">{{ formatNumber(v, 0) }}</td>
-                <td class="text-right font-weight-bold">{{ formatNumber(g.total, 0) }}</td>
+                <td class="row-title-cell">{{ g.name }}</td>
+                <td v-for="v in g.data " class="number-cell">{{ formatNumber(v, 0) }}</td>
+                <td class="sum-cell">{{ formatNumber(g.total, 0) }}</td>
             </tr>
         </tbody>
         <tfoot>
             <tr>
-                <td class="table-header-cell font-weight-bold">Total</td>
-                <td v-for="v in props.summary.totals" class="text-right font-weight-bold">{{ formatNumber(v, 0) }}</td>
+                <td class="row-title-cell">Total</td>
+                <td v-for="v in props.summary.bucketTotals" class="sum-cell">{{ formatNumber(v, 0) }}</td>
+                <td class="number-cell sum-total-cell">{{ formatNumber(props.summary.sumTotal, 0) }}</td>
             </tr>
         </tfoot>
     </v-table>
@@ -46,14 +45,30 @@ const headers = computed(() => {
 </template>
 
 <style>
-    .table-header-cell {
+    .thead-cell {
+        background-color: lightgray;
+        text-align: center !important;
+        font-weight: bold;
+    }
+
+    .row-title-cell {
         background-color: lightgray;
         font-weight: bold;
     }
 
-    .table-summary-cell {
-        background-color: #FFF9E8;
+    .number-cell {
+        text-align: right !important;
+    }
+
+    .sum-cell {
+        text-align: right !important;
         font-weight: bold;
+    }
+
+    .sum-total-cell {
+        text-align: right !important;
+        font-weight: bold;
+        background-color: #FFF9E8;
     }
 
     table, th, td {

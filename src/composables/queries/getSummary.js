@@ -19,7 +19,8 @@ function getSummary(vars) {
                     data
                     total
                 }
-                totals
+                bucketTotals
+                sumTotal
             }
         }
     `, vars)

@@ -1,6 +1,5 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import { ref } from 'vue'
 
 function getSummary(vars) {
     const { onResult, refetch } = useQuery(gql`

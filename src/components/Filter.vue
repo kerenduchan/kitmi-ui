@@ -94,7 +94,7 @@ function handleFilterClicked() {
                 <v-select label="Group By" :items="['category', 'subcategory']" v-model="groupBy" />
 
                 <!-- Type (expense/income)-->
-                <ExpenseOrIncomeRadioGroup v-if="isExpense !== null"
+                <ExpenseOrIncomeRadioGroup v-if="isExpense !== undefined"
                     :isExpense="isExpense" 
                     @change="handleTypeChange"/>
 

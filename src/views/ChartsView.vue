@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 // components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import StackedBarChart from '@/components/charts/StackedBarChart.vue'
+import PieChart from '@/components/charts/PieChart.vue'
 import Filter from '@/components/charts/Filter.vue'
 
 // composables
@@ -21,6 +22,7 @@ const filterParams = ref({
     endDate: "2022-12-31",
     groupBy: 'category',
     isExpense: true,
+    bucketSize: 'range',
     mergeUnderThreshold: true
 })
 
@@ -59,6 +61,14 @@ function formatRoundNumber(n) {
     return formatNumber(n, 0)
 }
 
+const pieChartSeries = computed(() => {
+    return summary.value.groups.map(g => g.total)
+})
+
+const pieChartLabels = computed(() => {
+    return summary.value.groups.map(g => g.name)
+})
+
 </script>
 
 <template>
@@ -76,13 +86,19 @@ function formatRoundNumber(n) {
     </div>
 
     {{ title }}
-    <!-- the stacked bar chart -->
-    <StackedBarChart 
-        v-if="isReady" 
-        :xaxis="summary.buckets"
-        :series="summary.groups"
-        :yaxisFormatterFunc="formatRoundNumber"
-    />
+    <div v-if="isReady" >
+        <!-- the stacked bar chart -->
+        <StackedBarChart
+            :xaxis="summary.buckets"
+            :series="summary.groups"
+            :yaxisFormatterFunc="formatRoundNumber"
+        />
+
+        <PieChart 
+            :series="pieChartSeries"
+            :labels="pieChartLabels"
+        />
+    </div>
 
     <!-- Filter dialog -->
         <v-dialog v-model="showFilterDialog">

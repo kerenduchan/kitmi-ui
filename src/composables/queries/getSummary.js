@@ -9,13 +9,15 @@ function getSummary(vars) {
             $startDate: Date!, 
             $endDate: Date!, 
             $isExpense: Boolean!, 
-            $mergeUnderThreshold: Boolean!) {
+            $mergeUnderThreshold: Boolean!,
+            $bucketSize: String!) {
             summary(
                 startDate: $startDate, 
                 endDate: $endDate, 
                 groupBy: $groupBy, 
                 isExpense: $isExpense, 
-                mergeUnderThreshold: $mergeUnderThreshold) {
+                mergeUnderThreshold: $mergeUnderThreshold,
+                bucketSize: $bucketSize) {
                 buckets,
                 groups {
                     groupId

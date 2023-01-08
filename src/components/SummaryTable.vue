@@ -1,5 +1,9 @@
 <script setup>
 import { computed } from 'vue'
+import SummaryTableHeaderRow from './SummaryTableHeaderRow.vue'
+import SummaryTableBodyRow from './SummaryTableBodyRow.vue';
+import SummaryTableFooterRow from './SummaryTableFooterRow.vue';
+
 import { formatNumber, formatMonthAndYear } from '@/composables/utils'
 
 // props 
@@ -20,25 +24,21 @@ const headers = computed(() => {
 <template>
     <v-table density="compact" class="summary-table-cell">
         <thead>
-            <tr>
-                <th v-for="header in headers" class="thead-cell summary-table-cell">
-                    {{ header }}
-                </th>
-            </tr>
+            <SummaryTableHeaderRow :values="headers" />
         </thead>
         <tbody>
-            <tr v-for="g in props.summary.groups">
-                <td class="row-title-cell summary-table-cell">{{ g.name }}</td>
-                <td v-for="v in g.data " class="number-cell summary-table-cell">{{ formatNumber(v, 0) }}</td>
-                <td class="sum-cell summary-table-cell">{{ formatNumber(g.total, 0) }}</td>
-            </tr>
+            <SummaryTableBodyRow v-for="g in props.summary.groups" 
+                :title="g.name"
+                :values="g.data.map(d => formatNumber(d, 0))"
+                :total="formatNumber(g.total, 0)"
+            />
         </tbody>
         <tfoot>
-            <tr>
-                <td class="row-title-cell summary-table-cell">Total</td>
-                <td v-for="v in props.summary.bucketTotals" class="sum-cell summary-table-cell">{{ formatNumber(v, 0) }}</td>
-                <td class="number-cell sum-total-cell summary-table-cell">{{ formatNumber(props.summary.sumTotal, 0) }}</td>
-            </tr>
+            <SummaryTableFooterRow 
+                title="Total"
+                :values="props.summary.bucketTotals.map(d => formatNumber(d, 0))"
+                :total="formatNumber(props.summary.sumTotal, 0) "
+            />
         </tfoot>
     </v-table>
 

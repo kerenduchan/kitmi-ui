@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 // components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import SummaryTable from '../components/SummaryTable.vue'
+import SavingsTable from '../components/SavingsTable.vue'
 import Filter from '@/components/Filter.vue'
 
 // composables
@@ -33,7 +34,6 @@ const { onResult, refetch } = getBalanceSummary(filterParams.value)
 onResult(queryResult => {
     if (queryResult && queryResult.data) {
         balanceSummary.value = queryResult.data.balanceSummary
-        console.log(balanceSummary.value)
         showFilterDialog.value = false   
     }
 })
@@ -83,6 +83,20 @@ function handleFilter(filter) {
                     </v-card-title>
                     <v-card-text>
                         <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-card-title>
+                        Savings
+                    </v-card-title>
+                    <v-card-text>
+                        <SavingsTable v-if="balanceSummary" 
+                            :balanceSummary="balanceSummary"
+                        />
                     </v-card-text>
                 </v-card>
             </v-col>

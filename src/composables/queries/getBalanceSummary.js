@@ -34,6 +34,10 @@ function getBalanceSummary(vars) {
                         bucketTotals
                         sumTotal        
                     },
+                    savings
+                    savingsPercentages
+                    savingsTotal
+                    savingsTotalPercentage
                 }
             }
     `, vars)

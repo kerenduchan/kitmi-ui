@@ -30,11 +30,18 @@ function getChartColors() {
         '#1F5D76',
         '#bb3e03',
     ]
-
 }
+
+function isReservedName(name) {
+    const b = ['total', 'other'].includes(name.toLowerCase())
+    console.log('isReservedName ' + name + ' - ' + b)
+    return b
+}
+
 export {
     formatNumber,
     formatDate,
     formatMonthAndYear,
-    getChartColors
+    getChartColors,
+    isReservedName
 }

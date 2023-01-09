@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import ExpenseOrIncomeRadioGroup from './ExpenseOrIncomeRadioGroup.vue'
 import expenseOrIncome from '@/composables/expenseOrIncome'
+import { isReservedName } from '@/composables/utils'
 
 // props 
 const props = defineProps({
@@ -33,7 +34,9 @@ const isNameAlreadyExists = computed(() => {
 })
 
 const isSaveDisabled = computed(() => {
-    return name.value.length === 0 || isNameAlreadyExists.value === true
+    return name.value.length === 0 || 
+    isNameAlreadyExists.value === true ||
+    isReservedName(name.value)
 })
 
 const title = computed(() => {
@@ -69,7 +72,8 @@ function save() {
                     v-model="name" 
                     :rules="[ 
                         n => n.length > 0 || 'Name must not be empty',
-                        n => !isNameAlreadyExists || 'Name already used'
+                        n => !isNameAlreadyExists || 'Name already used',
+                        n => !isReservedName(n) || 'This is a reserved name'
                         ]" />
 
                 <!-- Type -->

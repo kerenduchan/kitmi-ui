@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { isReservedName } from '@/composables/utils'
 
 // props 
 const props = defineProps({
@@ -41,7 +42,9 @@ const isSaveDisabled = computed(() => {
     if(props.subcategory && name.value == props.subcategory.name) {
         return false
     }
-    return name.value.length === 0 || isNameAlreadyExists.value === true
+    return name.value.length === 0 || 
+    isNameAlreadyExists.value === true || 
+    isReservedName(name.value)
 })
 
 const title = computed(() => {
@@ -85,7 +88,8 @@ function save() {
                     v-model="name" 
                     :rules="[ 
                         n => n.length > 0 || 'Name must not be empty',
-                        n => !isNameAlreadyExists || 'Name already used'
+                        n => !isNameAlreadyExists || 'Name already used',
+                        n => !isReservedName(n) || 'This is a reserved name'
                         ]" />
             </v-form>
 

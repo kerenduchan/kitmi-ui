@@ -71,7 +71,7 @@ const links = ref([
         title: 'Payees',
         value: 'payees',
         to: '/payees',
-        icon: 'mdi-account'
+        icon: 'mdi-hand-coin'
     },
     {
         title: 'Transactions',
@@ -80,10 +80,10 @@ const links = ref([
         icon: 'mdi-currency-usd'
     },
     {
-        title: 'Summary',
+        title: 'Balance',
         value: 'summary',
         to: '/summary',
-        icon: 'mdi-star'
+        icon: 'mdi-scale-balance'
     },
     {
         title: 'Charts',

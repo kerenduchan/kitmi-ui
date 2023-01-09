@@ -26,10 +26,13 @@ const isSaveDisabled = computed(() => {
     return selectedSubcategoryId.value === null && selectedCategoryId.value !== null
 })
 
+const note = ref(props.payee.note)
+
 function save() {
     const payee = { 
         payeeId: props.payee.id,
-        subcategoryId: selectedSubcategoryId.value
+        subcategoryId: selectedSubcategoryId.value,
+        note: note.value
     }
     emit('save', payee)
 }
@@ -50,6 +53,12 @@ function save() {
                     :subcategories="filteredSubcategories"
                     @categorySelected="handleCategorySelected"
                     @subcategorySelected="handleSubcategorySelected"
+                />
+
+                <!-- Note -->
+                <v-text-field 
+                    label="Note" 
+                    v-model="note" 
                 />
 
             </v-form>

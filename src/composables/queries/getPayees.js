@@ -10,6 +10,7 @@ function getPayees() {
                 id
                 name
                 subcategoryId
+                note
                 subcategory {
                     id
                     name

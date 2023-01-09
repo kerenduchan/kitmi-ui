@@ -10,6 +10,7 @@ class Payee {
     constructor(gqlPayee) {
         this.id = gqlPayee.id
         this.name = gqlPayee.name
+        this.note = gqlPayee.note
         this.subcategory = gqlPayee.subcategory ? new Subcategory(gqlPayee.subcategory) : null
     }
 

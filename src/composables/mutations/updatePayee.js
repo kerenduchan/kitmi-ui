@@ -4,8 +4,12 @@ import gql from 'graphql-tag'
 function getUpdatePayee() {
     // gql mutation for updating the subcategory of a payee
     const { mutate: updatePayee, onDone, onError } = useMutation(gql`
-        mutation updatePayee ($payeeId: ID!, $subcategoryId: ID, $note: String!) {
-            updatePayee (payeeId: $payeeId, subcategoryId: $subcategoryId, note: $note) {
+        mutation updatePayee ($payeeId: ID!, 
+                              $subcategoryId: ID, 
+                              $note: String) {
+            updatePayee (payeeId: $payeeId, 
+                         subcategoryId: $subcategoryId, 
+                         note: $note) {
                 id
             }
         }

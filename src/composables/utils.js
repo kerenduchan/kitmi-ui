@@ -33,7 +33,7 @@ function getChartColors() {
 }
 
 function isReservedName(name) {
-    return ['total', 'other'].includes(name.toLowerCase())
+    return ['total', 'other', 'uncategorized'].includes(name.toLowerCase())
 }
 
 export {

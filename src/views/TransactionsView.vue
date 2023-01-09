@@ -10,7 +10,6 @@ import EditTransaction from '@/components/EditTransaction.vue'
 // composables
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
-import getUpdatePayee from '@/composables/mutations/updatePayee'
 import getUpdateTransaction from '@/composables/mutations/updateTransaction'
 
 // ----------------------------------------------------------------------------
@@ -65,60 +64,13 @@ function handleSelect(id) {
 // edit dialog
 const showEditDialog = ref(false)
 
-let isSaveOnPayee = false
-
 const { 
     updateTransaction, 
     onDone: onUpdateTransactionDone, 
     onError: onUpdateTransactionError 
 } = getUpdateTransaction()
 
-const { 
-    updatePayee, 
-    onDone: onUpdatePayeeDone, 
-    onError: onUpdatePayeeError 
-} = getUpdatePayee()
-
-// update the payee 
-function handleSaveOnPayee(payee) {
-    isSaveOnPayee = true
-    const t = selectedTransaction.value
-    // set the subcategoryId of the transaction to null
-    if(t.subcategoryId !== null) {
-        updateTransaction({
-            transactionId: selectedTransactionId.value, 
-            overrideSubcategory: false,
-            subcategoryId: null
-        })
-    }
-
-    // update the payee
-    updatePayee(payee)
-}
-
-onUpdatePayeeDone(() => {
-    showEditDialog.value = false
-    store.refetchPayees()
-    displaySnackbar("Transaction updated.")
-})
-
-onUpdatePayeeError((e) => {
-    showEditDialog.value = false
-    console.log(e)
-    displaySnackbar("Failed to update transaction.")
-})
-
-// update the given subcategory ID on the transaction
-function handleSaveOnTransaction(transaction) {
-    isSaveOnPayee = false
-    updateTransaction(transaction)
-}
-
 onUpdateTransactionDone(() => {
-    if(isSaveOnPayee) {
-        return
-    }
-    showEditDialog.value = false
     store.refetchTransactions()
     displaySnackbar("Transaction updated.")
 })
@@ -182,8 +134,7 @@ onUpdateTransactionError((e) => {
             :transaction="selectedTransaction"
             :categories="categories" 
             @close="showEditDialog = false"
-            @saveOnPayee="handleSaveOnPayee" 
-            @saveOnTransaction="handleSaveOnTransaction" 
+            @save="updateTransaction" 
         />
     </v-dialog>
 

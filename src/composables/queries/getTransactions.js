@@ -12,6 +12,7 @@ function getTransactions() {
                 amount
                 overrideSubcategory
                 subcategoryId
+                note
                 account {
                     id
                     name

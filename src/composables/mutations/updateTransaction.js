@@ -6,10 +6,12 @@ function getUpdateTransaction() {
     const { mutate: updateTransaction, onDone, onError } = useMutation(gql`
         mutation updateTransaction ($transactionId: ID!, 
                                     $overrideSubcategory: Boolean,
-                                    $subcategoryId: ID) {
+                                    $subcategoryId: ID,
+                                    $note: String) {
             updateTransaction (transactionId: $transactionId, 
                                overrideSubcategory: $overrideSubcategory,
-                               subcategoryId: $subcategoryId) {
+                               subcategoryId: $subcategoryId,
+                               note: $note) {
                 id
             }
         }

@@ -17,6 +17,7 @@ class Transaction {
         this.accountId = gqlTransaction.account.id
         this.account = new Account(gqlTransaction.account)
         this.overrideSubcategory = gqlTransaction.overrideSubcategory
+        this.note = gqlTransaction.note
 
         this.overridingSubcategory = null
         
@@ -87,6 +88,14 @@ class Transaction {
 
     get excludeFromReports() {
         return this.subcategory === null || this.category.excludeFromReports
+    }
+
+    get payeeCategorizationStr() {
+        if(!this.payee.subcategory) {
+            return 'Uncategorized'
+        }
+        return this.payee.categoryName + ': ' + this.payee.subcategoryName
+    
     }
 }
 

@@ -1,4 +1,5 @@
 <script setup>
+import IconWithTooltip from '@/components/IconWithTooltip.vue';
 
 // props
 const props = defineProps({
@@ -8,9 +9,5 @@ const props = defineProps({
 </script>
 
 <template>
-    <v-tooltip :text="note">
-        <template v-slot:activator="{ props }">
-            <v-icon v-bind="props" color="grey">mdi-dots-horizontal</v-icon>
-        </template>
-    </v-tooltip>
+    <IconWithTooltip :tooltip="note" color="grey" icon="mdi-dots-horizontal"/>
 </template>

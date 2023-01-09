@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import TypeIcon from '@/components/TypeIcon.vue'
+import NoteIcon from '@/components/NoteIcon.vue'
 import { formatNumber } from '@/composables/utils'
 
 // props 
@@ -20,7 +21,8 @@ const headers = ref([
     'Amount', 
     'Payee', 
     'Category', 
-    'Subcategory'
+    'Subcategory',
+    'Note'
 ])
 
 // get the class for a selected row in the table
@@ -58,12 +60,24 @@ const sum = computed(() => {
                 :class="getClassForRow(t)" 
                 @click="handleRowClicked(t)"
             >
-                <td><TypeIcon :type="t.type"  :isExcluded="t.excludeFromReports"/></td>
-                <td>{{ t.formattedDate }}</td>
-                <td class="text-right">{{ t.formattedAmount }}</td>
-                <td>{{ t.payeeName }}</td>
+                <td>
+                    <TypeIcon :type="t.type"  :isExcluded="t.excludeFromReports"/>
+                </td>
+                <td>
+                    {{ t.formattedDate }}
+                </td>
+                <td class="text-right">
+                    {{ t.formattedAmount }}
+                </td>
+                <td>
+                    {{ t.payeeName }}
+                    <NoteIcon v-if="t.payee.note.length > 0" :note="t.payee.note" />
+                </td>
                 <td>{{ t.categoryName }}<span class="red" v-if="t.overrideSubcategory"> *</span></td>
                 <td>{{ t.subcategoryName }}<span class="red" v-if="t.overrideSubcategory"> *</span></td>
+                <td>
+                    {{ t.note }}
+                </td>
             </tr>
         </tbody>
         <tfoot>

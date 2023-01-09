@@ -20,6 +20,7 @@ function getTransactions() {
                 payee {
                     id
                     name
+                    note
                     subcategory {
                         id
                         name

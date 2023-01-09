@@ -19,7 +19,8 @@ const headers = ref([
     '',
     'Name', 
     'Category', 
-    'Subcategory'
+    'Subcategory',
+    'Note'
 ])
 
 // get the class for a selected row in the table
@@ -51,12 +52,10 @@ function handleRowClicked(payee) {
                 @click="handleRowClicked(p)"
             >
                 <td><TypeIcon :type="p.type" :isExcluded="p.excludeFromReports"/></td>
-                <td>
-                    {{ p.name}}
-                    <NoteIcon v-if="p.note.length > 0" :note="p.note" />
-                </td>
+                <td>{{ p.name}}</td>
                 <td>{{ p.categoryName }}</td>
                 <td>{{ p.subcategoryName }}</td>
+                <td>{{ p.note }}</td>
             </tr>
         </tbody>
     </v-table>

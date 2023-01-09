@@ -33,9 +33,7 @@ function getChartColors() {
 }
 
 function isReservedName(name) {
-    const b = ['total', 'other'].includes(name.toLowerCase())
-    console.log('isReservedName ' + name + ' - ' + b)
-    return b
+    return ['total', 'other'].includes(name.toLowerCase())
 }
 
 export {

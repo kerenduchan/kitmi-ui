@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import TypeIcon from '@/components/TypeIcon.vue'
+import NoteIcon from '@/components/NoteIcon.vue'
 
 // props 
 const props = defineProps({
@@ -50,7 +51,10 @@ function handleRowClicked(payee) {
                 @click="handleRowClicked(p)"
             >
                 <td><TypeIcon :type="p.type" :isExcluded="p.excludeFromReports"/></td>
-                <td>{{ p.name}} </td>
+                <td>
+                    {{ p.name}}
+                    <NoteIcon v-if="p.note.length > 0" :note="p.note" />
+                </td>
                 <td>{{ p.categoryName }}</td>
                 <td>{{ p.subcategoryName }}</td>
             </tr>

@@ -47,14 +47,3 @@ app.use(vuetify)
 app.use(VueApexCharts)
 
 app.mount('#app')
-
-
-
-
-
-
-
-
-
-
-

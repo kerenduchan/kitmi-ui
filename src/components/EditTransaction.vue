@@ -68,11 +68,11 @@ const fields = computed(() => {
             label: 'Account',
             value: props.transaction.account.name
         },
-        {
-            label: "Payee's Categorization",
-            value: props.transaction.payeeCategorizationStr + (overrideSubcategory.value ? ' (Overridden)' : '')
-        },
     ]
+})
+
+const overrideSubcategoryLabel = computed(() => {
+    return "Override Payee's Categorization (" + props.transaction.payeeCategorizationStr + ")"
 })
 
 </script>
@@ -102,7 +102,7 @@ const fields = computed(() => {
 
             <!-- Switch for overriding the payee's category and subcategory -->
             <v-switch 
-                label="Override Payee's Category and Subcategory" 
+                :label="overrideSubcategoryLabel"
                 v-model="overrideSubcategory">
             </v-switch>
 

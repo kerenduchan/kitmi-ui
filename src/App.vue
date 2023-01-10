@@ -59,7 +59,7 @@ const links = ref([
         title: 'Accounts',
         value: 'accounts',
         to: '/accounts',
-        icon: 'mdi-account'
+        icon: 'mdi-bank-transfer'
     },
     {
         title: 'Categories',

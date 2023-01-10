@@ -25,15 +25,10 @@ const filterParams = ref({
     isExpense: true,
 })
 
-const dateRangeStr = computed(() => {
+const subtitle = computed(() => {
     const f = filterParams.value
-    return formatDate(new Date(f.startDate)) + ' - ' + 
-    formatDate(new Date(f.endDate))
-})
-
-const title = computed(() => {
-    const f = filterParams.value
-    return (f.isExpense ? "Expenses" : "Income") + ' by ' + f.groupBy
+    return (f.isExpense ? "Expenses" : "Income") + ' by ' + f.groupBy + ' for ' +
+    formatDate(new Date(f.startDate)) + ' - ' + formatDate(new Date(f.endDate))
 })
 
 // show filter dialog
@@ -132,25 +127,41 @@ const pieChartLabels = computed(() => {
     </div>
     <v-divider />
 
-    <h3 class="text-center">{{ dateRangeStr }}</h3>
-    <h4 class="text-center">{{ title }}</h4>
+    <v-container fluid>
+        <v-row dense>
+            <v-col>
+                <v-card title="Charts" :subtitle="subtitle">
+                    <v-card-text>
 
-    <v-card>
-        <v-card-text>
-            <!-- the stacked bar chart -->
-            <StackedBarChart v-if="summaryForStackedBarChart"
-                :xaxis="summaryForStackedBarChart.buckets"
-                :series="summaryForStackedBarChart.groups"
-                :yaxisFormatterFunc="formatRoundNumber"
-            />
-
-            <PieChart v-if="summaryForPieChart"
-                :series="pieChartSeries"
-                :labels="pieChartLabels"
-            />
-
-        </v-card-text>
-    </v-card>
+                        <v-container fluid>
+                            <v-row dense>
+                                <v-col>
+                                    <v-card>
+                                        <!-- the stacked bar chart -->
+                                        <StackedBarChart v-if="summaryForStackedBarChart"
+                                            :xaxis="summaryForStackedBarChart.buckets"
+                                            :series="summaryForStackedBarChart.groups"
+                                            :yaxisFormatterFunc="formatRoundNumber"
+                                        />
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-card>
+                                        <PieChart v-if="summaryForPieChart"
+                                            :series="pieChartSeries"
+                                            :labels="pieChartLabels"
+                                        />
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 
     <!-- Filter dialog -->
     <v-dialog v-model="showFilterDialog">

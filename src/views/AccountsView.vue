@@ -207,11 +207,25 @@ onDeleteAccountError((e) => {
     </div>
     <v-divider />
 
-    <!-- List (table) of accounts -->
-    <AccountsList 
-        :selectedAccountId="selectedAccountId"
-        :accounts="accounts" 
-        @select="handleSelect" />
+    <v-container fluid>
+        <v-row dense>
+            <v-col>
+                <v-card>
+                    <v-card-title>
+                        Accounts
+                    </v-card-title>
+                    <v-card-text>
+                        <!-- List (table) of accounts -->
+                        <AccountsList 
+                            :selectedAccountId="selectedAccountId"
+                            :accounts="accounts" 
+                            @select="handleSelect" />
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
+
 
     <!-- snackbar -->
     <Snackbar 

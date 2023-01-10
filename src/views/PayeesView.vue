@@ -105,6 +105,11 @@ function openCategorizationWizard() {
 
     showCategorizationWizard.value = true
 }
+
+const subtitle = computed(() => {
+    return uncategorized.value ? 'Uncategorized' : ''
+})
+
 </script>
 
 <template>
@@ -122,7 +127,6 @@ function openCategorizationWizard() {
             </div>
 
             <v-divider vertical />
-
 
             <!-- Uncategorized checkbox -->
             <div class="top-bar-action">
@@ -153,11 +157,21 @@ function openCategorizationWizard() {
     </div>
     <v-divider />
 
-    <!-- List (table) of payees -->
-    <PayeesList 
-        :selectedPayeeId="selectedPayeeId"
-        :payees="filteredPayees" 
-        @select="handleSelect" />
+    <v-container fluid>
+        <v-row dense>
+            <v-col>
+                <v-card title="Payees" :subtitle="subtitle">
+                    <v-card-text>
+                        <!-- List (table) of payees -->
+                        <PayeesList 
+                            :selectedPayeeId="selectedPayeeId"
+                            :payees="filteredPayees" 
+                            @select="handleSelect" />
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 
     <!-- snackbar -->
     <Snackbar 

@@ -483,14 +483,24 @@ function handleFindSubcategory(subcategoryId) {
     </div>
     <v-divider />
 
-    <!-- List of categories -->
-    <CategoriesList 
-        :selectedCategoryId="selectedCategoryId"
-        :selectedSubcategoryId="selectedSubcategoryId"
-        :categories="categories"
-        @selectCategory="handleSelectCategory"
-        @selectSubcategory="handleSelectSubcategory"
-    />
+    <v-container fluid>
+        <v-row dense>
+            <v-col>
+                <v-card title="Categories">
+                    <v-card-text>
+                        <!-- List of categories -->
+                        <CategoriesList 
+                            :selectedCategoryId="selectedCategoryId"
+                            :selectedSubcategoryId="selectedSubcategoryId"
+                            :categories="categories"
+                            @selectCategory="handleSelectCategory"
+                            @selectSubcategory="handleSelectSubcategory"
+                        />
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 
     <!-- snackbar -->
     <Snackbar 

@@ -20,10 +20,10 @@ const filterParams = ref({
     groupBy: 'category'
 })
 
-const title = computed(() => {
+const subtitle = computed(() => {
     const f = filterParams.value
-    return formatDate(new Date(f.startDate)) + ' - ' 
-        + formatDate(new Date(f.endDate))
+    return 'By ' + filterParams.value.groupBy + ' for ' + 
+    formatDate(new Date(f.startDate)) + ' - ' + formatDate(new Date(f.endDate))
 })
 
 // show filter dialog
@@ -60,43 +60,51 @@ function handleFilter(filter) {
     </div>
     <v-divider />
 
-    <h3 class="text-center">{{ title }}</h3>
-    <h4 class="text-center">by {{ filterParams.groupBy }}</h4>
     <v-container fluid>
         <v-row dense>
             <v-col>
-                <v-card>
-                    <v-card-title>
-                        Income
-                    </v-card-title>
+                <v-card title="Balance" :subtitle="subtitle">
                     <v-card-text>
-                        <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <v-card>
-                    <v-card-title>
-                        Expenses
-                    </v-card-title>
-                    <v-card-text>
-                        <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <v-card>
-                    <v-card-title>
-                        Savings
-                    </v-card-title>
-                    <v-card-text>
-                        <SavingsTable v-if="balanceSummary" 
-                            :balanceSummary="balanceSummary"
-                        />
+                        <v-container fluid>
+                            <v-row dense>
+                                <v-col>
+                                    <v-card>
+                                        <v-card-title>
+                                            Income
+                                        </v-card-title>
+                                        <v-card-text>
+                                            <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-card>
+                                        <v-card-title>
+                                            Expenses
+                                        </v-card-title>
+                                        <v-card-text>
+                                            <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-card>
+                                        <v-card-title>
+                                            Savings
+                                        </v-card-title>
+                                        <v-card-text>
+                                            <SavingsTable v-if="balanceSummary" 
+                                                :balanceSummary="balanceSummary"
+                                            />
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </v-container>
                     </v-card-text>
                 </v-card>
             </v-col>

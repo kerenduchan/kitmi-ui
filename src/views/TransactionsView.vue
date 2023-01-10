@@ -86,6 +86,10 @@ onUpdateTransactionError((e) => {
     displaySnackbar("Failed to update transaction.")
 })
 
+const subtitle = computed(() => {
+    return uncategorized.value ? 'Uncategorized' : ''
+})
+
 </script> 
 
 <template>
@@ -121,11 +125,21 @@ onUpdateTransactionError((e) => {
     </div>
     <v-divider />
 
-    <!-- List (table) of transactions -->
-    <TransactionsList 
-        :selectedTransactionId="selectedTransactionId"
-        :transactions="filteredTransactions" 
-        @select="handleSelect"/>
+    <v-container fluid>
+        <v-row dense>
+            <v-col>
+                <v-card title="Transactions" :subtitle="subtitle">
+                    <v-card-text>
+                        <!-- List (table) of transactions -->
+                        <TransactionsList 
+                            :selectedTransactionId="selectedTransactionId"
+                            :transactions="filteredTransactions" 
+                            @select="handleSelect"/>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 
     <!-- snackbar -->
     <Snackbar 

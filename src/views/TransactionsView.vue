@@ -70,6 +70,11 @@ const {
     onError: onUpdateTransactionError 
 } = getUpdateTransaction()
 
+function save(transaction) {
+    showEditDialog.value = false
+    updateTransaction(transaction)
+}
+
 onUpdateTransactionDone(() => {
     store.refetchTransactions()
     displaySnackbar("Transaction updated.")
@@ -134,7 +139,7 @@ onUpdateTransactionError((e) => {
             :transaction="selectedTransaction"
             :categories="categories" 
             @close="showEditDialog = false"
-            @save="updateTransaction" 
+            @save="save" 
         />
     </v-dialog>
 

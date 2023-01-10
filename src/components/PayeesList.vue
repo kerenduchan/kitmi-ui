@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import TypeIcon from '@/components/TypeIcon.vue'
-import NoteIcon from '@/components/NoteIcon.vue'
 
 // props 
 const props = defineProps({

@@ -1,8 +1,7 @@
 <script setup>
-import { ref, computed } from 'vue'
-import IconWithTooltip from '@/components/IconWithTooltip.vue'
-import EditTransactionCategorization from '@/components/EditTransactionCategorization.vue'
-import EditText from '@/components/EditText.vue'
+import { ref, computed, watch } from 'vue'
+import SubcategorySelect from './SubcategorySelect.vue'
+import subcategorySelect from '@/composables/subcategorySelect'
 
 // props 
 const props = defineProps({
@@ -15,61 +14,65 @@ const emit = defineEmits([
     'save',
 ])
 
-const showEditCategorizationDialog = ref(false)
-const showEditNoteDialog = ref(false)
+// note (v-model for v-text-field)
+const note = ref(props.transaction.note)
 
-function save(transaction) {
-    showEditCategorizationDialog.value = false
-    emit('save', transaction)
-}
+// Whether or not to override the payee's subcategory (v-model for v-switch)
+const overrideSubcategory = ref(props.transaction.overrideSubcategory)
 
-function saveNote(note) {
-    showEditNoteDialog.value = false
-    const transaction = {
-        transactionId: props.transaction.id,
-        subcategoryId: props.transaction.subcategoryId,
-        overrideSubcategory: props.transaction.overrideSubcategory,
-        note
-    }
-    emit('save', transaction)
-}
+// select overriding category and subcategory
+const {
+    selectedCategoryId,
+    selectedSubcategoryId,
+    filteredCategories,
+    filteredSubcategories,
+    handleCategorySelected,
+    handleSubcategorySelected
+} = subcategorySelect(props.categories, props.transaction)
 
-const fields = ref([
-{
-        label: 'ID',
-        value: props.transaction.id
-    },
-    {
-        label: 'Payee',
-        value: props.transaction.payee.name
-    },
-    {
-        label: 'Amount',
-        value: props.transaction.formattedAmount
-    },
-    {
-        label: 'Date',
-        value: props.transaction.formattedDate
-    },
-    {
-        label: 'Account',
-        value: props.transaction.account.name
-    },
-])
-
-const transactionCategorization = computed(() => {
-    if(props.transaction.category) {
-        return props.transaction.categoryName + ': ' + props.transaction.subcategoryName
-    } else {
-        return 'Uncategorized'
-    }
+// whether or not the save button should be disabled
+const isSaveDisabled = computed(() => {
+    return selectedSubcategoryId.value === null && selectedCategoryId.value !== null
 })
 
-const categorizationTooltip = computed(() => {
-    if(props.transaction.overrideSubcategory) {
-        return "Overrides Payee's categorization (" + props.transaction.payeeCategorizationStr + ")"
+function save() {
+    const transaction = {
+        transactionId: props.transaction.id,
+        subcategoryId: selectedSubcategoryId.value,
+        overrideSubcategory: overrideSubcategory.value,
+        note: note.value
     }
-    return null
+    emit('save', transaction)
+}
+
+// read-only fields of the transaction
+const fields = computed(() => {
+    return [
+        {
+            label: 'ID',
+            value: props.transaction.id
+        },
+        {
+            label: 'Payee',
+            value: props.transaction.payee.name
+        },
+        {
+            label: 'Amount',
+            value: props.transaction.formattedAmount
+        },
+        {
+            label: 'Date',
+            value: props.transaction.formattedDate
+        },
+        {
+            label: 'Account',
+            value: props.transaction.account.name
+        },
+        {
+            label: "Payee's Categorization",
+            value: props.transaction.payeeCategorizationStr + (overrideSubcategory.value ? ' (Overridden)' : '')
+        },
+    ]
 })
 
 </script>
@@ -78,6 +81,8 @@ const categorizationTooltip = computed(() => {
     <v-card>
         <v-card-title>Transaction Details</v-card-title>
         <v-card-text>
+
+            <!-- Read-only fields (ID, amount, etc)-->
             <v-table density="compact">
                 <tbody>
                     <tr v-for="f in fields">
@@ -85,60 +90,36 @@ const categorizationTooltip = computed(() => {
                         <td>{{ f.value }}</td>
                         <td></td>
                     </tr>
-                    <tr>
-                        <td>Note</td>
-                        <td>{{ transaction.note }}</td>
-                        <td>
-                            <v-btn color="primary" @click="showEditNoteDialog = true">
-                                Edit
-                            </v-btn>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Categorization</td>
-                        <td>
-                            {{ transactionCategorization }}
-                            <IconWithTooltip 
-                                v-if="categorizationTooltip" 
-                                :tooltip="categorizationTooltip"
-                                icon="mdi-dots-horizontal"
-                                color="grey"
-                                location="bottom"
-                            />
-                        </td>
-                        <td>
-                            <v-btn color="primary" @click="showEditCategorizationDialog = true">
-                                Edit
-                            </v-btn>
-                        </td>
-                    </tr>
                 </tbody>
-            </v-table>            
+            </v-table>
+
+            <!-- Note -->
+            <v-text-field 
+                label="Note"
+                clearable
+                v-model="note" 
+            />
+
+            <!-- Switch for overriding the payee's category and subcategory -->
+            <v-switch 
+                label="Override Payee's Category and Subcategory" 
+                v-model="overrideSubcategory">
+            </v-switch>
+
+            <!-- The overriden category and subcategory (show only if overridden) -->
+            <SubcategorySelect v-if="overrideSubcategory"
+                :categoryId="selectedCategoryId"
+                :subcategoryId="selectedSubcategoryId"
+                :categories="filteredCategories"
+                :subcategories="filteredSubcategories"
+                @categorySelected="handleCategorySelected"
+                @subcategorySelected="handleSubcategorySelected"
+            />
+
         </v-card-text>
         <v-card-actions>
-            <v-btn color="primary" @click="emit('close')">Close</v-btn>            
+            <v-btn color="primary" :disabled="isSaveDisabled" @click="save">Save</v-btn>            
+            <v-btn color="primary" @click="emit('close')">Close</v-btn>
         </v-card-actions>
     </v-card>
-
-    <!-- Edit note dialog -->
-    <v-dialog v-model="showEditNoteDialog">
-        <EditText
-            :text="transaction.note"
-            label="Note"
-            title="Edit Note"
-            @close="showEditNoteDialog = false"
-            @save="saveNote"
-        />
-    </v-dialog>
-
-
-    <!-- Edit categorization dialog -->
-    <v-dialog v-model="showEditCategorizationDialog">
-        <EditTransactionCategorization
-            :transaction="transaction"
-            :categories="categories"
-            @close="showEditCategorizationDialog = false"
-            @save="save"
-        />
-    </v-dialog>
 </template>

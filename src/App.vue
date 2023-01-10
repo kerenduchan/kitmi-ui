@@ -81,8 +81,8 @@ const links = ref([
     },
     {
         title: 'Balance',
-        value: 'summary',
-        to: '/summary',
+        value: 'balance',
+        to: '/balance',
         icon: 'mdi-scale-balance'
     },
     {

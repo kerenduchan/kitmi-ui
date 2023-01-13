@@ -80,16 +80,6 @@ const sum = computed(() => {
                 </td>
             </tr>
         </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td>Total</td>
-                <td class="text-right">{{ sum }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tfoot>
     </v-table>
 
 </template>

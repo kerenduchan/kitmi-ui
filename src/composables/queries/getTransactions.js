@@ -3,24 +3,45 @@ import gql from 'graphql-tag'
 import { ref } from 'vue'
 import Transaction from '@/composables/model/Transaction'
 
-function getTransactions() {
-    const { onResult, refetch } = useQuery(gql`
-        query getTransactions {
-            transactions {
-                id
-                date
-                amount
-                overrideSubcategory
-                subcategoryId
-                note
-                account {
+function getTransactions(vars) {
+    console.log('getTransactions')
+    console.log(vars)
+    const { onResult, onError, refetch } = useQuery(gql`
+        query getTransactions(
+            $pageNumber: Int, 
+            $pageSize: Int,
+            $orderBy: String) {
+            transactions(
+                pageNumber: $pageNumber, 
+                pageSize: $pageSize,
+                orderBy: $orderBy) {
+                pagesCount
+                items {
                     id
-                    name
-                }
-                payee {
-                    id
-                    name
+                    date
+                    amount
+                    overrideSubcategory
+                    subcategoryId
                     note
+                    account {
+                        id
+                        name
+                    }
+                    payee {
+                        id
+                        name
+                        note
+                        subcategory {
+                            id
+                            name
+                            category {
+                                id
+                                name
+                                isExpense
+                                excludeFromReports
+                            }
+                        }
+                    }
                     subcategory {
                         id
                         name
@@ -32,29 +53,28 @@ function getTransactions() {
                         }
                     }
                 }
-                subcategory {
-                    id
-                    name
-                    category {
-                        id
-                        name
-                        isExpense
-                        excludeFromReports
-                    }
-                }
             }
         }
-    `)
+    `, vars)
 
     const transactions = ref(null)
-    const isReady = ref(false)
+    const pagesCount = ref(null)
 
-    onResult(queryResult => {
-        transactions.value = queryResult.data.transactions.map((p) => new Transaction(p))
-        isReady.value = true
+    onError(e => {
+        console.error('getTransactions failed:')
+        console.error(e)
     })
 
-    return { transactions, isReady, refetch }
+    onResult(queryResult => {
+        const data = queryResult.data.transactions
+        transactions.value = data.items.map((p) => new Transaction(p))
+        pagesCount.value = data.pagesCount
+    })
+
+    return { 
+        transactions, 
+        pagesCount,
+        refetch }
 }
 
 export default getTransactions

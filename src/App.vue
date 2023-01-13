@@ -98,13 +98,11 @@ const store = getStore()
 const { isReady: isAccountsReady } = store.fetchAccounts()
 const { isReady: isCategoriesReady } = store.fetchCategories()
 const { isReady: isPayeesReady } = store.fetchPayees()
-const { isReady: isTransactionsReady } = store.fetchTransactions()
 
 const isReady = computed(() => {
     return isAccountsReady.value === true &&
         isCategoriesReady.value === true &&
-        isPayeesReady.value === true &&
-        isTransactionsReady.value === true
+        isPayeesReady.value === true
 })
 
 </script>

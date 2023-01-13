@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 // components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
@@ -10,6 +10,7 @@ import EditTransaction from '@/components/EditTransaction.vue'
 // composables
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
+import getTransactions from '@/composables/queries/getTransactions'
 import getUpdateTransaction from '@/composables/mutations/updateTransaction'
 
 // ----------------------------------------------------------------------------
@@ -17,7 +18,27 @@ import getUpdateTransaction from '@/composables/mutations/updateTransaction'
 
 const store = getStore()
 const categories = store.categories
-const transactions = store.transactions
+
+// ----------------------------------------------------------------------------
+// get transactions with pagination
+
+// the current page (v-model for the v-pagination)
+const page = ref(1)
+
+// params to be passed to getTransactions
+const transactionsParams = computed(() => {
+    return {
+        pageNumber: page.value
+    }
+})
+
+// get the first page of transactions (pagination)
+const { transactions, pagesCount, refetch } = getTransactions(transactionsParams.value) 
+
+watch(page, () => {
+    // refetch the desired page of transactions
+    refetch(transactionsParams.value)
+})
 
 // ----------------------------------------------------------------------------
 // snackbar
@@ -76,7 +97,7 @@ function save(transaction) {
 }
 
 onUpdateTransactionDone(() => {
-    store.refetchTransactions()
+    refetch(transactionsParams.value)
     displaySnackbar("Transaction updated.")
 })
 
@@ -128,13 +149,19 @@ const subtitle = computed(() => {
     <v-container fluid>
         <v-row dense>
             <v-col>
-                <v-card title="Transactions" :subtitle="subtitle">
+                <v-card v-if="transactions" title="Transactions" :subtitle="subtitle">
                     <v-card-text>
                         <!-- List (table) of transactions -->
                         <TransactionsList 
                             :selectedTransactionId="selectedTransactionId"
                             :transactions="filteredTransactions" 
                             @select="handleSelect"/>
+
+                        <v-pagination 
+                            v-model="page"
+                            :length="pagesCount"
+                            circle 
+                        />
                     </v-card-text>
                 </v-card>
             </v-col>

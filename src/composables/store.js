@@ -2,7 +2,6 @@
 import getAccounts from '@/composables/queries/getAccounts'
 import getCategories from '@/composables/queries/getCategories'
 import getPayees from '@/composables/queries/getPayees'
-import getTransactions from '@/composables/queries/getTransactions'
 
 let theStore = null
 
@@ -32,13 +31,6 @@ class Store {
         return { isReady }
     }
 
-    fetchTransactions() {
-        const { transactions, isReady, refetch } = getTransactions() 
-        this.transactions = transactions
-        this.refetchers.refetchTransactions = refetch
-        return { isReady }
-    }
-
     refetchAccounts() {
         this.refetchers.refetchAccounts()
     }
@@ -48,18 +40,12 @@ class Store {
         // transactions and payees as well.
         this.refetchers.refetchCategories()
         this.refetchers.refetchPayees()
-        this.refetchers.refetchTransactions()
     }
 
     refetchPayees() {
         // a payee change means we need to refetch
         // transactions as well.
         this.refetchers.refetchPayees()
-        this.refetchers.refetchTransactions()
-    }
-
-    refetchTransactions() {
-        this.refetchers.refetchTransactions()
     }
 
     getTransactionsForPayeeId(payeeId) {

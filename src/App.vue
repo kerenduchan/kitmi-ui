@@ -32,11 +32,7 @@
 
         <v-main>
             <!-- Main window for the app -->
-            <router-view v-slot="{ Component }">
-                    <keep-alive>
-                        <component :is="Component" />
-                    </keep-alive>
-            </router-view>
+            <router-view />
         </v-main>
     </v-app>
 </template>

@@ -6,7 +6,7 @@ import getPayees from '@/composables/queries/getPayees'
 import getTransactionsOfPayee from '@/composables/queries/getTransactionsOfPayee'
 
 const offset = ref(0)
-const limit = 10
+const limit = 5
 
 // params to be passed to getPayees
 const payeesParams = computed(() => {
@@ -49,7 +49,7 @@ const hasNext = computed(() => {
 
 // whether there's a previous payee before the current one
 const hasPrev = computed(() => {
-    return currentPayeeIdx.value > 0
+    return absolutePayeeNumber.value > 1
 })
 
 // the current payee
@@ -83,7 +83,15 @@ const filteredCategories = computed(() => {
 
 function prev() {
     savePayeeSubcategory()
-    currentPayeeIdx.value--
+    if(currentPayeeIdx.value === 0) {
+        // need to fetch previous batch of payees
+        offset.value -= limit
+        payees.value = null
+        refetch(payeesParams.value)
+        currentPayeeIdx.value = limit - 1
+    } else {
+        currentPayeeIdx.value--
+    }
 }
 
 function next() {
@@ -91,6 +99,7 @@ function next() {
     if(currentPayeeIdx.value === limit - 1) {
         // need to fetch next batch of payees
         offset.value += limit
+        payees.value = null
         refetch(payeesParams.value)
         currentPayeeIdx.value = 0
     } else {
@@ -155,7 +164,7 @@ const absolutePayeeNumber = computed(() => {
     </v-card>
 
     <!-- show this if there are subcategories -->
-    <v-card v-if="filteredCategories.length > 0 && payees !== null">
+    <v-card v-if="filteredCategories.length > 0">
         <v-card-title>Categorization Wizard ({{ absolutePayeeNumber }} of {{ totalPayeesCount }})</v-card-title>
         <v-card-text>
             <!-- key forces the component to remount upon change -->

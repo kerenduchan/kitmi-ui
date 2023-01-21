@@ -18,7 +18,7 @@ const emit = defineEmits([
 
 // Index in the categories array of the selected category.
 // v-model for the categories v-item-group.
-const selectedCategoryIdx = ref(getCategoryIdxById(props.payee.categoryId))
+const selectedCategoryIdx = ref(getCategoryIdx())
 
 // The selected category
 const selectedCategory = computed(() => {
@@ -38,7 +38,7 @@ const subcategories = computed(() => {
 
 // Index in the subcategories array on the selected category.
 // v-model for the subcategories v-item-group.
-const selectedSubcategoryIdx = ref(getSubcategoryIdxById(props.payee.subcategoryId))
+const selectedSubcategoryIdx = ref(getSubcategoryIdx())
 
 // The selected subcategory
 const selectedSubcategory = computed(() => {
@@ -48,21 +48,23 @@ const selectedSubcategory = computed(() => {
     return subcategories.value[selectedSubcategoryIdx.value]
 })
 
-// get the index in the categories array of the category with the given ID
-function getCategoryIdxById(categoryId) {
-    if (categoryId === null) {
+// get the index in the categories array of the payee's category
+function getCategoryIdx() {
+    if(props.payee === null || props.payee.categoryId === null) {
         return null
     }
-    const foundIdx = props.categories.findIndex(c => c.id === categoryId)
+    const foundIdx = props.categories.findIndex(
+        c => c.id === props.payee.categoryId)
     return foundIdx === -1 ? null : foundIdx
 }
 
-// get the index in the subcategories array of the category with the given ID
-function getSubcategoryIdxById(subcategoryId) {
-    if (subcategoryId === null) {
+// get the index in the subcategories array of the payee's subcategory
+function getSubcategoryIdx() {
+    if(props.payee === null || props.payee.subcategoryId === null) {
         return null
     }
-    const foundIdx = subcategories.value.findIndex(s => s.id === subcategoryId)
+    const foundIdx = subcategories.value.findIndex(
+        s => s.id === props.payee.subcategoryId)
     return foundIdx === -1 ? null : foundIdx
 }
 
@@ -112,8 +114,8 @@ function clearSelectedSubcategory() {
 
 <template>
     <v-card height="100%">
-        <v-card-title>{{ payee.name }}</v-card-title>
-        <v-card-text>
+        <v-card-title>{{ payee ? payee.name : "" }}</v-card-title>
+        <v-card-text v-if="payee && transactions && transactions.length > 0">
 
             <!-- the transactions associated with this payee -->
             <v-expansion-panels>

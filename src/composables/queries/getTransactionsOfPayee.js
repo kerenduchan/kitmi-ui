@@ -62,6 +62,9 @@ function getTransactionsOfPayee(vars) {
     })
 
     onResult(queryResult => {
+        if(queryResult.data === undefined) {
+            return
+        }
         const data = queryResult.data.transactions
         transactions.value = data.items.map((p) => new Transaction(p))
         totalTransactionsCount.value = data.totalItemsCount

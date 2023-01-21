@@ -6,12 +6,13 @@ import getPayees from '@/composables/queries/getPayees'
 import getTransactionsOfPayee from '@/composables/queries/getTransactionsOfPayee'
 
 const offset = ref(0)
+const limit = 10
 
 // params to be passed to getPayees
 const payeesParams = computed(() => {
     let params = {
         offset: offset.value,
-        limit: 10,
+        limit,
         categorized: false
     }
     return params
@@ -43,7 +44,7 @@ const selectedSubcategoryId = ref(null)
 
 // whether there's a next payee after the current one
 const hasNext = computed(() => {
-    return currentPayeeIdx.value < payees.value.length - 1
+    return absolutePayeeNumber.value < totalPayeesCount.value
 })
 
 // whether there's a previous payee before the current one
@@ -87,7 +88,14 @@ function prev() {
 
 function next() {
     savePayeeSubcategory()
-    currentPayeeIdx.value++
+    if(currentPayeeIdx.value === limit - 1) {
+        // need to fetch next batch of payees
+        offset.value += limit
+        refetch(payeesParams.value)
+        currentPayeeIdx.value = 0
+    } else {
+        currentPayeeIdx.value++
+    }
 }
 
 function close() {
@@ -126,6 +134,10 @@ watch(currentPayee, () => {
     selectedSubcategoryId.value = null
 })
 
+const absolutePayeeNumber = computed(() => {
+    return currentPayeeIdx.value + offset.value + 1
+})
+
 </script>
 
 <template>
@@ -144,11 +156,11 @@ watch(currentPayee, () => {
 
     <!-- show this if there are subcategories -->
     <v-card v-if="filteredCategories.length > 0 && payees !== null">
-        <v-card-title>Categorization Wizard ({{ currentPayeeIdx + 1 }} of {{ payees.length }})</v-card-title>
+        <v-card-title>Categorization Wizard ({{ absolutePayeeNumber }} of {{ totalPayeesCount }})</v-card-title>
         <v-card-text>
             <!-- key forces the component to remount upon change -->
             <CategorizationWizardOnePayee v-if="transactions !== null && transactions.length > 0"
-                :key="currentPayeeIdx"
+                :key="absolutePayeeNumber"
                 :payee="currentPayee" 
                 :transactions="transactions"
                 :categories="filteredCategories"

@@ -116,18 +116,6 @@ const showCategorizationWizard = ref(false)
 const payeeIdsForCategorizationWizard = ref(null)
 const transactionsForCategorizationWizard = ref(null)
 
-function openCategorizationWizard() {
-    // "freeze" the list of IDs of payees that are currently uncategorized, for the wizard
-    // so that prev/next can go back to a payee that has been categorized using the wizard
-    payeeIdsForCategorizationWizard.value = payees.value.map(p => p.id)
-
-    // in the same order as the payeeIdsForCategorizationWizard array, get
-    // the transactions of each payee
-    transactionsForCategorizationWizard.value = 
-        payeeIdsForCategorizationWizard.value.map(payeeId => store.getTransactionsForPayeeId(payeeId))
-
-    showCategorizationWizard.value = true
-}
 
 const subtitle = computed(() => {
     return uncategorized.value ? 'Uncategorized' : ''
@@ -173,7 +161,7 @@ const subtitle = computed(() => {
                     tooltip="Categorization wizard" 
                     icon="mdi-wizard-hat"
                     :disabled="!payees || payees.length === 0"
-                    @click="openCategorizationWizard"
+                    @click="showCategorizationWizard = true"
                 />
             </div>
         </div>
@@ -222,9 +210,6 @@ const subtitle = computed(() => {
     <!-- Categorization wizard -->
     <v-dialog fullscreen v-model="showCategorizationWizard">
         <CategorizationWizard
-            :payeeIds="payeeIdsForCategorizationWizard"
-            :transactionsPerPayeeId="transactionsForCategorizationWizard"
-            :payees="payees"
             :categories="categories"
             @close="showCategorizationWizard = false"
             @change="refresh"

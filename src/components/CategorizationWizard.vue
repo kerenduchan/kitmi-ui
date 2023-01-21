@@ -2,12 +2,27 @@
 import { ref, computed, watch } from 'vue'
 import CategorizationWizardOnePayee from '@/components/CategorizationWizardOnePayee.vue'
 import getUpdatePayee from '@/composables/mutations/updatePayee'
+import getPayees from '@/composables/queries/getPayees'
+import getTransactionsOfPayee from '@/composables/queries/getTransactionsOfPayee'
+
+const offset = ref(0)
+
+// params to be passed to getPayees
+const payeesParams = computed(() => {
+    let params = {
+        offset: offset.value,
+        limit: 10,
+        categorized: false
+    }
+    return params
+})
+
+// get the first chunk of uncategorized payees (pagination)
+const { payees, totalPayeesCount, refetch } = getPayees(payeesParams.value) 
+
 
 // props 
 const props = defineProps({
-    payeeIds: Object,
-    transactionsPerPayeeId: Object,
-    payees: Object,
     categories: Object
 })
 
@@ -17,7 +32,9 @@ const emit = defineEmits([
     'change'
 ])
 
-// index into the payeeIds array - 
+
+
+// index into the payees array - 
 // the payee that's currently displayed in the wizard
 const currentPayeeIdx = ref(0)
 
@@ -26,7 +43,7 @@ const selectedSubcategoryId = ref(null)
 
 // whether there's a next payee after the current one
 const hasNext = computed(() => {
-    return currentPayeeIdx.value < props.payeeIds.length - 1
+    return currentPayeeIdx.value < payees.value.length - 1
 })
 
 // whether there's a previous payee before the current one
@@ -36,9 +53,26 @@ const hasPrev = computed(() => {
 
 // the current payee
 const currentPayee = computed(() => {
-    const payeeId = props.payeeIds[currentPayeeIdx.value]
-    const found = props.payees.find(p => p.id === payeeId)
-    return found ? found : null
+    if(payees.value === null || payees.value.length === 0) {
+        return null
+    }
+    return payees.value[currentPayeeIdx.value]
+})
+
+// params for getTransactionsOfPayee
+const transactionsParams = computed(() => {
+    return {
+        payeeId: currentPayee.value === null ? 0 : parseInt(currentPayee.value.id),
+        limit: 100,
+        offset: 0
+    }
+})
+
+const { transactions, totalTransactionsCount, refetch: refetchTransactions } = 
+            getTransactionsOfPayee(transactionsParams.value)
+
+watch(currentPayee, () => {
+    refetchTransactions(transactionsParams.value)
 })
 
 // only the categories that have subcategories
@@ -109,14 +143,14 @@ watch(currentPayee, () => {
     </v-card>
 
     <!-- show this if there are subcategories -->
-    <v-card v-else>
-        <v-card-title>Categorization Wizard ({{ currentPayeeIdx + 1 }} of {{ payeeIds.length }})</v-card-title>
+    <v-card v-if="filteredCategories.length > 0 && payees !== null">
+        <v-card-title>Categorization Wizard ({{ currentPayeeIdx + 1 }} of {{ payees.length }})</v-card-title>
         <v-card-text>
             <!-- key forces the component to remount upon change -->
-            <CategorizationWizardOnePayee 
+            <CategorizationWizardOnePayee v-if="transactions !== null && transactions.length > 0"
                 :key="currentPayeeIdx"
                 :payee="currentPayee" 
-                :transactions="transactionsPerPayeeId[currentPayeeIdx]"
+                :transactions="transactions"
                 :categories="filteredCategories"
                 @subcategorySelected="handleSubcategorySelected"
             />

@@ -23,6 +23,10 @@ const categories = store.categories
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
 
+const subtitle = computed(() => {
+    return uncategorized.value ? 'Uncategorized' : ''
+})
+
 // ----------------------------------------------------------------------------
 // get payees with pagination
 const limit = 20
@@ -113,13 +117,6 @@ onUpdatePayeeError((e) => {
 
 const showCategorizationWizard = ref(false)
 
-const payeeIdsForCategorizationWizard = ref(null)
-const transactionsForCategorizationWizard = ref(null)
-
-
-const subtitle = computed(() => {
-    return uncategorized.value ? 'Uncategorized' : ''
-})
 
 </script>
 

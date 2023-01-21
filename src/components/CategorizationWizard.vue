@@ -20,7 +20,7 @@ const payeesParams = computed(() => {
 
 // get the first chunk of uncategorized payees (pagination)
 const { payees, totalPayeesCount, refetch } = getPayees(payeesParams.value) 
-
+refetch(payeesParams.value)
 
 // props 
 const props = defineProps({

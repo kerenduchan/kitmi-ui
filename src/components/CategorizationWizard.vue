@@ -147,6 +147,12 @@ const absolutePayeeNumber = computed(() => {
     return currentPayeeIdx.value + offset.value + 1
 })
 
+const title = computed(() => {
+    if(totalPayeesCount.value > 0) {
+        return '' + absolutePayeeNumber.value + ' of ' + totalPayeesCount.value
+    } 
+    return 'nothing to categorize'
+})
 </script>
 
 <template>
@@ -165,7 +171,7 @@ const absolutePayeeNumber = computed(() => {
 
     <!-- show this if there are subcategories -->
     <v-card v-if="filteredCategories.length > 0">
-        <v-card-title>Categorization Wizard ({{ absolutePayeeNumber }} of {{ totalPayeesCount }})</v-card-title>
+        <v-card-title>Categorization Wizard ({{ title }})</v-card-title>
         <v-card-text>
             <!-- key forces the component to remount upon change -->
             <CategorizationWizardOnePayee v-if="transactions !== null && transactions.length > 0"

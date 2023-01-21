@@ -8,11 +8,13 @@ function getTransactions(vars) {
         query getTransactions(
             $orderBy: String,
             $limit: Int,
-            $offset: Int) {
+            $offset: Int
+            $categorized: Boolean) {
             transactions(
                 orderBy: $orderBy,
                 limit: $limit,
-                offset: $offset) {
+                offset: $offset
+                filter: {categorized: $categorized}) {
                 totalItemsCount
                 items {
                     id

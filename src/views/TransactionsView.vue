@@ -19,6 +19,9 @@ import getUpdateTransaction from '@/composables/mutations/updateTransaction'
 const store = getStore()
 const categories = store.categories
 
+// Show only uncategorized filter (v-model for checkbox)
+const uncategorized = ref(false)
+
 // ----------------------------------------------------------------------------
 // get transactions with pagination
 const limit = 20
@@ -28,10 +31,12 @@ const page = ref(1)
 
 // params to be passed to getTransactions
 const transactionsParams = computed(() => {
-    return {
+    let params = {
         offset: (page.value - 1) * limit,
-        limit
+        limit,
+        categorized: uncategorized.value ? false : null
     }
+    return params
 })
 
 // get the first page of transactions (pagination)
@@ -42,28 +47,24 @@ const pagesCount = computed(() => {
 })
 
 watch(page, () => {
-    // refetch the desired page of transactions
+    console.log('refetch')
+    console.log(transactionsParams.value)
     refetch(transactionsParams.value)
 })
+
+watch(uncategorized, () => {
+    console.log('refetch')
+    console.log(transactionsParams.value)
+    refetch(transactionsParams.value)
+})
+
+
 
 // ----------------------------------------------------------------------------
 // snackbar
 
 const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
 
-// ----------------------------------------------------------------------------
-// show only uncategorized transactions
-
-// Show only uncategorized filter (v-model for checkbox)
-const uncategorized = ref(false)
-
-// The transactions, after applying the filter
-const filteredTransactions = computed(() => {
-    if(uncategorized.value === true) {
-        return transactions.value.filter(t => !t.isCategorized)
-    }
-    return transactions.value
-})
 
 // ----------------------------------------------------------------------------
 // selected transaction
@@ -76,7 +77,7 @@ const selectedTransaction = computed(() => {
     if(selectedTransactionId.value === null) {
         return null
     }
-    const found = filteredTransactions.value.find(t => t.id === selectedTransactionId.value)
+    const found = transactions.value.find(t => t.id === selectedTransactionId.value)
     return found ? found : null
 })
 
@@ -160,7 +161,7 @@ const subtitle = computed(() => {
                         <!-- List (table) of transactions -->
                         <TransactionsList 
                             :selectedTransactionId="selectedTransactionId"
-                            :transactions="filteredTransactions" 
+                            :transactions="transactions" 
                             @select="handleSelect"/>
 
                         <!-- pagination -->

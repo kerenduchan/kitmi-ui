@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 // components
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
@@ -12,36 +12,59 @@ import EditPayee from '@/components/EditPayee.vue'
 import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import getUpdatePayee from '@/composables/mutations/updatePayee'
+import getPayees from '@/composables/queries/getPayees'
 
 // ----------------------------------------------------------------------------
 // store
 
 const store = getStore()
 const categories = store.categories
-const payees = store.payees
+
+// Show only uncategorized filter (v-model for checkbox)
+const uncategorized = ref(false)
+
+// ----------------------------------------------------------------------------
+// get payees with pagination
+const limit = 20
+
+// the current page (v-model for the v-pagination)
+const page = ref(1)
+
+// params to be passed to getPayees
+const payeesParams = computed(() => {
+    let params = {
+        offset: (page.value - 1) * limit,
+        limit,
+        categorized: uncategorized.value ? false : null
+    }
+    return params
+})
+
+// get the first page of payees (pagination)
+const { payees, totalPayeesCount, refetch } = getPayees(payeesParams.value) 
+
+function refresh() {
+    refetch(payeesParams.value)
+}
+
+const pagesCount = computed(() => {
+    return Math.ceil(parseFloat(totalPayeesCount.value) / limit)
+})
+
+watch(page, () => {
+    // selected page changed
+    refresh()
+})
+
+watch(uncategorized, () => {
+    // uncategorized checkbox changed
+    refresh()
+})
 
 // ----------------------------------------------------------------------------
 // snackbar
 
 const { showSnackbar, snackbarText, displaySnackbar } = snackbar()
-
-// ----------------------------------------------------------------------------
-// show only uncategorized payees
-
-// Show only uncategorized filter (v-model for checkbox)
-const uncategorized = ref(false)
-
-const uncategorizedPayees = computed(() => {
-    return payees.value.filter(p => !p.isCategorized)
-})
-
-// The payees, after applying the filter
-const filteredPayees = computed(() => {
-    if(uncategorized.value === true) {
-        return uncategorizedPayees.value
-    }
-    return payees.value
-})
 
 // ----------------------------------------------------------------------------
 // selected payee
@@ -54,7 +77,7 @@ const selectedPayee = computed(() => {
     if(!selectedPayeeId.value) {
         return null
     }
-    const found = filteredPayees.value.find(p => p.id === selectedPayeeId.value)
+    const found = payees.value.find(p => p.id === selectedPayeeId.value)
     return found ? found : null
 })
 
@@ -76,7 +99,7 @@ const {
 
 onUpdatePayeeDone((res) => {
     showEditDialog.value = false
-    store.refetchPayees()
+    refresh()
     displaySnackbar("Payee '" + selectedPayee.value.name + "' updated.")
 })
 
@@ -96,7 +119,7 @@ const transactionsForCategorizationWizard = ref(null)
 function openCategorizationWizard() {
     // "freeze" the list of IDs of payees that are currently uncategorized, for the wizard
     // so that prev/next can go back to a payee that has been categorized using the wizard
-    payeeIdsForCategorizationWizard.value = uncategorizedPayees.value.map(p => p.id)
+    payeeIdsForCategorizationWizard.value = payees.value.map(p => p.id)
 
     // in the same order as the payeeIdsForCategorizationWizard array, get
     // the transactions of each payee
@@ -149,7 +172,7 @@ const subtitle = computed(() => {
                 <ButtonWithTooltip 
                     tooltip="Categorization wizard" 
                     icon="mdi-wizard-hat"
-                    :disabled="uncategorizedPayees.length === 0"
+                    :disabled="!payees || payees.length === 0"
                     @click="openCategorizationWizard"
                 />
             </div>
@@ -160,13 +183,21 @@ const subtitle = computed(() => {
     <v-container fluid>
         <v-row dense>
             <v-col>
-                <v-card title="Payees" :subtitle="subtitle">
+                <v-card  v-if="payees" title="Payees" :subtitle="subtitle">
                     <v-card-text>
                         <!-- List (table) of payees -->
                         <PayeesList 
                             :selectedPayeeId="selectedPayeeId"
-                            :payees="filteredPayees" 
+                            :payees="payees" 
                             @select="handleSelect" />
+
+                        <!-- pagination -->
+                        <v-pagination 
+                            v-model="page"
+                            :length="pagesCount"
+                            circle 
+                        />
+    
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -196,7 +227,7 @@ const subtitle = computed(() => {
             :payees="payees"
             :categories="categories"
             @close="showCategorizationWizard = false"
-            @change="store.refetchPayees()"
+            @change="refresh"
         />
     </v-dialog>
 

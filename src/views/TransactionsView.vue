@@ -47,18 +47,12 @@ const pagesCount = computed(() => {
 })
 
 watch(page, () => {
-    console.log('refetch')
-    console.log(transactionsParams.value)
     refetch(transactionsParams.value)
 })
 
 watch(uncategorized, () => {
-    console.log('refetch')
-    console.log(transactionsParams.value)
     refetch(transactionsParams.value)
 })
-
-
 
 // ----------------------------------------------------------------------------
 // snackbar

@@ -58,7 +58,7 @@ function getTransactions(vars) {
     `, vars)
 
     const transactions = ref(null)
-    const totalItemsCount = ref(null)
+    const totalTransactionsCount = ref(null)
 
     onError(e => {
         console.error('getTransactions failed:')
@@ -68,12 +68,12 @@ function getTransactions(vars) {
     onResult(queryResult => {
         const data = queryResult.data.transactions
         transactions.value = data.items.map((p) => new Transaction(p))
-        totalItemsCount.value = data.totalItemsCount
+        totalTransactionsCount.value = data.totalItemsCount
     })
 
     return { 
         transactions, 
-        totalTransactionsCount: totalItemsCount,
+        totalTransactionsCount,
         refetch }
 }
 

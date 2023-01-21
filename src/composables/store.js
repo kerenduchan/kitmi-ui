@@ -22,27 +22,12 @@ class Store {
         this.refetchers.refetchCategories = refetch
     }
 
-    fetchPayees() {
-        const { payees, refetch } = getPayees() 
-        this.payees = payees
-        this.refetchers.refetchPayees = refetch
-    }
-
     refetchAccounts() {
         this.refetchers.refetchAccounts()
     }
 
     refetchCategories() {
-        // a category/subcategory change means we need to refetch
-        // transactions and payees as well.
         this.refetchers.refetchCategories()
-        this.refetchers.refetchPayees()
-    }
-
-    refetchPayees() {
-        // a payee change means we need to refetch
-        // transactions as well.
-        this.refetchers.refetchPayees()
     }
 
     getTransactionsForPayeeId(payeeId) {

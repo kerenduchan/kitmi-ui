@@ -93,11 +93,9 @@ const links = ref([
 const store = getStore()
 store.fetchAccounts()
 store.fetchCategories()
-store.fetchPayees()
 
 const isReady = computed(() => {
     return store.accounts.value !== null &&
-        store.payees.value !== null &&
         store.accounts.value !== null
 })
 

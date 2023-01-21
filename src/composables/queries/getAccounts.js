@@ -10,20 +10,17 @@ function getAccounts() {
                 name
                 source
                 username
-                password
             }
         }
     `)
 
     const accounts = ref(null)
-    const isReady = ref(false)
 
     onResult(queryResult => {
         accounts.value = queryResult.data.accounts
-        isReady.value = true
     })
 
-    return { accounts, isReady, refetch }
+    return { accounts, refetch }
 }
 
 export default getAccounts

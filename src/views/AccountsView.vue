@@ -125,18 +125,12 @@ function getDeleteAccountTitle() {
     }
     return ''
 } 
-// IDs of accounts used by one or more transactions
-const usedAccountIds = computed(() => {
-    const allAccountIds = accounts.value.map(a => a.id)
-    return allAccountIds.filter(accountId =>
-        store.transactions.value.find(t => t.accountId === accountId) !== undefined)
-})
 
 const isDeleteDisabled = computed(() => {
     // Delete is disabled if:
     // - No account is selected, or 
     // - The selected account is used in one or more transactions.
-    return !selectedAccountId.value || usedAccountIds.value.includes(selectedAccountId.value)
+    return !selectedAccountId.value
 })
 
 const { 

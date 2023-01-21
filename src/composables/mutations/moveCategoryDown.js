@@ -4,7 +4,9 @@ import gql from 'graphql-tag'
 function moveCategoryDown() {
     const { mutate: gqlMoveCategoryDown, onDone, onError } = useMutation(gql`
         mutation moveCategoryDown ($categoryId: ID!) {
-            moveCategoryDown (categoryId: $categoryId)
+            moveCategoryDown (categoryId: $categoryId) {
+                id
+            }
         }
     `)
 

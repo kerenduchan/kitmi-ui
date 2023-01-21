@@ -1,6 +1,5 @@
 import Subcategory from './Subcategory'
 import Payee from './Payee'
-import Account from './Account'
 import { formatNumber, formatDate } from '@/composables/utils'
 
 // Represents one transaction. 
@@ -15,7 +14,7 @@ class Transaction {
         this.amount = gqlTransaction.amount
         this.payee = new Payee(gqlTransaction.payee)
         this.accountId = gqlTransaction.account.id
-        this.account = new Account(gqlTransaction.account)
+        this.account = gqlTransaction.account
         this.overrideSubcategory = gqlTransaction.overrideSubcategory
         this.note = gqlTransaction.note
 

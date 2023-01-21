@@ -11,24 +11,21 @@ class Store {
     }
 
     fetchAccounts() {
-        const { accounts, isReady, refetch } = getAccounts() 
+        const { accounts, refetch } = getAccounts() 
         this.accounts = accounts
         this.refetchers.refetchAccounts = refetch
-        return { isReady }
     }
 
     fetchCategories() {
-        const { categories, isReady, refetch } = getCategories() 
+        const { categories, refetch } = getCategories() 
         this.categories = categories
         this.refetchers.refetchCategories = refetch
-        return { isReady }
     }
 
     fetchPayees() {
-        const { payees, isReady, refetch } = getPayees() 
+        const { payees, refetch } = getPayees() 
         this.payees = payees
         this.refetchers.refetchPayees = refetch
-        return { isReady }
     }
 
     refetchAccounts() {

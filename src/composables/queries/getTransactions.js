@@ -4,18 +4,16 @@ import { ref } from 'vue'
 import Transaction from '@/composables/model/Transaction'
 
 function getTransactions(vars) {
-    console.log('getTransactions')
-    console.log(vars)
     const { onResult, onError, refetch } = useQuery(gql`
         query getTransactions(
-            $pageNumber: Int, 
-            $pageSize: Int,
-            $orderBy: String) {
+            $orderBy: String,
+            $limit: Int,
+            $offset: Int) {
             transactions(
-                pageNumber: $pageNumber, 
-                pageSize: $pageSize,
-                orderBy: $orderBy) {
-                pagesCount
+                orderBy: $orderBy,
+                limit: $limit,
+                offset: $offset) {
+                totalItemsCount
                 items {
                     id
                     date
@@ -58,7 +56,7 @@ function getTransactions(vars) {
     `, vars)
 
     const transactions = ref(null)
-    const pagesCount = ref(null)
+    const totalItemsCount = ref(null)
 
     onError(e => {
         console.error('getTransactions failed:')
@@ -68,12 +66,12 @@ function getTransactions(vars) {
     onResult(queryResult => {
         const data = queryResult.data.transactions
         transactions.value = data.items.map((p) => new Transaction(p))
-        pagesCount.value = data.pagesCount
+        totalItemsCount.value = data.totalItemsCount
     })
 
     return { 
         transactions, 
-        pagesCount,
+        totalTransactionsCount: totalItemsCount,
         refetch }
 }
 

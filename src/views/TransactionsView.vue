@@ -21,6 +21,7 @@ const categories = store.categories
 
 // ----------------------------------------------------------------------------
 // get transactions with pagination
+const limit = 20
 
 // the current page (v-model for the v-pagination)
 const page = ref(1)
@@ -28,12 +29,17 @@ const page = ref(1)
 // params to be passed to getTransactions
 const transactionsParams = computed(() => {
     return {
-        pageNumber: page.value
+        offset: (page.value - 1) * limit,
+        limit
     }
 })
 
 // get the first page of transactions (pagination)
-const { transactions, pagesCount, refetch } = getTransactions(transactionsParams.value) 
+const { transactions, totalTransactionsCount, refetch } = getTransactions(transactionsParams.value) 
+
+const pagesCount = computed(() => {
+    return Math.ceil(parseFloat(totalTransactionsCount.value) / limit)
+})
 
 watch(page, () => {
     // refetch the desired page of transactions
@@ -157,6 +163,7 @@ const subtitle = computed(() => {
                             :transactions="filteredTransactions" 
                             @select="handleSelect"/>
 
+                        <!-- pagination -->
                         <v-pagination 
                             v-model="page"
                             :length="pagesCount"

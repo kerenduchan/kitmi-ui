@@ -5,7 +5,9 @@ function deleteSubcategory() {
     // gql mutation for creating a category
     const { mutate: gqlDeleteSubcategory, onDone, onError } = useMutation(gql`
         mutation deleteSubcategory ($subcategoryId: ID!) {
-            deleteSubcategory (subcategoryId: $subcategoryId)
+            deleteSubcategory (subcategoryId: $subcategoryId) {
+                count
+            }
         }
     `)
 

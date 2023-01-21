@@ -4,7 +4,9 @@ import gql from 'graphql-tag'
 function moveCategoryUp() {
     const { mutate: gqlMoveCategoryUp, onDone, onError } = useMutation(gql`
         mutation moveCategoryUp ($categoryId: ID!) {
-            moveCategoryUp (categoryId: $categoryId)
+            moveCategoryUp (categoryId: $categoryId) {
+                id
+            }
         }
     `)
 

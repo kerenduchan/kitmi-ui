@@ -21,14 +21,12 @@ function getCategories() {
     `)
 
     const categories = ref(null)
-    const isReady = ref(false)
 
     onResult(queryResult => {
         categories.value = queryResult.data.categories.map((p) => new Category(p))
-        isReady.value = true
     })
 
-    return { categories, isReady, refetch }
+    return { categories, refetch }
 }
 
 export default getCategories

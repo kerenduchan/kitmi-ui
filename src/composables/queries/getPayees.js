@@ -7,33 +7,36 @@ function getPayees() {
     const { onResult, refetch } = useQuery(gql`
         query getPayees {
             payees {
-                id
-                name
-                subcategoryId
-                note
-                subcategory {
+                items {
                     id
                     name
-                    category {
+                    subcategoryId
+                    note
+                    subcategory {
                         id
                         name
-                        isExpense
-                        excludeFromReports
-                    }
+                        category {
+                            id
+                            name
+                            isExpense
+                            excludeFromReports
+                        }
+                    }    
                 }
             }
         }
     `)
 
     const payees = ref(null)
-    const isReady = ref(false)
+    const totalItemsCount = ref(null)
 
     onResult(queryResult => {
-        payees.value = queryResult.data.payees.map((p) => new Payee(p))
-        isReady.value = true
+        const data = queryResult.data.payees
+        payees.value = data.items.map((p) => new Payee(p))
+        totalItemsCount.value = data.totalItemsCount
     })
 
-    return { payees, isReady, refetch }
+    return { payees, refetch }
 }
 
 export default getPayees

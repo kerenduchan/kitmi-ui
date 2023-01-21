@@ -17,6 +17,7 @@ const headers = ref([
     'Source',
 ])
 
+
 // get the class for a selected row in the table
 function getClassForRow(account) {
     return props.selectedAccountId === account.id ? 'selected-row' : ''
@@ -26,6 +27,10 @@ function getClassForRow(account) {
 function handleRowClicked(account) {
     // select or deselect
     emit('select', (account.id === props.selectedAccountId) ? null : account.id)
+}
+
+function source(account) {
+    return account.source.toLowerCase()
 }
 
 </script>
@@ -47,7 +52,7 @@ function handleRowClicked(account) {
                 @click="handleRowClicked(a)"
             >
                 <td>{{ a.name }}</td>
-                <td>{{ a.source }}</td>
+                <td>{{ source(a) }}</td>
             </tr>
         </tbody>
     </v-table>

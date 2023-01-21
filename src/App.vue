@@ -91,14 +91,14 @@ const links = ref([
 
 // fetch accounts, categories, payees, transactions from the server
 const store = getStore()
-const { isReady: isAccountsReady } = store.fetchAccounts()
-const { isReady: isCategoriesReady } = store.fetchCategories()
-const { isReady: isPayeesReady } = store.fetchPayees()
+store.fetchAccounts()
+store.fetchCategories()
+store.fetchPayees()
 
 const isReady = computed(() => {
-    return isAccountsReady.value === true &&
-        isCategoriesReady.value === true &&
-        isPayeesReady.value === true
+    return store.accounts.value !== null &&
+        store.payees.value !== null &&
+        store.accounts.value !== null
 })
 
 </script>

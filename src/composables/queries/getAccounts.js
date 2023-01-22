@@ -1,6 +1,5 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import { ref } from 'vue'
 
 function getAccounts() {
     const { onResult, refetch } = useQuery(gql`
@@ -14,13 +13,7 @@ function getAccounts() {
         }
     `)
 
-    const accounts = ref(null)
-
-    onResult(queryResult => {
-        accounts.value = queryResult.data.accounts
-    })
-
-    return { accounts, refetch }
+    return { onResult, refetch }
 }
 
 export default getAccounts

@@ -1,5 +1,5 @@
 <template>
-    <v-app v-if="isReady" id="inspire">
+    <v-app id="inspire">
         <v-navigation-drawer 
             v-model="drawer"
             :rail="rail"
@@ -38,8 +38,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import getStore from '@/composables/store'
+import { ref } from 'vue'
 
 const rail = ref(true)
 const drawer = ref(true)
@@ -88,17 +87,6 @@ const links = ref([
         icon: 'mdi-poll'
     },
 ])
-
-// fetch accounts, categories, payees, transactions from the server
-const store = getStore()
-store.fetchAccounts()
-store.fetchCategories()
-
-const isReady = computed(() => {
-    return store.accounts.value !== null &&
-        store.accounts.value !== null
-})
-
 </script>
 
 <style>

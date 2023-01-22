@@ -9,17 +9,22 @@ import CreateOrEditAccount from '@/components/CreateOrEditAccount.vue'
 import AreYouSure from '@/components/AreYouSure.vue'
 
 // composables
-import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import getCreateAccount from '@/composables/mutations/createAccount'
 import getUpdateAccount from '@/composables/mutations/updateAccount'
 import getDeleteAccount from '@/composables/mutations/deleteAccount'
+import getAccounts from '@/composables/queries/getAccounts'
 
 // ----------------------------------------------------------------------------
-// snackbar
+// accounts (from the server)
+const accounts = ref(null)
 
-const store = getStore()
-const accounts = store.accounts
+const { onResult, refetch } = getAccounts()
+
+onResult(res => {
+    accounts.value = res.data.accounts
+})
+
 
 // ----------------------------------------------------------------------------
 // snackbar
@@ -83,7 +88,7 @@ onCreateAccountDone((res) => {
     const account = res.data.createAccount
     selectedAccountId.value = account.id
     closeCreateOrEditDialog()
-    store.refetchAccounts()
+    refetch()
     displaySnackbar("Account '" + account.name + "' created.")
 })
 
@@ -106,7 +111,7 @@ onUpdateAccountDone((res) => {
     const account = res.data.updateAccount
     const name = account.name
     closeCreateOrEditDialog()
-    store.refetchAccounts()
+    refetch()
     displaySnackbar("Account '" + name + "' updated.")
 })
 
@@ -149,7 +154,7 @@ onDeleteAccountDone((res) => {
     const name = selectedAccount.value.name
     selectedAccountId.value = null
     showDeleteDialog.value = false
-    store.refetchAccounts()
+    refetch()
     displaySnackbar("Account '" + name + "' deleted.")
 })
 

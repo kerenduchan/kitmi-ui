@@ -11,7 +11,6 @@ import AreYouSure from '@/components/AreYouSure.vue'
 import CategoriesList from '@/components/CategoriesList.vue'
 
 // composables
-import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import getCreateCategory from '@/composables/mutations/createCategory'
 import getUpdateCategory from '@/composables/mutations/updateCategory'
@@ -21,11 +20,18 @@ import deleteCategory from '@/composables/mutations/deleteCategory'
 import deleteSubcategory from '@/composables/mutations/deleteSubcategory'
 import moveCategoryUp from '@/composables/mutations/moveCategoryUp'
 import moveCategoryDown from '@/composables/mutations/moveCategoryDown'
+import getCategories from '@/composables/queries/getCategories'
+import Category from '@/composables/model/Category'
 
 // ----------------------------------------------------------------------------
-// store
-const store = getStore()
-const categories = store.categories
+// categories (from the server)
+const categories = ref(null)
+
+const { onResult, refetch } = getCategories()
+
+onResult(res => {
+    categories.value = res.data.categories.map((p) => new Category(p))
+})
 
 // ----------------------------------------------------------------------------
 // snackbar
@@ -126,7 +132,7 @@ onCreateCategoryDone((res) => {
     // force-select the newly created category in the list
     selectedCategoryId.value = category.id
     showCreateOrEditCategoryDialog.value = false
-    store.refetchCategories()    
+    refetch()
     displaySnackbar("Category '" + category.name + "' created.")
 
 })
@@ -148,7 +154,7 @@ const {
 onUpdateCategoryDone((res) => {
     const category = res.data.updateCategory
     showCreateOrEditCategoryDialog.value = false
-    store.refetchCategories()    
+    refetch()
     displaySnackbar("Category '" + category.name + "' updated.")
 })
 
@@ -201,7 +207,7 @@ onCreateSubcategoryDone((res) => {
     selectedCategoryId.value = subcategory.categoryId
 
     showCreateOrEditSubcategoryDialog.value = false
-    store.refetchCategories()    
+    refetch()
     displaySnackbar("Subcategory '" + subcategory.name + "' created.")
 
 })
@@ -228,7 +234,7 @@ onUpdateSubcategoryDone((res) => {
     selectedCategoryId.value = subcategory.categoryId
 
     showCreateOrEditSubcategoryDialog.value = false
-    store.refetchCategories()    
+    refetch()
     displaySnackbar("Subcategory '" + subcategory.name + "' updated.")
 })
 
@@ -300,7 +306,7 @@ onDeleteCategoryDone(() => {
     const name = selectedCategory.value.name
     selectedCategoryId.value = null
     showDeleteDialog.value = false
-    store.refetchCategories()
+    refetch()
     displaySnackbar("Category '" + name + "' deleted.")
 })
 
@@ -316,7 +322,7 @@ onDeleteSubcategoryDone(() => {
     const name = getSelectedSubcategory().name
     selectedSubcategoryId.value = null
     showDeleteDialog.value = false
-    store.refetchCategories()
+    refetch()
     displaySnackbar("Subcategory '" + name + "' deleted.")
 })
 
@@ -358,7 +364,7 @@ function doMoveCategoryDown() {
 }
 
 onMoveCategoryDownDone(() => {
-    store.refetchCategories()
+    refetch()
 })
 
 // ----------------------------------------------------------------------------
@@ -386,7 +392,7 @@ function doMoveCategoryUp() {
 }
 
 onMoveCategoryUpDone(() => {
-    store.refetchCategories()
+    refetch()
 })
 
 // ----------------------------------------------------------------------------
@@ -405,7 +411,7 @@ function handleFindSubcategory(subcategoryId) {
 
 <template>
     <div class="top-bar">
-        <div class="top-bar-left">
+        <div class="top-bar-left" v-if="categories">
 
             <!-- Edit category/subcategory button -->
             <div class="top-bar-action">

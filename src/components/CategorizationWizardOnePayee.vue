@@ -1,13 +1,18 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
-import { formatNumber, formatDate } from '@/composables/utils'
+
+// components
 import TypeIcon from '@/components/TypeIcon.vue'
 import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
+
+// composables
+import { formatNumber, formatDate } from '@/composables/utils'
+import Transaction from '@/composables/model/Transaction'
+import getTransactionsOfPayee from '@/composables/queries/getTransactionsOfPayee'
 
 // props 
 const props = defineProps({
     payee: Object,
-    transactions: Object,
     categories: Object
 })
 
@@ -15,6 +20,24 @@ const props = defineProps({
 const emit = defineEmits([
     'subcategorySelected',
 ])
+
+const transactions = ref(null)
+const totalTransactionsCount = ref(null)
+const isLoading = ref(true)
+
+
+// get the transactions of this payee
+const { onResult } = getTransactionsOfPayee({
+        payeeId: props.payee.id,
+        limit: 100,
+        offset: 0
+    })
+
+onResult(res => {
+    transactions.value = res.data.transactions.items.map((p) => new Transaction(p))
+    totalTransactionsCount.value = res.data.transactions.totalItemsCount
+    isLoading.value = false
+})
 
 // Index in the categories array of the selected category.
 // v-model for the categories v-item-group.
@@ -114,8 +137,8 @@ function clearSelectedSubcategory() {
 
 <template>
     <v-card height="100%">
-        <v-card-title>{{ payee ? payee.name : "" }}</v-card-title>
-        <v-card-text v-if="payee && transactions && transactions.length > 0">
+        <v-card-title>{{ payee.name }}</v-card-title>
+        <v-card-text v-if="transactions && transactions.length > 0">
 
             <!-- the transactions associated with this payee -->
             <v-expansion-panels>

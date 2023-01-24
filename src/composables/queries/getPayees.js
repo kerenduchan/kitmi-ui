@@ -1,7 +1,5 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import { ref } from 'vue'
-import Payee from '@/composables/model/Payee'
 
 function getPayees(vars) {
     const { onResult, refetch } = useQuery(gql`
@@ -32,17 +30,7 @@ function getPayees(vars) {
         }
       }`, 
       vars)
-
-    const payees = ref(null)
-    const totalPayeesCount = ref(null)
-
-    onResult(queryResult => {
-        const data = queryResult.data.payees
-        payees.value = data.items.map((p) => new Payee(p))
-        totalPayeesCount.value = data.totalItemsCount
-    })
-
-    return { payees, totalPayeesCount, refetch }
+    return { onResult, refetch }
 }
 
 export default getPayees

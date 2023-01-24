@@ -9,16 +9,13 @@ import PayeesList from '@/components/PayeesList.vue'
 import EditPayee from '@/components/EditPayee.vue'
 
 // composables
-import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import getUpdatePayee from '@/composables/mutations/updatePayee'
-import getPayees from '@/composables/queries/getPayees'
+import getPayeesAndCategories from '@/composables/queries/getPayeesAndCategories'
+import Category from '@/composables/model/Category'
+import Payee from '@/composables/model/Payee'
 
 // ----------------------------------------------------------------------------
-// store
-
-const store = getStore()
-const categories = store.categories
 
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
@@ -34,21 +31,37 @@ const limit = 20
 // the current page (v-model for the v-pagination)
 const page = ref(1)
 
+const getCategories = ref(false)
+
 // params to be passed to getPayees
-const payeesParams = computed(() => {
+const gqlParams = computed(() => {
     let params = {
         offset: (page.value - 1) * limit,
         limit,
-        categorized: uncategorized.value ? false : null
+        categorized: uncategorized.value ? false : null,
+        getCategories: getCategories.value
     }
     return params
 })
 
-// get the first page of payees (pagination)
-const { payees, totalPayeesCount, refetch } = getPayees(payeesParams.value) 
+const payees = ref(null)
+const categories = ref(null)
+const totalPayeesCount = ref(null)
+
+// get the first page of payees (pagination) + all categories
+const { onResult, refetch } = getPayeesAndCategories(gqlParams.value) 
+
+onResult(res => {
+    categories.value = res.data.categories.map((p) => new Category(p))
+    payees.value = res.data.payees.items.map((p) => new Payee(p))
+    totalPayeesCount.value = res.data.payees.totalItemsCount
+    // get categories only the first time
+    getCategories.value = false
+})
+
 
 function refresh() {
-    refetch(payeesParams.value)
+    refetch(gqlParams.value)
 }
 
 const pagesCount = computed(() => {

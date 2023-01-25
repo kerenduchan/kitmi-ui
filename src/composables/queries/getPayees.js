@@ -2,7 +2,7 @@ import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 
 function getPayees(vars) {
-    const { onResult, refetch } = useQuery(gql`
+    const { onResult, onError, refetch } = useQuery(gql`
     query getPayees($orderBy: String, $limit: Int, $offset: Int, $categorized: Boolean) {
         payees(
           orderBy: $orderBy
@@ -26,6 +26,43 @@ function getPayees(vars) {
                 excludeFromReports
               }
             }
+            transactions {
+              id
+              date
+              amount
+              overrideSubcategory
+              subcategoryId
+              note
+              account {
+                id
+                name
+              }
+              payee {
+                  id
+                  name
+                  note
+                  subcategory {
+                      id
+                      name
+                      category {
+                          id
+                          name
+                          isExpense
+                          excludeFromReports
+                      }
+                  }
+              }
+              subcategory {
+                id
+                name
+                category {
+                  id
+                  name
+                  isExpense
+                  excludeFromReports
+                }
+              }
+            }
           }
         }
       }`, 
@@ -33,6 +70,10 @@ function getPayees(vars) {
       {
         fetchPolicy: "network-only"
       })
+
+    onError(e => {
+      console.error(e)
+    })
     return { onResult, refetch }
 }
 

@@ -149,6 +149,7 @@ const title = computed(() => {
                 <CategorizationWizardOnePayee v-if="currentPayee"
                     :key="currentPayeeIdx"
                     :payee="currentPayee" 
+                    :transactions="currentPayee.transactions"
                     :categories="filteredCategories"
                     @subcategorySelected="handleSubcategorySelected"
                 />

@@ -4,7 +4,8 @@
 // Wraps the payee received from the server and exposes useful UI-specific 
 // getters on it.
 
-import Subcategory from "./Subcategory";
+import Subcategory from "./Subcategory"
+import Transaction from "./Transaction"
 
 class Payee {
     constructor(gqlPayee) {
@@ -12,6 +13,7 @@ class Payee {
         this.name = gqlPayee.name
         this.note = gqlPayee.note
         this.subcategory = gqlPayee.subcategory ? new Subcategory(gqlPayee.subcategory) : null
+        this.transactions = gqlPayee.transactions ? gqlPayee.transactions.map(t => new Transaction(t)) : null
     }
 
     get category() {

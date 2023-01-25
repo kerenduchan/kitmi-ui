@@ -8,16 +8,23 @@ import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
 
 // composables
-import getStore from '@/composables/store'
 import snackbar from '@/composables/snackbar'
 import getTransactions from '@/composables/queries/getTransactions'
+import getCategories from '@/composables/queries/getCategories'
+import Category from '@/composables/model/Category'
 import getUpdateTransaction from '@/composables/mutations/updateTransaction'
 
 // ----------------------------------------------------------------------------
-// store
 
-const store = getStore()
-const categories = store.categories
+// get categories
+const categories = ref(null)
+
+const { onResult: onCategoriesResult, refetch: refetchCategories } = getCategories()
+
+onCategoriesResult(res => {
+    categories.value = res.data.categories.map((p) => new Category(p))
+})
+
 
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)

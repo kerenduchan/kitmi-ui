@@ -29,7 +29,10 @@ function getPayees(vars) {
           }
         }
       }`, 
-      vars)
+      vars,
+      {
+        fetchPolicy: "network-only"
+      })
     return { onResult, refetch }
 }
 

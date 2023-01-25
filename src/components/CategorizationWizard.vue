@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 // components
 import CategorizationWizardOnePayee from '@/components/CategorizationWizardOnePayee.vue'
@@ -35,9 +35,6 @@ const isLoading = ref(true)
 // get the first chunk of uncategorized payees (pagination)
 const { onResult } = getPayees(payeesParams.value) 
 
-onMounted(() => {
-    console.log('mounted')
-})
 
 onResult(res => {
     payees.value = res.data.payees.items.map((p) => new Payee(p))

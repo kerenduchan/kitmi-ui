@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 
 // components
 import CategorizationWizardOnePayee from '@/components/CategorizationWizardOnePayee.vue'
@@ -20,14 +20,9 @@ const emit = defineEmits([
     'change'
 ])
 
-const offset = ref(0)
-const limit = 5
-
 // params to be passed to getPayees
 const payeesParams = computed(() => {
     let params = {
-        offset: offset.value,
-        limit,
         categorized: false
     }
     return params
@@ -38,7 +33,11 @@ const totalPayeesCount = ref(null)
 const isLoading = ref(true)
 
 // get the first chunk of uncategorized payees (pagination)
-const { onResult, refetch } = getPayees(payeesParams.value) 
+const { onResult } = getPayees(payeesParams.value) 
+
+onMounted(() => {
+    console.log('mounted')
+})
 
 onResult(res => {
     payees.value = res.data.payees.items.map((p) => new Payee(p))
@@ -46,27 +45,9 @@ onResult(res => {
     isLoading.value = false
 })
 
-function refetchPayees() {
-    isLoading.value = true
-    refetch(payeesParams.value)
-}
-
 // index into the payees array - 
 // the payee that's currently displayed in the wizard
 const currentPayeeIdx = ref(0)
-
-// the selected subcategory ID for the currently displayed payee
-const selectedSubcategoryId = ref(null)
-
-// whether there's a next payee after the current one
-const hasNext = computed(() => {
-    return absolutePayeeNumber.value < totalPayeesCount.value
-})
-
-// whether there's a previous payee before the current one
-const hasPrev = computed(() => {
-    return absolutePayeeNumber.value > 1
-})
 
 // the current payee
 const currentPayee = computed(() => {
@@ -76,6 +57,19 @@ const currentPayee = computed(() => {
     return payees.value[currentPayeeIdx.value]
 })
 
+// the selected subcategory ID for the currently displayed payee
+const selectedSubcategoryId = ref(null)
+
+// whether there's a next payee after the current one
+const hasNext = computed(() => {
+    return currentPayeeIdx.value < totalPayeesCount.value - 1
+})
+
+// whether there's a previous payee before the current one
+const hasPrev = computed(() => {
+    return currentPayeeIdx.value > 0
+})
+
 // only the categories that have subcategories
 const filteredCategories = computed(() => {
     return props.categories.filter(c => c.hasSubcategories)
@@ -83,28 +77,12 @@ const filteredCategories = computed(() => {
 
 function prev() {
     savePayeeSubcategory()
-    if(currentPayeeIdx.value === 0) {
-        // need to fetch previous batch of payees
-        offset.value -= limit
-        payees.value = null
-        refetchPayees()
-        currentPayeeIdx.value = limit - 1
-    } else {
-        currentPayeeIdx.value--
-    }
+    currentPayeeIdx.value--
 }
 
 function next() {
     savePayeeSubcategory()
-    if(currentPayeeIdx.value === limit - 1) {
-        // need to fetch next batch of payees
-        offset.value += limit
-        payees.value = null
-        refetchPayees()
-        currentPayeeIdx.value = 0
-    } else {
-        currentPayeeIdx.value++
-    }
+    currentPayeeIdx.value++
 }
 
 function close() {
@@ -143,10 +121,6 @@ watch(currentPayee, () => {
     selectedSubcategoryId.value = null
 })
 
-const absolutePayeeNumber = computed(() => {
-    return currentPayeeIdx.value + offset.value + 1
-})
-
 const title = computed(() => {
     let res = "Categorization Wizard"
     if(filteredCategories.value.length === 0) {
@@ -161,7 +135,7 @@ const title = computed(() => {
         return res
     }
 
-    res += '' + absolutePayeeNumber.value + ' of ' + totalPayeesCount.value
+    res += '' + (currentPayeeIdx.value + 1) + ' of ' + totalPayeesCount.value
     return res
 })
 </script>
@@ -174,13 +148,13 @@ const title = computed(() => {
                 Define some categories and subcategories first.
             </div>
             <div v-else>
-            <!-- key forces the component to remount upon change -->
-            <CategorizationWizardOnePayee v-if="currentPayee"
-                :key="absolutePayeeNumber"
-                :payee="currentPayee" 
-                :categories="filteredCategories"
-                @subcategorySelected="handleSubcategorySelected"
-            />
+                <!-- key forces the component to remount upon change -->
+                <CategorizationWizardOnePayee v-if="currentPayee"
+                    :key="currentPayeeIdx"
+                    :payee="currentPayee" 
+                    :categories="filteredCategories"
+                    @subcategorySelected="handleSubcategorySelected"
+                />
             </div>
         </v-card-text>
 

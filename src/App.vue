@@ -60,7 +60,7 @@ const links = ref([
         title: 'Categories',
         value: 'categories',
         to: '/categories',
-        icon: 'mdi-folder'
+        icon: 'mdi-folder-multiple'
     },
     {
         title: 'Payees',

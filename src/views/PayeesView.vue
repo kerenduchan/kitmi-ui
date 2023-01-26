@@ -130,6 +130,10 @@ onUpdatePayeeError((e) => {
 
 const showCategorizationWizard = ref(false)
 
+function handleCloseCategorizationWizard() {
+    showCategorizationWizard.value = false
+    refresh()
+}
 
 </script>
 
@@ -221,7 +225,7 @@ const showCategorizationWizard = ref(false)
     <v-dialog fullscreen v-model="showCategorizationWizard">
         <CategorizationWizard
             :categories="categories"
-            @close="showCategorizationWizard = false"
+            @close="handleCloseCategorizationWizard"
             @change="refresh"
         />
     </v-dialog>

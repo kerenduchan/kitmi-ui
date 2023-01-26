@@ -75,6 +75,7 @@ watch(page, () => {
 
 watch(uncategorized, () => {
     // uncategorized checkbox changed
+    page.value = 1
     refresh()
 })
 

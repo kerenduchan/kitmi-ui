@@ -58,6 +58,7 @@ watch(page, () => {
 })
 
 watch(uncategorized, () => {
+    page.value = 1
     refetch(transactionsParams.value)
 })
 

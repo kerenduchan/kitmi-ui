@@ -47,69 +47,68 @@ function handleFilter(filter) {
 </script>
 
 <template>
-    <div class="top-bar">
-
-        <div class="top-bar-left">
+    <!-- actions bar at the top -->
+    <div id="actions-bar">
+        
+        <!-- actions at the start of the actions bar -->
+        <div class="actions">
 
             <!-- Filter button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip tooltip="Filter" icon="mdi-filter" @click="showFilterDialog = true" />
             </div>
 
         </div>
     </div>
-    <v-divider />
 
-    <v-container fluid>
-        <v-row dense>
-            <v-col>
-                <v-card title="Balance" :subtitle="subtitle">
-                    <v-card-text>
-                        <v-container fluid>
-                            <v-row dense>
-                                <v-col>
-                                    <v-card>
-                                        <v-card-title>
-                                            Income
-                                        </v-card-title>
-                                        <v-card-text>
-                                            <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
-                                        </v-card-text>
-                                    </v-card>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-card>
-                                        <v-card-title>
-                                            Expenses
-                                        </v-card-title>
-                                        <v-card-text>
-                                            <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
-                                        </v-card-text>
-                                    </v-card>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-card>
-                                        <v-card-title>
-                                            Savings
-                                        </v-card-title>
-                                        <v-card-text>
-                                            <SavingsTable v-if="balanceSummary" 
-                                                :balanceSummary="balanceSummary"
-                                            />
-                                        </v-card-text>
-                                    </v-card>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <!-- content -->
+    <div id="content">
+        <div id="content-title">
+            Balance
+        </div>
+        <div class="scrollable">
+            <v-container fluid>
+                <v-row dense>
+                    <v-col>
+                        <v-card>
+                            <v-card-title>
+                                Income
+                            </v-card-title>
+                            <v-card-text>
+                                <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <v-card>
+                            <v-card-title>
+                                Expenses
+                            </v-card-title>
+                            <v-card-text>
+                                <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <v-card>
+                            <v-card-title>
+                                Savings
+                            </v-card-title>
+                            <v-card-text>
+                                <SavingsTable v-if="balanceSummary" 
+                                    :balanceSummary="balanceSummary"
+                                />
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </div>
+    </div>
 
     <!-- Filter dialog -->
     <v-dialog v-model="showFilterDialog">

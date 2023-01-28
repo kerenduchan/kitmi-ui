@@ -410,11 +410,14 @@ function handleFindSubcategory(subcategoryId) {
 </script>
 
 <template>
-    <div class="top-bar">
-        <div class="top-bar-left" v-if="categories">
+    <!-- actions bar at the top -->
+    <div id="actions-bar">
+        
+        <!-- actions at the start of the actions bar -->
+        <div class="actions">
 
             <!-- Edit category/subcategory button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip 
                     :tooltip="'Edit ' + selectedItemTypeStr" 
                     icon="mdi-pencil"
@@ -424,7 +427,7 @@ function handleFindSubcategory(subcategoryId) {
             </div>
 
             <!-- Create subcategory button -->
-            <div v-if="!isCreateSubcategoryHidden" class="top-bar-action">
+            <div v-if="!isCreateSubcategoryHidden">
                 <ButtonWithTooltip 
                     tooltip="Create subcategory" 
                     icon="mdi-plus"
@@ -434,7 +437,7 @@ function handleFindSubcategory(subcategoryId) {
             </div>
 
             <!-- Move category down button -->
-            <div v-if="isMoveCategoryButtonVisible" class="top-bar-action">
+            <div v-if="isMoveCategoryButtonVisible">
                 <ButtonWithTooltip 
                     tooltip="Move Category Down" 
                     icon="mdi-arrow-down"
@@ -444,7 +447,7 @@ function handleFindSubcategory(subcategoryId) {
             </div>
 
             <!-- Move category up button -->
-            <div v-if="isMoveCategoryButtonVisible" class="top-bar-action">
+            <div v-if="isMoveCategoryButtonVisible">
                 <ButtonWithTooltip 
                     tooltip="Move Category Up" 
                     icon="mdi-arrow-up"
@@ -454,7 +457,7 @@ function handleFindSubcategory(subcategoryId) {
             </div>
 
             <!-- Delete category/subcategory button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip 
                     :tooltip="'Delete ' + selectedItemTypeStr"
                     icon="mdi-delete"
@@ -465,10 +468,11 @@ function handleFindSubcategory(subcategoryId) {
         </div>
 
 
-        <div class="top-bar-right">
+        <!-- actions at the end of the actions bar -->
+        <div class="actions">
 
             <!-- Find subcategory button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip 
                     tooltip="Find subcategory" 
                     icon="mdi-folder-search"
@@ -477,7 +481,7 @@ function handleFindSubcategory(subcategoryId) {
             </div>
 
             <!-- Create category button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip 
                     tooltip="Create category" 
                     icon="mdi-plus"
@@ -487,27 +491,24 @@ function handleFindSubcategory(subcategoryId) {
 
         </div>
     </div>
-    <v-divider />
 
-    <v-container fluid>
-        <v-row dense>
-            <v-col>
-                <v-card title="Categories">
-                    <v-card-text>
-                        <!-- List of categories -->
-                        <CategoriesList 
-                            :selectedCategoryId="selectedCategoryId"
-                            :selectedSubcategoryId="selectedSubcategoryId"
-                            :categories="categories"
-                            @selectCategory="handleSelectCategory"
-                            @selectSubcategory="handleSelectSubcategory"
-                        />
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
-
+    <!-- content -->
+    <div id="content" v-if="categories">
+        <div id="content-title">
+            Categories
+        </div>
+        <div class="scrollable">
+            <!-- List of categories -->
+            <CategoriesList 
+                :selectedCategoryId="selectedCategoryId"
+                :selectedSubcategoryId="selectedSubcategoryId"
+                :categories="categories"
+                @selectCategory="handleSelectCategory"
+                @selectSubcategory="handleSelectSubcategory"
+            />
+        </div>
+    </div>
+            
     <!-- snackbar -->
     <Snackbar 
         :show="showSnackbar" 

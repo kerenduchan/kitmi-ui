@@ -46,7 +46,7 @@ const sum = computed(() => {
 
 <template>
 
-    <v-table density="compact" height="550px" fixed-header>
+    <table>
         <thead>
             <tr>
                 <th v-for="header in headers" class="text-left">
@@ -66,7 +66,7 @@ const sum = computed(() => {
                 <td>
                     {{ t.formattedDate }}
                 </td>
-                <td class="text-right">
+                <td class="cell-align-right">
                     {{ t.formattedAmount }}
                 </td>
                 <td>
@@ -80,7 +80,7 @@ const sum = computed(() => {
                 </td>
             </tr>
         </tbody>
-    </v-table>
+    </table>
 
 </template>
 

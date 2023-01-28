@@ -114,54 +114,51 @@ const pieChartLabels = computed(() => {
 </script>
 
 <template>
-    <div class="top-bar">
-
-        <div class="top-bar-left">
-
+    <!-- actions bar at the top -->
+    <div id="actions-bar">
+        
+        <!-- actions at the start of the actions bar -->
+        <div class="actions">
             <!-- Filter button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip tooltip="Filter" icon="mdi-filter" @click="showFilterDialog = true" />
             </div>
 
         </div>
     </div>
-    <v-divider />
 
-    <v-container fluid>
-        <v-row dense>
-            <v-col>
-                <v-card title="Charts" :subtitle="subtitle">
-                    <v-card-text>
-
-                        <v-container fluid>
-                            <v-row dense>
-                                <v-col>
-                                    <v-card>
-                                        <!-- the stacked bar chart -->
-                                        <StackedBarChart v-if="summaryForStackedBarChart"
-                                            :xaxis="summaryForStackedBarChart.buckets"
-                                            :series="summaryForStackedBarChart.groups"
-                                            :yaxisFormatterFunc="formatRoundNumber"
-                                        />
-                                    </v-card>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-card>
-                                        <PieChart v-if="summaryForPieChart"
-                                            :series="pieChartSeries"
-                                            :labels="pieChartLabels"
-                                        />
-                                    </v-card>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <!-- content -->
+    <div id="content">
+        <div id="content-title">
+            Charts
+        </div>
+        <div class="scrollable">
+            <v-container fluid>
+                <v-row dense>
+                    <v-col>
+                        <v-card>
+                            <!-- the stacked bar chart -->
+                            <StackedBarChart v-if="summaryForStackedBarChart"
+                                :xaxis="summaryForStackedBarChart.buckets"
+                                :series="summaryForStackedBarChart.groups"
+                                :yaxisFormatterFunc="formatRoundNumber"
+                            />
+                        </v-card>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <v-card>
+                            <PieChart v-if="summaryForPieChart"
+                                :series="pieChartSeries"
+                                :labels="pieChartLabels"
+                            />
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </div>
+    </div>
 
     <!-- Filter dialog -->
     <v-dialog v-model="showFilterDialog">

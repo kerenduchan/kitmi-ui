@@ -139,96 +139,70 @@ function handleCloseCategorizationWizard() {
 </script>
 
 <template>
-    <div class="top-bar">
-        <div class="top-bar-left">
+        <!-- actions bar at the top -->
+        <div id="actions-bar">
+
+        <!-- actions at the start of the actions bar -->
+        <div class="actions">
 
             <!-- Edit button -->
-            <div class="top-bar-action">
-                <ButtonWithTooltip 
-                    tooltip="Edit payee" 
-                    icon="mdi-pencil"
-                    :disabled="!selectedPayee"
-                    @click="showEditDialog = true"
-                />
+            <div>
+                <ButtonWithTooltip tooltip="Edit payee" icon="mdi-pencil" :disabled="!selectedPayee"
+                    @click="showEditDialog = true" />
             </div>
 
+            <!-- divider -->
             <v-divider vertical />
 
             <!-- Uncategorized checkbox -->
-            <div class="top-bar-action">
+            <div>
                 <v-tooltip text="Toggle show only uncategorized" location="bottom">
                     <template v-slot:activator="{ props }">
-                        <v-checkbox-btn 
-                            v-bind="props"
-                            label="Uncategorized" 
-                            v-model="uncategorized">
+                        <v-checkbox-btn v-bind="props" label="Uncategorized" v-model="uncategorized">
                         </v-checkbox-btn>
                     </template>
                 </v-tooltip>
             </div>
         </div>
 
-        <div class="top-bar-right">
+        <!-- actions at the end of the actions bar -->
+        <div class="actions">
 
             <!-- Open categorization wizard button -->
-            <div class="top-bar-action">
-                <ButtonWithTooltip 
-                    tooltip="Categorization wizard" 
-                    icon="mdi-wizard-hat"
-                    :disabled="!payees || payees.length === 0"
-                    @click="showCategorizationWizard = true"
-                />
+            <div>
+                <ButtonWithTooltip tooltip="Categorization wizard" icon="mdi-wizard-hat"
+                    :disabled="!payees || payees.length === 0" @click="showCategorizationWizard = true" />
             </div>
         </div>
     </div>
-    <v-divider />
 
-    <v-container fluid>
-        <v-row dense>
-            <v-col>
-                <v-card  v-if="payees" title="Payees" :subtitle="subtitle">
-                    <v-card-text>
-                        <!-- List (table) of payees -->
-                        <PayeesList 
-                            :selectedPayeeId="selectedPayeeId"
-                            :payees="payees" 
-                            @select="handleSelect" />
-
-                        <!-- pagination -->
-                        <v-pagination 
-                            v-model="page"
-                            :length="pagesCount"
-                            circle 
-                        />
-    
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <!-- content -->
+    <div id="content" v-if="payees">
+        <div id="content-title">
+            Payees
+        </div>
+        <div class="scrollable">
+            <!-- List (table) of payees -->
+            <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
+        </div>
+        <div class="footer">
+            <!-- pagination -->
+            <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
+        </div>
+    </div>
 
     <!-- snackbar -->
-    <Snackbar 
-        :show="showSnackbar" 
-        :text="snackbarText"
-        @close="showSnackbar = false"/>
+    <Snackbar :show="showSnackbar" :text="snackbarText" @close="showSnackbar = false" />
 
     <!-- Edit selected payee dialog -->
     <v-dialog v-model="showEditDialog">
-        <EditPayee 
-            :payee="selectedPayee"
-            :categories="categories"
-            @close="showEditDialog = false"
+        <EditPayee :payee="selectedPayee" :categories="categories" @close="showEditDialog = false"
             @save="updatePayee" />
     </v-dialog>
 
     <!-- Categorization wizard -->
     <v-dialog fullscreen v-model="showCategorizationWizard">
-        <CategorizationWizard
-            :categories="categories"
-            @close="handleCloseCategorizationWizard"
-            @change="refresh"
-        />
+        <CategorizationWizard :categories="categories" @close="handleCloseCategorizationWizard" @change="refresh" />
     </v-dialog>
 
 </template>

@@ -123,11 +123,14 @@ const subtitle = computed(() => {
 </script> 
 
 <template>
-    <div class="top-bar">
-        <div class="top-bar-left">
+    <!-- actions bar at the top -->
+    <div id="actions-bar">
+    
+        <!-- actions at the start of the actions bar -->
+        <div class="actions">
 
             <!-- Edit button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip 
                     tooltip="Edit transaction" 
                     icon="mdi-pencil"
@@ -136,11 +139,11 @@ const subtitle = computed(() => {
                 />
             </div>
 
+            <!-- divider -->
             <v-divider vertical />
 
-
             <!-- Uncategorized checkbox -->
-            <div class="top-bar-action">
+            <div>
                 <v-tooltip text="Toggle show only uncategorized" location="bottom">
                     <template v-slot:activator="{ props }">
                         <v-checkbox-btn 
@@ -153,30 +156,21 @@ const subtitle = computed(() => {
             </div>
         </div>
     </div>
-    <v-divider />
 
-    <v-container fluid>
-        <v-row dense>
-            <v-col>
-                <v-card v-if="transactions" title="Transactions" :subtitle="subtitle">
-                    <v-card-text>
-                        <!-- List (table) of transactions -->
-                        <TransactionsList 
-                            :selectedTransactionId="selectedTransactionId"
-                            :transactions="transactions" 
-                            @select="handleSelect"/>
-
-                        <!-- pagination -->
-                        <v-pagination 
-                            v-model="page"
-                            :length="pagesCount"
-                            circle 
-                        />
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <!-- content -->
+    <div id="content" v-if="transactions">
+        <div id="content-title">
+            Transactions
+        </div>
+        <div class="scrollable">
+            <!-- List (table) of transactions -->
+            <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
+        </div>
+        <div class="footer">
+            <!-- pagination -->
+            <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
+        </div>
+    </div>
 
     <!-- snackbar -->
     <Snackbar 

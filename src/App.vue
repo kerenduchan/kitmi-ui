@@ -82,33 +82,3 @@ const links = ref([
     },
 ])
 </script>
-
-<style>
-.top-bar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 80px;
-}
-
-.top-bar-left {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-}
-
-.top-bar-right {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
-
-.top-bar-action {
-    align-self: center;
-    padding: 10px;
-}
-
-.selected-row {
-    background-color: #D6DBDF;
-}
-</style>

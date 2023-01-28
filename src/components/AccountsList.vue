@@ -37,7 +37,7 @@ function source(account) {
 
 <template>
 
-    <v-table density="compact" fixed-header>
+    <table>
         <thead>
             <tr>
                 <th v-for="header in headers" class="text-left">
@@ -55,6 +55,6 @@ function source(account) {
                 <td>{{ source(a) }}</td>
             </tr>
         </tbody>
-    </v-table>
+    </table>
 
 </template>

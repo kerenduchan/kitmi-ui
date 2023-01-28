@@ -3,9 +3,8 @@
 </script>
 
 <template>
-    <div class="top-bar">
+    <!-- actions bar at the top -->
+    <div id="actions-bar">
     </div>
-    <v-divider />
-
-  This is the home page
+        This is the home page
 </template>

@@ -36,7 +36,7 @@ function handleRowClicked(payee) {
 </script>
 
 <template>
-    <v-table density="compact" height="550px" fixed-header>
+    <table>
         <thead>
             <tr>
                 <th v-for="header in headers" class="text-left">
@@ -57,5 +57,5 @@ function handleRowClicked(payee) {
                 <td>{{ p.note }}</td>
             </tr>
         </tbody>
-    </v-table>
+    </table>
 </template>

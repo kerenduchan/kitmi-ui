@@ -167,11 +167,14 @@ onDeleteAccountError((e) => {
 </script>
 
 <template>
-    <div class="top-bar">
-        <div class="top-bar-left">
+    <!-- actions bar at the top -->
+    <div id="actions-bar">
+        
+        <!-- actions at the start of the actions bar -->
+        <div class="actions">
 
             <!-- Edit account button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip 
                     tooltip="Edit account" 
                     icon="mdi-pencil"
@@ -181,7 +184,7 @@ onDeleteAccountError((e) => {
             </div>
 
             <!-- Delete account button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip 
                     tooltip="Delete account" 
                     icon="mdi-delete"
@@ -192,10 +195,11 @@ onDeleteAccountError((e) => {
 
         </div>
 
-        <div class="top-bar-right">
+        <!-- actions at the end of the actions bar -->
+        <div class="actions">
 
             <!-- Create account button -->
-            <div class="top-bar-action">
+            <div>
                 <ButtonWithTooltip 
                     tooltip="Create account"
                     icon="mdi-plus"
@@ -204,27 +208,17 @@ onDeleteAccountError((e) => {
             </div>
         </div>
     </div>
-    <v-divider />
 
-    <v-container fluid>
-        <v-row dense>
-            <v-col>
-                <v-card>
-                    <v-card-title>
-                        Accounts
-                    </v-card-title>
-                    <v-card-text>
-                        <!-- List (table) of accounts -->
-                        <AccountsList 
-                            :selectedAccountId="selectedAccountId"
-                            :accounts="accounts" 
-                            @select="handleSelect" />
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
-
+    <!-- content -->
+    <div id="content" v-if="accounts">
+        <div id="content-title">
+            Accounts
+        </div>
+        <div class="scrollable">
+            <!-- List (table) of accounts -->
+            <AccountsList :selectedAccountId="selectedAccountId" :accounts="accounts" @select="handleSelect" />
+        </div>
+    </div>
 
     <!-- snackbar -->
     <Snackbar 

@@ -1,9 +1,152 @@
 @import './base.css';
 
 .error {
-    color:red
+    color: red
 }
 
 .flat-form {
     display: inline
+}
+
+
+body {
+    /* body height is set to the viewport height */
+    height: 100vh;
+
+    /* no scroll */
+    overflow-y: hidden;
+
+    /* is a flex container */
+    display: flex;
+}
+
+/* the whole app */
+#app {
+
+    overflow-y: hidden;
+
+    /* app height is equal to body height */
+    flex-grow: 1;
+
+    /* is a flex container */
+    display: flex;
+}
+
+/* the main section */
+.v-main {
+    height: 100%;
+
+    /* is a flex container */
+    display: flex;
+
+    /* contents of main go top-to-bottom */
+    flex-direction: column;
+}
+
+
+/* actions bar at the top of the main section */
+#actions-bar {
+
+    height: 50px;
+
+    /* padding around all actions as a whole */
+    padding: 0 20px;
+
+    /* is a flex container */
+    display: flex;
+
+    /* pushes the first group of actions to the start and the second group of actions to the end */
+    justify-content: space-between;
+
+    /* border between actions bar and the content below it */
+    border-bottom: 1px solid lightgray;
+}
+
+/* one group of actions in the actions bar */
+#actions-bar .actions {
+
+    /* is a flex container */
+    display: flex;
+
+    /* vertical-align the actions */
+    align-items: center;
+
+    /* gap between individual actions */
+    gap: 20px;
+}
+
+#content {
+
+    /* takes up the rest of the leftover space */
+    flex-grow: 1;
+
+    /* is a flex container */
+    display: flex;
+
+    /* contents of this container go top-to-bottom */
+    flex-direction: column;
+
+    /* crop the height of this container even if its contents overflow (no scroll) */
+    overflow-y: hidden;
+}
+
+#content-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 10px 20px;
+
+    /* is a flex container */
+    display: flex;
+
+}
+
+#content .scrollable {
+    /* takes up the rest of the leftover space (pushes the footer to the bottom always) */
+    flex-grow: 1;
+
+    /* makes this scrollable */
+    overflow-y: scroll;
+}
+
+#content .footer {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: #F6F6F6;
+}
+
+table {
+    border-collapse: collapse;
+    text-align: left;
+    position: relative;
+    width: 100%;
+}
+
+th {
+    background-color: #F6F6F6;
+    z-index: 1;
+    position: sticky;
+    top: 0;
+    font-weight: normal;
+    font-size: 0.75rem;
+}
+
+td,
+th {
+    height: 32px;
+    border-bottom: 1px solid lightgray;
+    text-align: left;
+}
+
+td {
+    font-size: 0.875rem;
+}
+
+.selected-row {
+    background-color: #D6DBDF;
+}
+
+.cell-align-right {
+    text-align: right;
+    padding-right: 20px;
 }

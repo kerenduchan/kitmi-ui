@@ -1,22 +1,16 @@
 <template>
-    <v-app id="inspire">
-        <v-navigation-drawer 
-            v-model="drawer"
-            :rail="rail"
-            permanent
-        >
+    <v-app fluid fill-height>
+            <!-- Navigation drawer -->
+            <v-navigation-drawer v-model="drawer" :rail="rail" permanent :width="190">
             <v-list>
+                <!-- Arrow for expanding/collapsing the navigation drawer -->
                 <v-list-item>
                     <v-list-item-title>
-                        <v-btn
-                            class="rounded-0" 
-                            elevation="0"
-                            variant="text"
-                            :icon="rail ? 'mdi-chevron-right' : 'mdi-chevron-left'"
-                            @click.stop="rail = !rail"
-                        />
+                        <v-btn class="rounded-0" elevation="0" variant="text"
+                            :icon="rail ? 'mdi-chevron-right' : 'mdi-chevron-left'" @click.stop="rail = !rail" />
                     </v-list-item-title>
                 </v-list-item>
+                <!-- Navigation (router) links -->
                 <v-list-item v-for="link in links" :key="link.key" router :to="link.to">
                     <template v-slot:prepend>
                         <v-tooltip :disabled="!rail" :text="link.title">
@@ -30,8 +24,8 @@
             </v-list>
         </v-navigation-drawer>
 
+        <!-- Main window for the app -->
         <v-main>
-            <!-- Main window for the app -->
             <router-view />
         </v-main>
     </v-app>

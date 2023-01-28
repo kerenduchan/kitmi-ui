@@ -181,13 +181,19 @@ function handleCloseCategorizationWizard() {
         <div id="content-title">
             Payees
         </div>
-        <div id="content-main" class="scrollable">
-            <!-- List (table) of payees -->
-            <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
-        </div>
-        <div class="footer">
-            <!-- pagination -->
-            <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
+        <div id="content-main">
+            <v-card>
+                <v-card-text>
+                    <!-- List (table) of payees -->
+                    <div class="scrollable">
+                        <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
+                    </div>
+                    <div class="footer">
+                        <!-- pagination -->
+                        <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
+                    </div>
+                </v-card-text>
+            </v-card>
         </div>
     </div>
 

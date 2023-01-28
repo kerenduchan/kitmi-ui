@@ -162,13 +162,19 @@ const subtitle = computed(() => {
         <div id="content-title">
             Transactions
         </div>
-        <div id="content-main" class="scrollable">
-            <!-- List (table) of transactions -->
-            <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
-        </div>
-        <div class="footer">
-            <!-- pagination -->
-            <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
+        <div id="content-main">
+            <v-card>
+                <v-card-text>
+                    <div class="scrollable">
+                        <!-- List (table) of transactions -->
+                        <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
+                    </div>
+                    <div class="footer">
+                        <!-- pagination -->
+                        <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
+                    </div>
+                </v-card-text>
+            </v-card>
         </div>
     </div>
 

@@ -26,7 +26,7 @@ const subtitle = computed(() => {
 
 // ----------------------------------------------------------------------------
 // get payees with pagination
-const limit = 20
+const limit = 50
 
 // the current page (v-model for the v-pagination)
 const page = ref(1)

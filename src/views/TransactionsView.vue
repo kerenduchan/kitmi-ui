@@ -162,7 +162,7 @@ const subtitle = computed(() => {
         <div id="content-title">
             Transactions
         </div>
-        <div class="scrollable">
+        <div id="content-main" class="scrollable">
             <!-- List (table) of transactions -->
             <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
         </div>

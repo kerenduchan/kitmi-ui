@@ -100,10 +100,12 @@ body {
 
 }
 
-#content .scrollable {
+#content-main {
     /* takes up the rest of the leftover space (pushes the footer to the bottom always) */
     flex-grow: 1;
+}
 
+.scrollable {
     /* makes this scrollable */
     overflow-y: scroll;
 }

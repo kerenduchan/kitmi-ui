@@ -214,7 +214,7 @@ onDeleteAccountError((e) => {
         <div id="content-title">
             Accounts
         </div>
-        <div class="scrollable">
+        <div id="content-main" class="scrollable">
             <!-- List (table) of accounts -->
             <AccountsList :selectedAccountId="selectedAccountId" :accounts="accounts" @select="handleSelect" />
         </div>

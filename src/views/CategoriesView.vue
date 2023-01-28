@@ -497,7 +497,7 @@ function handleFindSubcategory(subcategoryId) {
         <div id="content-title">
             Categories
         </div>
-        <div class="scrollable">
+        <div id="content-main" class="scrollable">
             <!-- List of categories -->
             <CategoriesList 
                 :selectedCategoryId="selectedCategoryId"

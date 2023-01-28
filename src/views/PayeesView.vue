@@ -181,7 +181,7 @@ function handleCloseCategorizationWizard() {
         <div id="content-title">
             Payees
         </div>
-        <div class="scrollable">
+        <div id="content-main" class="scrollable">
             <!-- List (table) of payees -->
             <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
         </div>

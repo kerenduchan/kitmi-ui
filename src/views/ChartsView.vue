@@ -132,7 +132,7 @@ const pieChartLabels = computed(() => {
         <div id="content-title">
             Charts
         </div>
-        <div class="scrollable">
+        <div id="content-main" class="scrollable">
             <v-container fluid>
                 <v-row dense>
                     <v-col>

@@ -35,7 +35,7 @@ watchEffect(() => {
 </script>
 
 <template>
-    <v-expansion-panels class="pa-4" v-model="expansionPanelModel">
+    <v-expansion-panels v-model="expansionPanelModel">
 
         <!-- Category -->
         <v-expansion-panel v-for="c in categories" :value="c.id">
@@ -62,4 +62,5 @@ watchEffect(() => {
 .category-type-icon {
     padding-right: 10px;
 }
+
 </style>

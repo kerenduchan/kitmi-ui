@@ -16,6 +16,6 @@ const options = ref({
 
 <template>
     <div>
-      <apexchart width="50%" type="donut" :options="options" :series="series"></apexchart>
+      <apexchart width="500px" type="donut" :options="options" :series="series"></apexchart>
     </div>
   </template>

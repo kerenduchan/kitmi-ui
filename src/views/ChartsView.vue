@@ -149,10 +149,12 @@ const pieChartLabels = computed(() => {
                 <v-row>
                     <v-col>
                         <v-card>
-                            <PieChart v-if="summaryForPieChart"
-                                :series="pieChartSeries"
-                                :labels="pieChartLabels"
-                            />
+                            <v-card-text  class="d-flex justify-center">
+                                <PieChart v-if="summaryForPieChart"
+                                    :series="pieChartSeries"
+                                    :labels="pieChartLabels"                                    
+                                />
+                            </v-card-text>
                         </v-card>
                     </v-col>
                 </v-row>

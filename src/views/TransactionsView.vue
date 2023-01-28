@@ -13,6 +13,7 @@ import getTransactions from '@/composables/queries/getTransactions'
 import getCategories from '@/composables/queries/getCategories'
 import Category from '@/composables/model/Category'
 import getUpdateTransaction from '@/composables/mutations/updateTransaction'
+import Transaction from '@/composables/model/Transaction'
 
 // ----------------------------------------------------------------------------
 
@@ -46,8 +47,21 @@ const transactionsParams = computed(() => {
     return params
 })
 
+const scrollable = ref(null)
+const transactions = ref(null)
+const totalTransactionsCount = ref(null)
+
 // get the first page of transactions (pagination)
-const { transactions, totalTransactionsCount, refetch } = getTransactions(transactionsParams.value) 
+const { onResult, refetch } = getTransactions(transactionsParams.value) 
+
+onResult(res => {
+    const data = res.data.transactions
+    transactions.value = data.items.map((p) => new Transaction(p))
+    totalTransactionsCount.value = data.totalItemsCount
+    if(scrollable.value) {
+        scrollable.value.scrollTo(0, 0)
+    }
+})
 
 const pagesCount = computed(() => {
     return Math.ceil(parseFloat(totalTransactionsCount.value) / limit)
@@ -165,7 +179,7 @@ const subtitle = computed(() => {
         <div id="content-main">
             <v-card>
                 <v-card-text>
-                    <div class="scrollable">
+                    <div class="scrollable" ref="scrollable">
                         <!-- List (table) of transactions -->
                         <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
                     </div>

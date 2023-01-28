@@ -1,7 +1,5 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import { ref } from 'vue'
-import Transaction from '@/composables/model/Transaction'
 
 function getTransactions(vars) {
     const { onResult, onError, refetch } = useQuery(gql`
@@ -57,24 +55,15 @@ function getTransactions(vars) {
         }
     `, vars)
 
-    const transactions = ref(null)
-    const totalTransactionsCount = ref(null)
-
     onError(e => {
         console.error('getTransactions failed:')
         console.error(e)
     })
 
-    onResult(queryResult => {
-        const data = queryResult.data.transactions
-        transactions.value = data.items.map((p) => new Transaction(p))
-        totalTransactionsCount.value = data.totalItemsCount
-    })
-
     return { 
-        transactions, 
-        totalTransactionsCount,
-        refetch }
+        onResult,
+        refetch 
+    }
 }
 
 export default getTransactions

@@ -51,12 +51,17 @@ const totalPayeesCount = ref(null)
 // get the first page of payees (pagination) + all categories
 const { onResult, refetch } = getPayeesAndCategories(gqlParams.value) 
 
+const scrollable = ref(null)
+
 onResult(res => {
     categories.value = res.data.categories.map((p) => new Category(p))
     payees.value = res.data.payees.items.map((p) => new Payee(p))
     totalPayeesCount.value = res.data.payees.totalItemsCount
     // get categories only the first time
     getCategories.value = false
+    if(scrollable.value) {
+        scrollable.value.scrollTo(0, 0)
+    }
 })
 
 
@@ -185,7 +190,7 @@ function handleCloseCategorizationWizard() {
             <v-card>
                 <v-card-text>
                     <!-- List (table) of payees -->
-                    <div class="scrollable">
+                    <div class="scrollable" ref="scrollable">
                         <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
                     </div>
                     <div class="footer">

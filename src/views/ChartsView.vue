@@ -136,7 +136,7 @@ const pieChartLabels = computed(() => {
             <v-container fluid>
                 <v-row dense>
                     <v-col>
-                        <v-card>
+                        <v-card variant="outlined">
                             <!-- the stacked bar chart -->
                             <StackedBarChart v-if="summaryForStackedBarChart"
                                 :xaxis="summaryForStackedBarChart.buckets"
@@ -148,8 +148,8 @@ const pieChartLabels = computed(() => {
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-card>
-                            <v-card-text  class="d-flex justify-center">
+                        <v-card variant="outlined">
+                            <v-card-text class="d-flex justify-center">
                                 <PieChart v-if="summaryForPieChart"
                                     :series="pieChartSeries"
                                     :labels="pieChartLabels"                                    

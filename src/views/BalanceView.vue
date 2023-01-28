@@ -70,7 +70,7 @@ function handleFilter(filter) {
             <v-container fluid>
                 <v-row dense>
                     <v-col>
-                        <v-card>
+                        <v-card variant="outlined">
                             <v-card-title>
                                 Income
                             </v-card-title>
@@ -82,7 +82,7 @@ function handleFilter(filter) {
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-card>
+                        <v-card variant="outlined">
                             <v-card-title>
                                 Expenses
                             </v-card-title>
@@ -94,7 +94,7 @@ function handleFilter(filter) {
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-card>
+                        <v-card variant="outlined">
                             <v-card-title>
                                 Savings
                             </v-card-title>

@@ -187,7 +187,7 @@ function handleCloseCategorizationWizard() {
             Payees
         </div>
         <div id="content-main">
-            <v-card>
+            <v-card variant="outlined">
                 <v-card-text>
                     <!-- List (table) of payees -->
                     <div class="scrollable" ref="scrollable">

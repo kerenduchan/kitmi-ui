@@ -177,7 +177,7 @@ const subtitle = computed(() => {
             Transactions
         </div>
         <div id="content-main">
-            <v-card>
+            <v-card variant="outlined">
                 <v-card-text>
                     <div class="scrollable" ref="scrollable">
                         <!-- List (table) of transactions -->

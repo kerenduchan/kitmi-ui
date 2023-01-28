@@ -130,7 +130,6 @@ body {
   }
   
 #content .footer {
-    padding: 10px;
     display: flex;
     justify-content: center;
     background-color: #F6F6F6;

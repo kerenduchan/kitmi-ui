@@ -172,6 +172,7 @@ td {
     padding-right: 20px;
 }
 
-.v-card {
-    border-color: lightgray;
+.v-card, .v-expansion-panels {
+    border-radius: 6px;
+    border: 1px solid lightgray;
 }

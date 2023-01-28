@@ -125,7 +125,7 @@ body {
   
   .scrollable {
     flex-grow: 1;
-    overflow-y: scroll; /* makes this scrollable */
+    overflow-y: scroll !important; /* makes this scrollable */
 
   }
   

@@ -45,7 +45,7 @@ const selectedCategoryId = ref(null)
 
 // The selected category (null if none is selected)
 const selectedCategory = computed(() => {
-    if(!selectedCategoryId) {
+    if(categories.value === null || selectedCategoryId.value === null) {
         return null
     }
     const found = categories.value.find(c => c.id === selectedCategoryId.value)
@@ -345,7 +345,7 @@ const isMoveCategoryButtonVisible = computed(() => {
 function isMoveCategoryDownDisabled() {
     // Move category down is disabled if no category is selected or 
     // the selected category can't move any further down
-    if(categories.value.length === 0) {
+    if(categories.value === null || categories.value.length === 0) {
         return true
     }
     return !selectedCategoryId.value ||
@@ -373,7 +373,7 @@ onMoveCategoryDownDone(() => {
 function isMoveCategoryUpDisabled() {
     // Move category up is disabled if no category is selected or 
     // the selected category can't move any further up
-    if(categories.value.length === 0) {
+    if(categories.value === null || categories.value.length === 0) {
         return true
     }
     return !selectedCategoryId.value ||

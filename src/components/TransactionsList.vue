@@ -66,7 +66,7 @@ const sum = computed(() => {
                 <td>
                     {{ t.formattedDate }}
                 </td>
-                <td class="cell-align-right">
+                <td class="text-right">
                     {{ t.formattedAmount }}
                 </td>
                 <td>

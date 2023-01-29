@@ -66,47 +66,35 @@ function handleFilter(filter) {
         <div id="content-title">
             Balance
         </div>
-        <div id="content-main" class="scrollable">
-            <v-container class="pa-0">
-                <v-row dense>
-                    <v-col>
-                        <v-card variant="outlined">
-                            <v-card-title>
-                                Income
-                            </v-card-title>
-                            <v-card-text>
-                                <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
-                            </v-card-text>
-                        </v-card>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col>
-                        <v-card variant="outlined">
-                            <v-card-title>
-                                Expenses
-                            </v-card-title>
-                            <v-card-text>
-                                <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
-                            </v-card-text>
-                        </v-card>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col>
-                        <v-card variant="outlined">
-                            <v-card-title>
-                                Savings
-                            </v-card-title>
-                            <v-card-text>
-                                <SavingsTable v-if="balanceSummary" 
-                                    :balanceSummary="balanceSummary"
-                                />
-                            </v-card-text>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-container>
+        <div id="content-main">
+            <div class="scrollable">
+                <v-card variant="outlined" class="mb-4">
+                    <v-card-title>
+                        Income
+                    </v-card-title>
+                    <v-card-text>
+                        <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
+                    </v-card-text>
+                </v-card>
+                <v-card variant="outlined" class="mb-4">
+                    <v-card-title>
+                        Expenses
+                    </v-card-title>
+                    <v-card-text>
+                        <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
+                    </v-card-text>
+                </v-card>
+                <v-card variant="outlined">
+                    <v-card-title>
+                        Savings
+                    </v-card-title>
+                    <v-card-text>
+                        <SavingsTable v-if="balanceSummary" 
+                            :balanceSummary="balanceSummary"
+                        />
+                    </v-card-text>
+                </v-card>
+            </div>
         </div>
     </div>
 

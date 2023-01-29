@@ -81,8 +81,11 @@
 
 .scrollable {
     flex-grow: 1;
-    overflow-y: scroll !important;
+
     /* makes this scrollable */
+    overflow-y: scroll !important;
+    gap: 20px;
+
 }
 
 #content .footer {

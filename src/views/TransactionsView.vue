@@ -199,7 +199,7 @@ const subtitle = computed(() => {
         @close="showSnackbar = false"/>
 
     <!-- Edit selected transaction dialog -->
-    <v-dialog v-model="showEditDialog">
+    <v-dialog v-model="showEditDialog" width="800">
         <EditTransaction 
             :transaction="selectedTransaction"
             :categories="categories" 

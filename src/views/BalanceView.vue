@@ -99,7 +99,7 @@ function handleFilter(filter) {
     </div>
 
     <!-- Filter dialog -->
-    <v-dialog v-model="showFilterDialog">
+    <v-dialog v-model="showFilterDialog" width="800">
         <Filter :defaults="filterParams" @close="showFilterDialog = false" @filter="handleFilter" />
     </v-dialog>
 

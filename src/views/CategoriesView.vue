@@ -517,7 +517,7 @@ function handleFindSubcategory(subcategoryId) {
     />
 
     <!-- Create / edit category dialog -->
-    <v-dialog v-model="showCreateOrEditCategoryDialog">
+    <v-dialog v-model="showCreateOrEditCategoryDialog" width="800">
         <CreateOrEditCategory
             :category="categoryForCreateOrEditCategoryDialog"
             :categories="categories"
@@ -526,7 +526,7 @@ function handleFindSubcategory(subcategoryId) {
     </v-dialog>
 
     <!-- Create / edit subcategory dialog -->
-    <v-dialog v-model="showCreateOrEditSubcategoryDialog">
+    <v-dialog v-model="showCreateOrEditSubcategoryDialog" width="800">
         <CreateOrEditSubcategory
             :categoryId="selectedCategoryId"
             :subcategory="subcategoryForCreateOrEditCategoryDialog"
@@ -536,7 +536,7 @@ function handleFindSubcategory(subcategoryId) {
     </v-dialog>
 
     <!-- Search for subcategory dialog -->
-    <v-dialog v-model="showFindSubcategoryDialog">
+    <v-dialog v-model="showFindSubcategoryDialog" width="800">
         <FindSubcategory
             :categories="categories"
             @close="showFindSubcategoryDialog = false"
@@ -544,7 +544,7 @@ function handleFindSubcategory(subcategoryId) {
     </v-dialog>
 
     <!-- Delete category / subcategory dialog -->
-    <v-dialog v-model="showDeleteDialog">
+    <v-dialog v-model="showDeleteDialog" width="400">
         <AreYouSure 
             :title="getDeleteDialogTitle()"
             @cancel="showDeleteDialog = false"

@@ -206,7 +206,7 @@ function handleCloseCategorizationWizard() {
     <Snackbar :show="showSnackbar" :text="snackbarText" @close="showSnackbar = false" />
 
     <!-- Edit selected payee dialog -->
-    <v-dialog v-model="showEditDialog">
+    <v-dialog v-model="showEditDialog" width="800">
         <EditPayee :payee="selectedPayee" :categories="categories" @close="showEditDialog = false"
             @save="updatePayee" />
     </v-dialog>

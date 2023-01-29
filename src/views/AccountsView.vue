@@ -235,7 +235,7 @@ onDeleteAccountError((e) => {
         @close="showSnackbar = false"/>
 
     <!-- Create or edit account dialog -->
-    <v-dialog v-model="showCreateOrEditDialog">
+    <v-dialog v-model="showCreateOrEditDialog" width="800">
         <CreateOrEditAccount
             :account="accountForCreateOrEditDialog"
             :accounts="accounts"
@@ -245,7 +245,7 @@ onDeleteAccountError((e) => {
     </v-dialog>
 
     <!-- Delete selected account dialog -->
-    <v-dialog v-model="showDeleteDialog">
+    <v-dialog v-model="showDeleteDialog" width="400">
         <AreYouSure 
             :title="getDeleteAccountTitle()"
             @cancel="showDeleteDialog = false"

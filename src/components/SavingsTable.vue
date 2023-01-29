@@ -23,7 +23,7 @@ const headers = computed(() => {
 </script>
 
 <template>
-    <v-table density="compact" class="summary-table-cell">
+    <table>
         <thead>
             <SummaryTableHeaderRow :values="headers" />
         </thead>
@@ -52,6 +52,6 @@ const headers = computed(() => {
             />
         </tfoot>
 
-    </v-table>
+    </table>
 
 </template>

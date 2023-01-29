@@ -215,11 +215,13 @@ onDeleteAccountError((e) => {
             Accounts
         </div>
         <div id="content-main">
-            <v-card variant="outlined">
+            <v-card variant="outlined" class="flex-grow-0">
                 <v-card-text>
                     <!-- List (table) of accounts -->
                     <div class="scrollable">
                         <AccountsList :selectedAccountId="selectedAccountId" :accounts="accounts" @select="handleSelect" />
+                    </div>
+                    <div class="footer">
                     </div>
                 </v-card-text>
             </v-card>

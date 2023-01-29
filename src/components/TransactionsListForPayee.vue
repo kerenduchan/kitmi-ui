@@ -27,7 +27,7 @@ const sum = computed(() => {
     <v-table density="compact" height="300px" fixed-header>
         <thead>
             <tr>
-                <th v-for="header in headers" class="text-left">
+                <th v-for="header in headers">
                     {{ header }}
                 </th>
             </tr>

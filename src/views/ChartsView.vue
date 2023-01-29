@@ -133,16 +133,18 @@ const pieChartLabels = computed(() => {
             Charts
         </div>
         <div id="content-main" class="scrollable">
-            <v-container fluid>
+            <v-container fluid class="pa-0">
                 <v-row dense>
                     <v-col>
                         <v-card variant="outlined">
-                            <!-- the stacked bar chart -->
-                            <StackedBarChart v-if="summaryForStackedBarChart"
-                                :xaxis="summaryForStackedBarChart.buckets"
-                                :series="summaryForStackedBarChart.groups"
-                                :yaxisFormatterFunc="formatRoundNumber"
-                            />
+                            <v-card-text>
+                                <!-- the stacked bar chart -->
+                                <StackedBarChart v-if="summaryForStackedBarChart"
+                                    :xaxis="summaryForStackedBarChart.buckets"
+                                    :series="summaryForStackedBarChart.groups"
+                                    :yaxisFormatterFunc="formatRoundNumber"
+                                />
+                            </v-card-text>
                         </v-card>
                     </v-col>
                 </v-row>

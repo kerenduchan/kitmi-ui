@@ -67,7 +67,7 @@ function handleFilter(filter) {
             Balance
         </div>
         <div id="content-main" class="scrollable">
-            <v-container fluid>
+            <v-container class="pa-0">
                 <v-row dense>
                     <v-col>
                         <v-card variant="outlined">

@@ -137,7 +137,6 @@ body {
 
 table {
     border-collapse: collapse;
-    text-align: left;
     position: relative;
     width: 100%;
 }
@@ -151,16 +150,16 @@ th {
     font-size: 0.75rem;
 }
 
+td {
+    font-size: 0.875rem;
+}
+
 td,
 th {
+    padding: 0px 15px;
     height: 32px;
     border-bottom: 1px solid lightgray;
     text-align: left;
-}
-
-td {
-    font-size: 0.875rem;
-    padding: 0px 10px;
 }
 
 .selected-row {

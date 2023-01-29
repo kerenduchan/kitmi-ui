@@ -49,7 +49,7 @@ const sum = computed(() => {
     <table>
         <thead>
             <tr>
-                <th v-for="header in headers" class="text-left">
+                <th v-for="header in headers">
                     {{ header }}
                 </th>
             </tr>

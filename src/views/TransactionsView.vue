@@ -2,6 +2,8 @@
 import { ref, computed, watch } from 'vue'
 
 // components
+import ActionsBar from '@/components/ActionsBar.vue'
+import Actions from '@/components/Actions.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import TransactionsList from '@/components/TransactionsList.vue'
@@ -138,11 +140,10 @@ const subtitle = computed(() => {
 
 <template>
     <!-- actions bar at the top -->
-    <div id="actions-bar">
-    
-        <!-- actions at the start of the actions bar -->
-        <div class="actions">
+    <ActionsBar>
 
+        <!-- actions at the start of the actions bar -->
+        <Actions>
             <!-- Edit button -->
             <div>
                 <ButtonWithTooltip 
@@ -168,8 +169,9 @@ const subtitle = computed(() => {
                     </template>
                 </v-tooltip>
             </div>
-        </div>
-    </div>
+        </Actions>
+
+    </ActionsBar>
 
     <!-- content -->
     <div id="content" v-if="transactions">

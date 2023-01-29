@@ -2,6 +2,8 @@
 import { ref, computed, watch } from 'vue'
 
 // components
+import ActionsBar from '@/components/ActionsBar.vue'
+import Actions from '@/components/Actions.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import CategorizationWizard from '@/components/CategorizationWizard.vue'
@@ -144,12 +146,11 @@ function handleCloseCategorizationWizard() {
 </script>
 
 <template>
-        <!-- actions bar at the top -->
-        <div id="actions-bar">
+    <!-- actions bar at the top -->
+    <ActionsBar>
 
         <!-- actions at the start of the actions bar -->
-        <div class="actions">
-
+        <Actions>
             <!-- Edit button -->
             <div>
                 <ButtonWithTooltip tooltip="Edit payee" icon="mdi-pencil" :disabled="!selectedPayee"
@@ -168,18 +169,18 @@ function handleCloseCategorizationWizard() {
                     </template>
                 </v-tooltip>
             </div>
-        </div>
+        </Actions>
 
         <!-- actions at the end of the actions bar -->
-        <div class="actions">
-
+        <Actions>
             <!-- Open categorization wizard button -->
             <div>
                 <ButtonWithTooltip tooltip="Categorization wizard" icon="mdi-wizard-hat"
                     :disabled="!payees || payees.length === 0" @click="showCategorizationWizard = true" />
             </div>
-        </div>
-    </div>
+        </Actions>
+
+    </ActionsBar>
 
     <!-- content -->
     <div id="content" v-if="payees">

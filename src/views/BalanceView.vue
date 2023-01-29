@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 
 // components
+import ActionsBar from '@/components/ActionsBar.vue'
+import Actions from '@/components/Actions.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import SummaryTable from '../components/SummaryTable.vue'
 import SavingsTable from '../components/SavingsTable.vue'
@@ -48,18 +50,17 @@ function handleFilter(filter) {
 
 <template>
     <!-- actions bar at the top -->
-    <div id="actions-bar">
-        
-        <!-- actions at the start of the actions bar -->
-        <div class="actions">
+    <ActionsBar>
 
+        <!-- actions at the start of the actions bar -->
+        <Actions>
             <!-- Filter button -->
             <div>
                 <ButtonWithTooltip tooltip="Filter" icon="mdi-filter" @click="showFilterDialog = true" />
             </div>
+        </Actions>
 
-        </div>
-    </div>
+    </ActionsBar>
 
     <!-- content -->
     <div id="content">

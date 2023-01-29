@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 
 // components
+import ActionsBar from '@/components/ActionsBar.vue'
+import Actions from '@/components/Actions.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import AccountsList from '@/components/AccountsList.vue'
@@ -168,11 +170,10 @@ onDeleteAccountError((e) => {
 
 <template>
     <!-- actions bar at the top -->
-    <div id="actions-bar">
-        
-        <!-- actions at the start of the actions bar -->
-        <div class="actions">
+    <ActionsBar>
 
+        <!-- actions at the start of the actions bar -->
+        <Actions>
             <!-- Edit account button -->
             <div>
                 <ButtonWithTooltip 
@@ -192,12 +193,10 @@ onDeleteAccountError((e) => {
                     @click="showDeleteDialog = true"
                 />
             </div>
-
-        </div>
+        </Actions>
 
         <!-- actions at the end of the actions bar -->
-        <div class="actions">
-
+        <Actions>
             <!-- Create account button -->
             <div>
                 <ButtonWithTooltip 
@@ -206,8 +205,10 @@ onDeleteAccountError((e) => {
                     @click="openCreateOrEditDialog(true)"
                 />
             </div>
-        </div>
-    </div>
+        </Actions>
+
+    </ActionsBar>
+
 
     <!-- content -->
     <div id="content" v-if="accounts">

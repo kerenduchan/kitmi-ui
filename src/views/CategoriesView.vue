@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 
 // components
+import ActionsBar from '@/components/ActionsBar.vue'
+import Actions from '@/components/Actions.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import CreateOrEditCategory from '@/components/CreateOrEditCategory.vue'
@@ -411,11 +413,10 @@ function handleFindSubcategory(subcategoryId) {
 
 <template>
     <!-- actions bar at the top -->
-    <div id="actions-bar">
-        
-        <!-- actions at the start of the actions bar -->
-        <div class="actions">
+    <ActionsBar>
 
+        <!-- actions at the start of the actions bar -->
+        <Actions>
             <!-- Edit category/subcategory button -->
             <div>
                 <ButtonWithTooltip 
@@ -465,12 +466,10 @@ function handleFindSubcategory(subcategoryId) {
                     @click="showDeleteDialog = true"
                 />
             </div>
-        </div>
-
+        </Actions>
 
         <!-- actions at the end of the actions bar -->
-        <div class="actions">
-
+        <Actions>
             <!-- Find subcategory button -->
             <div>
                 <ButtonWithTooltip 
@@ -488,9 +487,9 @@ function handleFindSubcategory(subcategoryId) {
                     @click="openCreateOrEditCategoryDialog(true)"
                 />
             </div>
+        </Actions>
 
-        </div>
-    </div>
+    </ActionsBar>
 
     <!-- content -->
     <div id="content" v-if="categories">

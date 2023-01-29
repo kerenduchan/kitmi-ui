@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 
 // components
+import ActionsBar from '@/components/ActionsBar.vue'
+import Actions from '@/components/Actions.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import StackedBarChart from '@/components/StackedBarChart.vue'
 import PieChart from '@/components/PieChart.vue'
@@ -115,17 +117,18 @@ const pieChartLabels = computed(() => {
 
 <template>
     <!-- actions bar at the top -->
-    <div id="actions-bar">
-        
+    <ActionsBar>
+
         <!-- actions at the start of the actions bar -->
-        <div class="actions">
+        <Actions>
             <!-- Filter button -->
             <div>
                 <ButtonWithTooltip tooltip="Filter" icon="mdi-filter" @click="showFilterDialog = true" />
             </div>
 
-        </div>
-    </div>
+        </Actions>
+        
+    </ActionsBar>
 
     <!-- content -->
     <div id="content">

@@ -52,9 +52,16 @@ function source(account) {
                 @click="handleRowClicked(a)"
             >
                 <td>{{ a.name }}</td>
-                <td>{{ source(a) }}</td>
+                <td class="aaa">{{ source(a) }}</td>
             </tr>
         </tbody>
     </table>
 
 </template>
+
+<style scoped>
+tbody>tr:last-child>td{
+    border-bottom: none;
+}
+
+</style>

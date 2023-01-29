@@ -1,49 +1,5 @@
 @import './base.css';
 
-.error {
-    color: red
-}
-
-.flat-form {
-    display: inline
-}
-
-
-body {
-    /* body height is set to the viewport height */
-    height: 100vh;
-
-    /* no scroll */
-    overflow-y: hidden;
-
-    /* is a flex container */
-    display: flex;
-}
-
-/* the whole app */
-#app {
-
-    overflow-y: hidden;
-
-    /* app height is equal to body height */
-    flex-grow: 1;
-
-    /* is a flex container */
-    display: flex;
-}
-
-/* the main section */
-.v-main {
-    height: 100%;
-
-    /* is a flex container */
-    display: flex;
-
-    /* contents of main go top-to-bottom */
-    flex-direction: column;
-}
-
-
 /* actions bar at the top of the main section */
 #actions-bar {
 

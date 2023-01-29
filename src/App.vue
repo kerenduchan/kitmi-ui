@@ -1,7 +1,7 @@
 <template>
-    <v-app fluid fill-height>
-            <!-- Navigation drawer -->
-            <v-navigation-drawer v-model="drawer" :rail="rail" permanent :width="190" color="grey">
+    <v-app>
+        <!-- Navigation drawer -->
+        <v-navigation-drawer v-model="drawer" :rail="rail" permanent :width="190" color="grey">
             <v-list>
                 <!-- Arrow for expanding/collapsing the navigation drawer -->
                 <v-list-item>
@@ -25,7 +25,7 @@
         </v-navigation-drawer>
 
         <!-- Main window for the app -->
-        <v-main>
+        <v-main class="d-flex flex-column h-100">
             <router-view />
         </v-main>
     </v-app>

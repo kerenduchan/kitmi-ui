@@ -3,7 +3,7 @@
 /* actions bar at the top of the main section */
 #actions-bar {
 
-    height: 50px;
+    min-height: 48px;
 
     /* padding around all actions as a whole */
     padding: 0 20px;

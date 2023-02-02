@@ -13,7 +13,7 @@ const light = {
         info: '#2196F3',
         success: '#4CAF50',
         warning: '#FB8C00',
-        'expense': colors.pink.lighten2,
+        'expense': colors.red.lighten2,
         'income': colors.grey.darken3,
         'excluded': colors.grey.base,
         'highlight': colors.amber.lighten4
@@ -33,7 +33,7 @@ const dark = {
         info: '#2196F3',
         success: '#4CAF50',
         warning: '#FB8C00',
-        'expense': colors.pink.lighten2,
+        'expense': colors.red.lighten2,
         'income': colors.grey.lighten1,
         'excluded': colors.grey.darken2,
         'highlight': colors.orange.base

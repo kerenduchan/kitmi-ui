@@ -8,7 +8,6 @@ const props = defineProps({
     isExcluded: Boolean
 })
 
-const excludedColor = '#9E9E9E'
 const iconAndColor = computed(() => {
     let res = {
         icon: '',
@@ -17,19 +16,19 @@ const iconAndColor = computed(() => {
     switch (props.type) {
         case 'Expense':
             res.icon = 'mdi-minus-circle-outline'
-            res.color = props.isExcluded ? excludedColor : '#F08080'
+            res.color = props.isExcluded ? 'excluded' : 'expense'
             break
         case 'Income':
             res.icon = 'mdi-plus-circle-outline'
-            res.color = props.isExcluded ? excludedColor : '#37A0CC'
+            res.color = props.isExcluded ? 'excluded' : 'income'
             break
         case 'Zero':
             res.icon = 'mdi-numeric-0-circle-outline'
-            res.color = props.isExcluded ? excludedColor : '#9575CD'
+            res.color = 'excluded'
             break
         case 'Undefined':
             res.icon = 'mdi-help-circle-outline'
-            res.color = excludedColor
+            res.color = 'excluded'
             break
         default:
             break

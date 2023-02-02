@@ -2,8 +2,8 @@
 import { ref, computed } from 'vue'
 
 // components
-import ActionsBar from '@/components/ActionsBar.vue'
-import Actions from '@/components/Actions.vue'
+import ActionsBar from '@/components/layout/ActionsBar.vue'
+import Actions from '@/components/layout/Actions.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import SummaryTable from '../components/SummaryTable.vue'
 import SavingsTable from '../components/SavingsTable.vue'

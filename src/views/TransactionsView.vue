@@ -2,8 +2,12 @@
 import { ref, computed, watch } from 'vue'
 
 // components
-import ActionsBar from '@/components/ActionsBar.vue'
-import Actions from '@/components/Actions.vue'
+import ActionsBar from '@/components/layout/ActionsBar.vue'
+import Actions from '@/components/layout/Actions.vue'
+import ViewContent from '@/components/layout/ViewContent.vue'
+import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
+
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import TransactionsList from '@/components/TransactionsList.vue'
@@ -173,26 +177,24 @@ const subtitle = computed(() => {
 
     </ActionsBar>
 
-    <!-- content -->
-    <div id="content" v-if="transactions">
-        <div id="content-title">
-            Transactions
-        </div>
-        <div id="content-main">
-            <v-card variant="outlined">
-                <v-card-text>
-                    <div class="scrollable" ref="scrollable">
-                        <!-- List (table) of transactions -->
-                        <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
-                    </div>
-                    <div class="footer">
-                        <!-- pagination -->
-                        <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
-                    </div>
-                </v-card-text>
-            </v-card>
-        </div>
-    </div>
+    <!-- content, below the actions bar -->
+    <ViewContent v-if="transactions">
+
+        <!-- content title -->
+        <ViewContentTitle text="Transactions" />
+
+        <!-- content body -->
+        <ScrollableContainerWithFooter>
+            <template v-slot:main>
+                <!-- List (table) of transactions -->
+                <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
+            </template>
+            <template v-slot:footer>
+                <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" />
+            </template>
+        </ScrollableContainerWithFooter>
+
+    </ViewContent>
 
     <!-- snackbar -->
     <Snackbar 

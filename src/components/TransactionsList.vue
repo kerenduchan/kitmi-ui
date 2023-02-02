@@ -27,7 +27,7 @@ const headers = ref([
 
 // get the class for a selected row in the table
 function getClassForRow(transaction) {
-    return props.selectedTransactionId === transaction.id ? 'selected-row' : ''
+    return props.selectedTransactionId === transaction.id ? 'bg-secondary' : 'bg-surface'
 }
 
 // handle click on a row in the table (select the transaction)
@@ -46,10 +46,10 @@ const sum = computed(() => {
 
 <template>
 
-    <table>
+    <table class="w-100">
         <thead>
             <tr>
-                <th v-for="header in headers">
+                <th v-for="header in headers" class="bg-primary">
                     {{ header }}
                 </th>
             </tr>
@@ -87,5 +87,17 @@ const sum = computed(() => {
 <style>
 .red {
     color: red;
+}
+</style>
+
+<style scoped>
+th {
+    z-index: 1;
+    position: sticky;
+    top: 0;
+}
+
+td {
+    border-bottom: 1px solid var(--table-row-divider-color);
 }
 </style>

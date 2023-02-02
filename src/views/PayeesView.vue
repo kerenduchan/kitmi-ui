@@ -2,8 +2,12 @@
 import { ref, computed, watch } from 'vue'
 
 // components
-import ActionsBar from '@/components/ActionsBar.vue'
-import Actions from '@/components/Actions.vue'
+import ActionsBar from '@/components/layout/ActionsBar.vue'
+import Actions from '@/components/layout/Actions.vue'
+import ViewContent from '@/components/layout/ViewContent.vue'
+import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
+
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import CategorizationWizard from '@/components/CategorizationWizard.vue'
@@ -182,26 +186,23 @@ function handleCloseCategorizationWizard() {
 
     </ActionsBar>
 
-    <!-- content -->
-    <div id="content" v-if="payees">
-        <div id="content-title">
-            Payees
-        </div>
-        <div id="content-main">
-            <v-card variant="outlined">
-                <v-card-text>
-                    <!-- List (table) of payees -->
-                    <div class="scrollable" ref="scrollable">
-                        <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
-                    </div>
-                    <div class="footer">
-                        <!-- pagination -->
-                        <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
-                    </div>
-                </v-card-text>
-            </v-card>
-        </div>
-    </div>
+    <!-- content, below the actions bar -->
+    <ViewContent v-if="payees">
+
+        <!-- content title -->
+        <ViewContentTitle text="Payees" />
+
+        <!-- content body -->
+        <ScrollableContainerWithFooter>
+            <template v-slot:main>
+                <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
+            </template>
+            <template v-slot:footer>
+                <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
+            </template>
+        </ScrollableContainerWithFooter>
+
+    </ViewContent>
 
     <!-- snackbar -->
     <Snackbar :show="showSnackbar" :text="snackbarText" @close="showSnackbar = false" />

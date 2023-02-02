@@ -4,6 +4,9 @@ import { ref, computed } from 'vue'
 // components
 import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
+import ViewContent from '@/components/layout/ViewContent.vue'
+import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import AccountsList from '@/components/AccountsList.vue'
@@ -210,12 +213,14 @@ onDeleteAccountError((e) => {
     </ActionsBar>
 
 
-    <!-- content -->
-    <div id="content" v-if="accounts">
-        <div id="content-title">
-            Accounts
-        </div>
-        <div id="content-main">
+    <!-- content, below the actions bar -->
+    <ViewContent v-if="accounts">
+
+        <!-- content title -->
+        <ViewContentTitle text="Accounts" />
+
+        <div class="overflow-y-auto">
+
             <v-card variant="outlined" class="flex-grow-0">
                 <v-card-text>
                     <!-- List (table) of accounts -->
@@ -227,7 +232,7 @@ onDeleteAccountError((e) => {
                 </v-card-text>
             </v-card>
         </div>
-    </div>
+    </ViewContent>
 
     <!-- snackbar -->
     <Snackbar 

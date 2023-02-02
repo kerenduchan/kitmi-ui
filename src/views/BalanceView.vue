@@ -4,6 +4,9 @@ import { ref, computed } from 'vue'
 // components
 import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
+import ViewContent from '@/components/layout/ViewContent.vue'
+import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import SummaryTable from '../components/SummaryTable.vue'
 import SavingsTable from '../components/SavingsTable.vue'
@@ -62,42 +65,42 @@ function handleFilter(filter) {
 
     </ActionsBar>
 
-    <!-- content -->
-    <div id="content">
-        <div id="content-title">
-            Balance
+    <!-- content, below the actions bar -->
+    <ViewContent>
+
+        <!-- content title -->
+        <ViewContentTitle text="Balance" />
+
+        <div class="overflow-y-auto">
+
+            <v-card variant="outlined" class="mb-4">
+                <v-card-title>
+                    Income
+                </v-card-title>
+                <v-card-text>
+                    <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
+                </v-card-text>
+            </v-card>
+            <v-card variant="outlined" class="mb-4">
+                <v-card-title>
+                    Expenses
+                </v-card-title>
+                <v-card-text>
+                    <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
+                </v-card-text>
+            </v-card>
+            <v-card variant="outlined">
+                <v-card-title>
+                    Savings
+                </v-card-title>
+                <v-card-text>
+                    <SavingsTable v-if="balanceSummary" 
+                        :balanceSummary="balanceSummary"
+                    />
+                </v-card-text>
+            </v-card>
         </div>
-        <div id="content-main">
-            <div class="scrollable">
-                <v-card variant="outlined" class="mb-4">
-                    <v-card-title>
-                        Income
-                    </v-card-title>
-                    <v-card-text>
-                        <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
-                    </v-card-text>
-                </v-card>
-                <v-card variant="outlined" class="mb-4">
-                    <v-card-title>
-                        Expenses
-                    </v-card-title>
-                    <v-card-text>
-                        <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
-                    </v-card-text>
-                </v-card>
-                <v-card variant="outlined">
-                    <v-card-title>
-                        Savings
-                    </v-card-title>
-                    <v-card-text>
-                        <SavingsTable v-if="balanceSummary" 
-                            :balanceSummary="balanceSummary"
-                        />
-                    </v-card-text>
-                </v-card>
-            </div>
-        </div>
-    </div>
+    </ViewContent>
 
     <!-- Filter dialog -->
     <v-dialog v-model="showFilterDialog" width="800">

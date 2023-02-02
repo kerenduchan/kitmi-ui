@@ -4,6 +4,9 @@ import { ref, computed } from 'vue'
 // components
 import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
+import ViewContent from '@/components/layout/ViewContent.vue'
+import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import StackedBarChart from '@/components/StackedBarChart.vue'
 import PieChart from '@/components/PieChart.vue'
@@ -130,12 +133,13 @@ const pieChartLabels = computed(() => {
         
     </ActionsBar>
 
-    <!-- content -->
-    <div id="content">
-        <div id="content-title">
-            Charts
-        </div>
-        <div id="content-main" class="scrollable">
+    <!-- content, below the actions bar -->
+    <ViewContent>
+
+        <!-- content title -->
+        <ViewContentTitle text="Charts" />
+
+        <div class="overflow-y-auto">
             <v-container fluid class="pa-0">
                 <v-row dense>
                     <v-col>
@@ -165,7 +169,7 @@ const pieChartLabels = computed(() => {
                 </v-row>
             </v-container>
         </div>
-    </div>
+    </ViewContent>
 
     <!-- Filter dialog -->
     <v-dialog v-model="showFilterDialog" width="800">

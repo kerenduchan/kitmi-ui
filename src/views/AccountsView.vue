@@ -6,6 +6,7 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
 
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
@@ -43,7 +44,7 @@ const selectedAccountId = ref(null)
 
 // The selected account
 const selectedAccount = computed(() => {
-    if(!selectedAccountId.value) {
+    if (!selectedAccountId.value) {
         return null
     }
     const found = accounts.value.find(a => a.id === selectedAccountId.value)
@@ -73,7 +74,7 @@ function closeCreateOrEditDialog() {
 }
 
 function handleSaveOnCreateOrEditAccount(account) {
-    if(accountForCreateOrEditDialog.value) {
+    if (accountForCreateOrEditDialog.value) {
         updateAccount(account)
     } else {
         createAccount(account)
@@ -83,9 +84,9 @@ function handleSaveOnCreateOrEditAccount(account) {
 // ----------------------------------------------------------------------------
 // create account
 
-const { 
-    createAccount, 
-    onDone: onCreateAccountDone, 
+const {
+    createAccount,
+    onDone: onCreateAccountDone,
     onError: onCreateAccountError
 } = getCreateAccount()
 
@@ -105,9 +106,9 @@ onCreateAccountError((e) => {
 // ----------------------------------------------------------------------------
 // edit account
 
-const { 
-    updateAccount, 
-    onDone: onUpdateAccountDone, 
+const {
+    updateAccount,
+    onDone: onUpdateAccountDone,
     onError: onUpdateAccountError
 } = getUpdateAccount()
 
@@ -130,11 +131,11 @@ onUpdateAccountError((e) => {
 const showDeleteDialog = ref(false)
 
 function getDeleteAccountTitle() {
-    if(selectedAccount.value) {
+    if (selectedAccount.value) {
         return "Delete Account '" + selectedAccount.value.name + "'"
     }
     return ''
-} 
+}
 
 const isDeleteDisabled = computed(() => {
     // Delete is disabled if:
@@ -143,9 +144,9 @@ const isDeleteDisabled = computed(() => {
     return !selectedAccountId.value
 })
 
-const { 
-    gqlDeleteAccount, 
-    onDone: onDeleteAccountDone, 
+const {
+    gqlDeleteAccount,
+    onDone: onDeleteAccountDone,
     onError: onDeleteAccountError
 } = getDeleteAccount()
 
@@ -179,22 +180,14 @@ onDeleteAccountError((e) => {
         <Actions>
             <!-- Edit account button -->
             <div>
-                <ButtonWithTooltip 
-                    tooltip="Edit account" 
-                    icon="mdi-pencil"
-                    :disabled="!selectedAccountId"
-                    @click="openCreateOrEditDialog(false)"
-                />
+                <ButtonWithTooltip tooltip="Edit account" icon="mdi-pencil" :disabled="!selectedAccountId"
+                    @click="openCreateOrEditDialog(false)" />
             </div>
 
             <!-- Delete account button -->
             <div>
-                <ButtonWithTooltip 
-                    tooltip="Delete account" 
-                    icon="mdi-delete"
-                    :disabled="isDeleteDisabled"
-                    @click="showDeleteDialog = true"
-                />
+                <ButtonWithTooltip tooltip="Delete account" icon="mdi-delete" :disabled="isDeleteDisabled"
+                    @click="showDeleteDialog = true" />
             </div>
         </Actions>
 
@@ -202,11 +195,7 @@ onDeleteAccountError((e) => {
         <Actions>
             <!-- Create account button -->
             <div>
-                <ButtonWithTooltip 
-                    tooltip="Create account"
-                    icon="mdi-plus"
-                    @click="openCreateOrEditDialog(true)"
-                />
+                <ButtonWithTooltip tooltip="Create account" icon="mdi-plus" @click="openCreateOrEditDialog(true)" />
             </div>
         </Actions>
 
@@ -220,43 +209,28 @@ onDeleteAccountError((e) => {
         <ViewContentTitle text="Accounts" />
 
         <div class="overflow-y-auto">
-
-            <v-card variant="outlined" class="flex-grow-0">
-                <v-card-text>
-                    <!-- List (table) of accounts -->
-                    <div class="scrollable">
-                        <AccountsList :selectedAccountId="selectedAccountId" :accounts="accounts" @select="handleSelect" />
-                    </div>
-                    <div class="footer">
-                    </div>
-                </v-card-text>
-            </v-card>
+            <!-- List (table) of accounts -->
+            <ScrollableContainerWithFooter>
+                <template v-slot:main>
+                    <AccountsList :selectedAccountId="selectedAccountId" :accounts="accounts" @select="handleSelect" />
+                </template>
+            </ScrollableContainerWithFooter>
         </div>
+
     </ViewContent>
 
     <!-- snackbar -->
-    <Snackbar 
-        :show="showSnackbar" 
-        :text="snackbarText"
-        @close="showSnackbar = false"/>
+    <Snackbar :show="showSnackbar" :text="snackbarText" @close="showSnackbar = false" />
 
     <!-- Create or edit account dialog -->
     <v-dialog v-model="showCreateOrEditDialog" width="800">
-        <CreateOrEditAccount
-            :account="accountForCreateOrEditDialog"
-            :accounts="accounts"
-            @close="closeCreateOrEditDialog()"
-            @save="handleSaveOnCreateOrEditAccount" 
-        />
+        <CreateOrEditAccount :account="accountForCreateOrEditDialog" :accounts="accounts"
+            @close="closeCreateOrEditDialog()" @save="handleSaveOnCreateOrEditAccount" />
     </v-dialog>
 
     <!-- Delete selected account dialog -->
     <v-dialog v-model="showDeleteDialog" width="400">
-        <AreYouSure 
-            :title="getDeleteAccountTitle()"
-            @cancel="showDeleteDialog = false"
-            @yes="deleteAccount" 
-        />
+        <AreYouSure :title="getDeleteAccountTitle()" @cancel="showDeleteDialog = false" @yes="deleteAccount" />
     </v-dialog>
 
 </template>

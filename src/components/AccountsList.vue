@@ -20,7 +20,7 @@ const headers = ref([
 
 // get the class for a selected row in the table
 function getClassForRow(account) {
-    return props.selectedAccountId === account.id ? 'selected-row' : ''
+    return props.selectedAccountId === account.id ? 'bg-secondary' : 'bg-surface'
 }
 
 // handle click on a row in the table (select the account)
@@ -37,10 +37,10 @@ function source(account) {
 
 <template>
 
-    <table>
+    <table class="w-100">
         <thead>
             <tr>
-                <th v-for="header in headers">
+                <th v-for="header in headers" class="bg-primary">
                     {{ header }}
                 </th>
             </tr>
@@ -60,8 +60,19 @@ function source(account) {
 </template>
 
 <style scoped>
+th {
+    z-index: 1;
+    position: sticky;
+    top: 0;
+}
+
+td {
+    border-bottom: 1px solid var(--table-row-divider-color);
+}
+
 tbody>tr:last-child>td{
     border-bottom: none;
 }
 
 </style>
+

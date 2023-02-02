@@ -22,7 +22,7 @@ const headers = computed(() => {
 </script>
 
 <template>
-    <table>
+    <v-table>
         <thead>
             <SummaryTableHeaderRow :values="headers" />
         </thead>
@@ -40,39 +40,5 @@ const headers = computed(() => {
                 :total="formatNumber(props.summary.sumTotal, 0) "
             />
         </tfoot>
-    </table>
-
+    </v-table>
 </template>
-
-<style>
-    .thead-cell {
-        background-color: lightgray;
-        text-align: center !important;
-        font-weight: bold;
-    }
-
-    .row-title-cell {
-        background-color: lightgray;
-        font-weight: bold;
-    }
-
-    .number-cell {
-        text-align: right !important;
-    }
-
-    .sum-cell {
-        text-align: right !important;
-        font-weight: bold;
-        background-color: #f3f3f3;
-    }
-
-    .sum-total-cell {
-        text-align: right !important;
-        font-weight: bold;
-        background-color: #fff2cc;
-    }
-
-    .summary-table-cell {
-        border: 0.5px solid black;
-    }
-</style>

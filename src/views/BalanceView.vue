@@ -73,32 +73,15 @@ function handleFilter(filter) {
 
         <div class="overflow-y-auto">
 
-            <v-card variant="outlined" class="mb-4">
-                <v-card-title>
-                    Income
-                </v-card-title>
-                <v-card-text>
-                    <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
-                </v-card-text>
-            </v-card>
-            <v-card variant="outlined" class="mb-4">
-                <v-card-title>
-                    Expenses
-                </v-card-title>
-                <v-card-text>
-                    <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
-                </v-card-text>
-            </v-card>
-            <v-card variant="outlined">
-                <v-card-title>
-                    Savings
-                </v-card-title>
-                <v-card-text>
-                    <SavingsTable v-if="balanceSummary" 
-                        :balanceSummary="balanceSummary"
-                    />
-                </v-card-text>
-            </v-card>
+            <div class="text-h6 pt-5 pb-1">Income</div>
+            <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
+
+            <div class="text-h6 pt-5 pb-1">Expenses</div>
+            <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
+
+            <div class="text-h6 pt-5 pb-1">Savings</div>
+            <SavingsTable v-if="balanceSummary" :balanceSummary="balanceSummary" />
+
         </div>
     </ViewContent>
 

@@ -8,7 +8,7 @@ const props = defineProps({
 
 <template>
     <tr>
-        <th v-for="v in values" class="thead-cell summary-table-cell">
+        <th v-for="v in values" class="bg-primary text-center">
             {{ v }}
         </th>
     </tr>

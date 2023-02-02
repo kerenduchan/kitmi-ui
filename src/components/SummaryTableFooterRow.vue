@@ -10,8 +10,8 @@ const props = defineProps({
 
 <template>
     <tr>
-        <td class="row-title-cell summary-table-cell">{{ title }}</td>
-        <td v-for="v in values" class="sum-cell summary-table-cell">{{ v }}</td>
-        <td class="number-cell sum-total-cell summary-table-cell">{{ total }}</td>
+        <td class="bg-primary">{{ title }}</td>
+        <td v-for="v in values" class="bg-secondary text-right">{{ v }}</td>
+        <td class="bg-highlight text-right">{{ total }}</td>
     </tr>
 </template>

@@ -15,7 +15,8 @@ const light = {
         warning: '#FB8C00',
         'expense': colors.pink.lighten2,
         'income': colors.grey.darken3,
-        'excluded': colors.grey.base
+        'excluded': colors.grey.base,
+        'highlight': colors.amber.lighten4
     }
 }
 
@@ -27,14 +28,15 @@ const dark = {
         surface: colors.grey.darken4,
         'surface-darken': colors.grey.darken4,
         primary: colors.blueGrey.darken3,
-        secondary: colors.grey.lighten1,
+        secondary: colors.grey.darken2,
         error: '#B00020',
         info: '#2196F3',
         success: '#4CAF50',
         warning: '#FB8C00',
         'expense': colors.pink.lighten2,
         'income': colors.grey.lighten1,
-        'excluded': colors.grey.darken2
+        'excluded': colors.grey.darken2,
+        'highlight': colors.orange.base
     }
 }
 

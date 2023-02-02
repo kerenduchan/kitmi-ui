@@ -2,15 +2,17 @@ import { createApp, provide, h } from 'vue'
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
 import VueApexCharts from "vue3-apexcharts"
+
 import App from './App.vue'
 import router from './router'
-import '@mdi/font/css/materialdesignicons.css'
+import theme from './theme'
 
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import '@mdi/font/css/materialdesignicons.css'
 
 import './assets/main.css'
 
@@ -30,6 +32,7 @@ const apolloClient = new ApolloClient({
 })
 
 const vuetify = createVuetify({
+  theme,
   components,
   directives,
 })

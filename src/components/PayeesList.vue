@@ -24,7 +24,7 @@ const headers = ref([
 
 // get the class for a selected row in the table
 function getClassForRow(payee) {
-    return props.selectedPayeeId === payee.id ? 'selected-row' : ''
+    return props.selectedPayeeId === payee.id ? 'bg-secondary' : 'bg-surface'
 }
 
 // handle click on a row in the table (select the payee)
@@ -36,10 +36,10 @@ function handleRowClicked(payee) {
 </script>
 
 <template>
-    <table>
+    <table class="w-100">
         <thead>
             <tr>
-                <th v-for="header in headers">
+                <th v-for="header in headers" class="bg-primary">
                     {{ header }}
                 </th>
             </tr>
@@ -59,3 +59,15 @@ function handleRowClicked(payee) {
         </tbody>
     </table>
 </template>
+
+<style scoped>
+th {
+    z-index: 1;
+    position: sticky;
+    top: 0;
+}
+
+td {
+    border-bottom: 1px solid var(--table-row-divider-color);
+}
+</style>

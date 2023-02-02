@@ -6,6 +6,7 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import SummaryTable from '../components/SummaryTable.vue'
@@ -71,8 +72,7 @@ function handleFilter(filter) {
         <!-- content title -->
         <ViewContentTitle text="Balance" />
 
-        <div class="overflow-y-auto">
-
+        <ViewContentMain>
             <div class="text-h6 pt-5 pb-1">Income</div>
             <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
 
@@ -81,8 +81,8 @@ function handleFilter(filter) {
 
             <div class="text-h6 pt-5 pb-1">Savings</div>
             <SavingsTable v-if="balanceSummary" :balanceSummary="balanceSummary" />
-
-        </div>
+        </ViewContentMain>
+        
     </ViewContent>
 
     <!-- Filter dialog -->

@@ -6,8 +6,9 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
-import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
+import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 
+import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import AccountsList from '@/components/AccountsList.vue'
@@ -208,15 +209,15 @@ onDeleteAccountError((e) => {
         <!-- content title -->
         <ViewContentTitle text="Accounts" />
 
-        <div class="overflow-y-auto">
+        <ViewContentMain>
             <!-- List (table) of accounts -->
             <ScrollableContainerWithFooter>
                 <template v-slot:main>
                     <AccountsList :selectedAccountId="selectedAccountId" :accounts="accounts" @select="handleSelect" />
                 </template>
             </ScrollableContainerWithFooter>
-        </div>
-
+        </ViewContentMain>
+        
     </ViewContent>
 
     <!-- snackbar -->

@@ -6,6 +6,7 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
@@ -500,7 +501,7 @@ function handleFindSubcategory(subcategoryId) {
         <!-- content title -->
         <ViewContentTitle text="Categories" />
 
-        <div class="overflow-y-auto">
+        <ViewContentMain>
             <!-- List of categories -->
             <CategoriesList 
                 :selectedCategoryId="selectedCategoryId"
@@ -509,7 +510,7 @@ function handleFindSubcategory(subcategoryId) {
                 @selectCategory="handleSelectCategory"
                 @selectSubcategory="handleSelectSubcategory"
             />
-        </div>
+        </ViewContentMain>
     </ViewContent>
             
     <!-- snackbar -->

@@ -16,7 +16,8 @@ const light = {
         'expense': colors.red.lighten2,
         'income': colors.grey.darken3,
         'excluded': colors.grey.base,
-        'highlight': colors.amber.lighten4
+        'highlight': colors.amber.lighten4,
+        'link': colors.blue.darken2
     }
 }
 
@@ -36,7 +37,8 @@ const dark = {
         'expense': colors.red.lighten2,
         'income': colors.grey.lighten1,
         'excluded': colors.grey.darken2,
-        'highlight': colors.orange.base
+        'highlight': colors.orange.base,
+        'link': colors.blue.base
     }
 }
 

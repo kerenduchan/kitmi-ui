@@ -36,13 +36,14 @@ class Transaction {
 
         obj.account = gqlObj.account
 
+        if(gqlObj.payee) {
+            obj.payee = Payee.fromGql(gqlObj.payee)
+        }
+
         if(gqlObj.overrideSubcategory && gqlObj.subcategoryId !== null) {
             obj.overridingSubcategory = Subcategory.fromGql(gqlObj.subcategory)
         }
 
-        if(gqlObj.payee) {
-            this.payee = Payee.fromGql(gqlObj.payee)
-        }
 
         if (gqlObj.transactions) {
             obj.transactions = gqlObj.transactions.map(t => Transaction.fromGql(t))

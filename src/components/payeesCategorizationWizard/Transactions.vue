@@ -6,7 +6,8 @@ import IconWithTooltip from '@/components/IconWithTooltip.vue'
 import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
 
 const props = defineProps({
-    transactions: Object
+    transactions: Object,
+    payeeName: String
 })
 
 const hasTransactions = computed(() => {
@@ -34,10 +35,14 @@ const showAllTransactionsDialog = ref(false)
         <IconWithTooltip @click="showAllTransactionsDialog = true" tooltip="show all" icon="mdi-dots-horizontal"/>
     </div>
 
-    <v-dialog v-model="showAllTransactionsDialog" width="600px">
-        <v-card title="Transactions">
-            <v-card-text>
-                <TransactionsListForPayee :transactions="transactions"/>
+    <v-dialog v-model="showAllTransactionsDialog" width="400px">
+        <v-card class="d-flex flex-column">
+            <v-card-title>Transactions</v-card-title>
+            <v-card-text class="flex-grow-1 d-flex flex-column overflow-y-hidden align-center py-1">
+                {{ payeeName }}
+                <div class="flex-grow-1 overflow-y-auto rounded w-100">
+                    <TransactionsListForPayee :transactions="transactions"/>
+                </div>
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="showAllTransactionsDialog = false">Close</v-btn>

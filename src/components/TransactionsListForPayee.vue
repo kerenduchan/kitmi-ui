@@ -23,10 +23,10 @@ const sum = computed(() => {
 
 <template>
 
-    <v-table density="compact" fixed-header>
+    <table class="w-100">
         <thead>
             <tr>
-                <th v-for="header in headers">
+                <th v-for="header in headers" class="bg-primary">
                     {{ header }}
                 </th>
             </tr>
@@ -40,11 +40,24 @@ const sum = computed(() => {
             </tr>
         </tbody>
         <tfoot>
-            <tr>
+            <tr class="bg-primary">
                 <td>Total</td>
                 <td class="text-right">{{ sum }}</td>
             </tr>
         </tfoot>
-    </v-table>
+    </table>
 
 </template>
+
+<style scoped>
+th {
+    z-index: 1;
+    position: sticky;
+    top: 0;
+}
+
+td {
+    border-bottom: 1px solid var(--table-row-divider-color);
+}
+
+</style>

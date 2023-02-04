@@ -28,7 +28,7 @@ function handleSubcategorySelected(subcategory) {
             <div v-if="payeeDraft">{{ payeeDraft.payee.name }}</div>
         </v-card-title>
         <v-card-text class="d-flex flex-column overflow-y-hidden">
-            <Transactions :transactions="payeeDraft.payee.transactions" />
+            <Transactions :transactions="payeeDraft.payee.transactions" :payeeName="payeeDraft.payee.name"/>
             <Categorization :payeeDraft="payeeDraft" :categories="categories"
                 @categorySelected="handleCategorySelected" @subcategorySelected="handleSubcategorySelected" />
         </v-card-text>

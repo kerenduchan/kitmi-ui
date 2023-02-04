@@ -18,9 +18,10 @@ watch(selectedIdx, () => {
 </script>
 
 <template>
-    <div class="overflow-y-auto d-flex flex-wrap">
-        <v-chip v-for="item, idx in items" :key="idx" @click="selectedIdx = idx" class="ma-3">
+    <div class="overflow-y-auto d-flex flex-wrap justify-center">
+        <div v-for="item, idx in items" :key="idx" @click="selectedIdx = idx"
+            class="d-flex ma-3 bg-secondary py-2 justify-center align-center text-center w-25 rounded">
             {{ item.name }}
-        </v-chip>
+        </div>
     </div>
 </template>

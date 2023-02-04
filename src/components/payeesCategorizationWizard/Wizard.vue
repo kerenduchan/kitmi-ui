@@ -48,15 +48,24 @@ function handleCategorySelected(category) {
 
 function handleSubcategorySelected(subcategory) {
     curPayeeDraft.value.subcategory = subcategory
-    if(hasNext.value) {
-        setTimeout(() => {
-            next()
-        }, 400)
+    if (subcategory !== null) {
+        const idx = findNextUncategorized()
+        if (idx !== -1) {
+            setTimeout(() => {
+                handleLeavePayee(idx)
+            }, 400)
+        }
     }
 }
 
-// transactions of the current payee
-const transactions = ref([])
+function findNextUncategorized() {
+    for (let i = curPayeeIdx.value + 1; i < payeesDraft.value.length; i++) {
+        if (payeesDraft.value[i].subcategory === null) {
+            return i
+        }
+    }
+    return -1
+}
 
 const isPayeePartiallyCategorized = computed(() => {
     return curPayeeDraft.value.category !== null && curPayeeDraft.value.subcategory === null

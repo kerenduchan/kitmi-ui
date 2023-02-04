@@ -22,9 +22,9 @@ watch(selectedIdx, () => {
         <v-hover v-for="item, idx in items" :key="idx">
             <template v-slot:default="{ isHovering, props }">
                 <div class="d-flex ma-2 py-2 justify-center align-center text-center w-25 rounded"
-                :class="isHovering ? 'bg-primary' : 'bg-secondary'"
+                :class="isHovering ? 'bg-secondary-1' : 'bg-secondary'"
                     @click="selectedIdx = idx" v-bind="props">
-                    {{ item.name }}
+                    <slot :item="item"></slot>             
                 </div>
             </template>
         </v-hover>

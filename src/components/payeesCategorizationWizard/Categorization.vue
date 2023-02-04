@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import Breadcrumbs from './Breadcrumbs.vue'
 import SelectOneOfMany from '../SelectOneOfMany.vue'
+import TypeIcon from '../TypeIcon.vue'
 
 const props = defineProps({
     payeeDraft: Object,
@@ -104,18 +105,25 @@ function handleSubcategorySelected(idx) {
 <template>
 
     <!-- the "breadcrumbs" of the selected category and subcategory -->
-    <Breadcrumbs :category="category" :subcategory="subcategory"
-        @categoryClicked="clearCategory" @subcategoryClicked="clearSubcategory" />
+    <Breadcrumbs :category="category" :subcategory="subcategory" @categoryClicked="clearCategory"
+        @subcategoryClicked="clearSubcategory" />
 
     <!-- category select -->
     <div v-if="showCategorySelect" class="flex-grow-1 d-flex flex-column overflow-y-hidden">
         <div class="pt-3">Category:</div>
-        <SelectOneOfMany :items="categories" @selected="handleCategorySelected" />
+        <SelectOneOfMany :items="categories" @selected="handleCategorySelected" v-slot="slotProps">
+            <div class="v-flex gap-3">
+                <TypeIcon :type="slotProps.item.type" :isExcluded="slotProps.item.excludeFromReports" />
+                {{ slotProps.item.name }}
+            </div>
+        </SelectOneOfMany>
     </div>
 
     <!-- subcategory select -->
     <div v-if="showSubcategorySelect" class="flex-grow-1 d-flex flex-column overflow-y-hidden">
         <div class="pt-3">Subcategory:</div>
-        <SelectOneOfMany :items="subcategories" @selected="handleSubcategorySelected" />
+        <SelectOneOfMany :items="subcategories" @selected="handleSubcategorySelected" v-slot="slotProps">
+            {{ slotProps.item.name }}
+        </SelectOneOfMany>
     </div>
 </template>

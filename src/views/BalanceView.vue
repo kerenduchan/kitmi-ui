@@ -9,8 +9,8 @@ import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
 import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
-import SummaryTable from '../components/SummaryTable.vue'
-import SavingsTable from '../components/SavingsTable.vue'
+import SummaryTable from '../components/balance/SummaryTable.vue'
+import SavingsTable from '../components/balance/SavingsTable.vue'
 import Filter from '@/components/Filter.vue'
 
 // composables

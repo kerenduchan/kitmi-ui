@@ -6,7 +6,7 @@
 
 <style scoped>
 .actions {
-    min-height: 49px;
+    min-height: 48px;
     gap: 20px;
 }
 </style>

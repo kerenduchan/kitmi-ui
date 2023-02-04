@@ -13,3 +13,9 @@ const props = defineProps({
         </th>
     </tr>
 </template>
+
+<style scoped>
+    th {
+        height: 36px !important;
+    }
+</style>

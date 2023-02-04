@@ -71,13 +71,14 @@ function handleFilter(filter) {
         <ViewContentTitle text="Balance" />
 
         <ViewContentMain>
-            <div class="text-h6 pt-5 pb-1">Income</div>
+            <div class="ps-3"></div>
+            <div class="text-h6 pt-0 pb-3">Income</div>
             <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
 
-            <div class="text-h6 pt-5 pb-1">Expenses</div>
+            <div class="text-h6 pt-5 pb-3">Expenses</div>
             <SummaryTable v-if="balanceSummary" :summary="balanceSummary.expenses" />
 
-            <div class="text-h6 pt-5 pb-1">Savings</div>
+            <div class="text-h6 pt-5 pb-3">Savings</div>
             <SavingsTable v-if="balanceSummary" :balanceSummary="balanceSummary" />
         </ViewContentMain>
         

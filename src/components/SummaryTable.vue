@@ -22,23 +22,19 @@ const headers = computed(() => {
 </script>
 
 <template>
-    <v-table>
-        <thead>
-            <SummaryTableHeaderRow :values="headers" />
-        </thead>
-        <tbody>
-            <SummaryTableBodyRow v-for="g in props.summary.groups" 
-                :title="g.name"
-                :values="g.data.map(d => formatNumber(d, 0))"
-                :total="formatNumber(g.total, 0)"
-            />
-        </tbody>
-        <tfoot>
-            <SummaryTableFooterRow 
-                title="Total"
-                :values="props.summary.bucketTotals.map(d => formatNumber(d, 0))"
-                :total="formatNumber(props.summary.sumTotal, 0) "
-            />
-        </tfoot>
-    </v-table>
+    <div class="rounded">
+        <v-table>
+            <thead>
+                <SummaryTableHeaderRow :values="headers" />
+            </thead>
+            <tbody>
+                <SummaryTableBodyRow v-for="g in props.summary.groups" :title="g.name"
+                    :values="g.data.map(d => formatNumber(d, 0))" :total="formatNumber(g.total, 0)" />
+            </tbody>
+            <tfoot>
+                <SummaryTableFooterRow title="Total" :values="props.summary.bucketTotals.map(d => formatNumber(d, 0))"
+                    :total="formatNumber(props.summary.sumTotal, 0)" />
+            </tfoot>
+        </v-table>
+    </div>
 </template>

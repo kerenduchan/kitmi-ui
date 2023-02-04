@@ -15,3 +15,9 @@ const props = defineProps({
         <td class="bg-highlight text-right">{{ total }}</td>
     </tr>
 </template>
+
+<style scoped>
+    td {
+        height: 36px !important;
+    }
+</style>

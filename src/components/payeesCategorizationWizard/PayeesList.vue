@@ -28,7 +28,7 @@ function getClass(idx) {
 </script>
 
 <template>
-    <v-card variant="outlined" class="mr-4 d-flex flex-column">
+    <v-card variant="outlined" class="mr-4 flex-grow-0 flex-shrink-0 d-flex flex-column">
         <v-card-title>
             Payees
         </v-card-title>
@@ -48,7 +48,7 @@ function getClass(idx) {
 <style scoped>
 
 .v-card {
-    min-width: 200px;
+    max-width: 200px;
 }
 
 td,

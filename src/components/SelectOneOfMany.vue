@@ -19,9 +19,14 @@ watch(selectedIdx, () => {
 
 <template>
     <div class="overflow-y-auto d-flex flex-wrap justify-center">
-        <div v-for="item, idx in items" :key="idx" @click="selectedIdx = idx"
-            class="d-flex ma-3 bg-secondary py-2 justify-center align-center text-center w-25 rounded">
-            {{ item.name }}
-        </div>
+        <v-hover v-for="item, idx in items" :key="idx">
+            <template v-slot:default="{ isHovering, props }">
+                <div class="d-flex ma-2 py-2 justify-center align-center text-center w-25 rounded"
+                :class="isHovering ? 'bg-primary' : 'bg-secondary'"
+                    @click="selectedIdx = idx" v-bind="props">
+                    {{ item.name }}
+                </div>
+            </template>
+        </v-hover>
     </div>
 </template>

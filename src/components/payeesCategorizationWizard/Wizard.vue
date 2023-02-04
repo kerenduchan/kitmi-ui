@@ -70,7 +70,7 @@ function handleLeavePayee(toIdx) {
 //--------------------------------------------------------------------------------------
 // title
 const title = computed(() => {
-    let res = 'Wizard'
+    let res = 'Payees Categorization Wizard'
     if (payeesDraft.value && payeesDraft.value.length > 0) {
         res += ' (' + (curPayeeIdx.value + 1) + ' of ' + payeesDraft.value.length + ')'
     }
@@ -155,7 +155,7 @@ function handlePartiallyCategorizedDialogCancel() {
 
             <!-- the current payee being categorized -->
             <!-- key forces the component to remount upon change -->
-            <PayeeVue :key="curPayeeIdx" :payeeDraft="curPayeeDraft" :transactions="transactions" :categories="categories"
+            <PayeeVue :key="curPayeeIdx" :payeeDraft="curPayeeDraft" :categories="categories"
                 @categorySelected="handleCategorySelected" @subcategorySelected="handleSubcategorySelected" />
 
         </v-card-text>

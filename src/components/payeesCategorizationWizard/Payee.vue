@@ -4,7 +4,6 @@ import Categorization from './Categorization.vue'
 
 const props = defineProps({
     payeeDraft: Object,
-    transactions: Object,
     categories: Object
 })
 
@@ -29,7 +28,7 @@ function handleSubcategorySelected(subcategory) {
             <div v-if="payeeDraft">{{ payeeDraft.payee.name }}</div>
         </v-card-title>
         <v-card-text class="d-flex flex-column overflow-y-hidden">
-            <Transactions :transactions="transactions" />
+            <Transactions :transactions="payeeDraft.payee.transactions" />
             <Categorization :payeeDraft="payeeDraft" :categories="categories"
                 @categorySelected="handleCategorySelected" @subcategorySelected="handleSubcategorySelected" />
         </v-card-text>

@@ -9,7 +9,6 @@ const props = defineProps({
 })
 
 const headers = ref([
-    '',
     'Date', 
     'Amount', 
 ])
@@ -24,7 +23,7 @@ const sum = computed(() => {
 
 <template>
 
-    <v-table density="compact" height="300px" fixed-header>
+    <v-table density="compact" fixed-header>
         <thead>
             <tr>
                 <th v-for="header in headers">
@@ -36,14 +35,12 @@ const sum = computed(() => {
             <tr v-for="t in transactions" 
                 :key="t.id"
             >
-                <td><TypeIcon :type="t.type"  :isExcluded="t.excludeFromReports"/></td>
                 <td>{{ t.formattedDate }}</td>
                 <td class="text-right">{{ t.formattedAmount }}</td>
             </tr>
         </tbody>
         <tfoot>
             <tr>
-                <td></td>
                 <td>Total</td>
                 <td class="text-right">{{ sum }}</td>
             </tr>

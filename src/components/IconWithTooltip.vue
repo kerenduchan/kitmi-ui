@@ -8,12 +8,19 @@ const props = defineProps({
     location: String
 })
 
+const emit = defineEmits([
+    'click'
+])
+
+function handleClick() {
+    emit('click')
+}
 </script>
 
 <template>
     <v-tooltip :text="tooltip" :location="location">
         <template v-slot:activator="{ props }">
-            <v-icon v-bind="props" :color="color">{{ icon }}</v-icon>
+            <v-icon v-bind="props" :color="color" @click="handleClick">{{ icon }}</v-icon>
         </template>
     </v-tooltip>
 </template>

@@ -1,6 +1,9 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { formatNumber, formatDate } from '@/composables/utils'
+
+import IconWithTooltip from '@/components/IconWithTooltip.vue'
+import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
 
 const props = defineProps({
     transactions: Object
@@ -17,23 +20,28 @@ const lastTransaction = computed(() => {
     return null
 })
 
+const showAllTransactionsDialog = ref(false)
+
 </script>
 
 
 <template>
     <!-- the transactions associated with this payee -->
-    <v-expansion-panels v-if="hasTransactions">
-        <v-expansion-panel elevation="0">
-            <v-expansion-panel-title>
-                Last Transaction: {{ formatNumber(lastTransaction.amount) }} at {{ formatDate(lastTransaction.date) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-                <div v-for="t in transactions">
-                    {{ formatNumber(t.amount) }} at {{ formatDate(t.date) }}
-                </div>
-            </v-expansion-panel-text>
-        </v-expansion-panel>
-    </v-expansion-panels>
+    <div class="d-flex gap-3">
+        <div>
+            Last Transaction: {{ formatNumber(lastTransaction.amount) }} at {{ formatDate(lastTransaction.date) }} 
+        </div>
+        <IconWithTooltip @click="showAllTransactionsDialog = true" tooltip="show all" icon="mdi-dots-horizontal"/>
+    </div>
 
-
+    <v-dialog v-model="showAllTransactionsDialog" width="600px">
+        <v-card title="Transactions">
+            <v-card-text>
+                <TransactionsListForPayee :transactions="transactions"/>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn @click="showAllTransactionsDialog = false">Close</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>

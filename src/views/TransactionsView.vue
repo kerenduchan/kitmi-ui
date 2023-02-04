@@ -148,32 +148,28 @@ const subtitle = computed(() => {
 
         <!-- actions at the start of the actions bar -->
         <Actions>
-            <!-- Edit button -->
-            <div>
-                <ButtonWithTooltip 
-                    tooltip="Edit transaction" 
-                    icon="mdi-pencil"
-                    :disabled="selectedTransaction === null"
-                    @click="showEditDialog = true"
-                />
-            </div>
+        <!-- Edit button -->
+        <ButtonWithTooltip 
+            tooltip="Edit transaction" 
+            icon="mdi-pencil"
+            :disabled="selectedTransaction === null"
+            @click="showEditDialog = true"
+        />
 
-            <!-- divider -->
-            <v-divider vertical />
+        <!-- divider -->
+        <v-divider vertical />
 
-            <!-- Uncategorized checkbox -->
-            <div>
-                <v-tooltip text="Toggle show only uncategorized" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-checkbox-btn 
-                            v-bind="props"
-                            label="Uncategorized" 
-                            v-model="uncategorized">
-                        </v-checkbox-btn>
-                    </template>
-                </v-tooltip>
-            </div>
-        </Actions>
+        <!-- Uncategorized checkbox -->
+        <v-tooltip text="Toggle show only uncategorized" location="bottom">
+            <template v-slot:activator="{ props }">
+                <v-checkbox-btn 
+                    v-bind="props"
+                    label="Uncategorized" 
+                    v-model="uncategorized">
+                </v-checkbox-btn>
+            </template>
+        </v-tooltip>
+    </Actions>
 
     </ActionsBar>
 

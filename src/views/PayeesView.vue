@@ -178,32 +178,26 @@ onUpdatePayeesError((e) => {
         <!-- actions at the start of the actions bar -->
         <Actions>
             <!-- Edit button -->
-            <div>
-                <ButtonWithTooltip tooltip="Edit payee" icon="mdi-pencil" :disabled="!selectedPayee"
-                    @click="showEditDialog = true" />
-            </div>
+            <ButtonWithTooltip tooltip="Edit payee" icon="mdi-pencil" :disabled="!selectedPayee"
+                @click="showEditDialog = true" />
 
             <!-- divider -->
             <v-divider vertical />
 
             <!-- Uncategorized checkbox -->
-            <div>
-                <v-tooltip text="Toggle show only uncategorized" location="bottom">
-                    <template v-slot:activator="{ props }">
-                        <v-checkbox-btn v-bind="props" label="Uncategorized" v-model="uncategorized">
-                        </v-checkbox-btn>
-                    </template>
-                </v-tooltip>
-            </div>
+            <v-tooltip text="Toggle show only uncategorized" location="bottom">
+                <template v-slot:activator="{ props }">
+                    <v-checkbox-btn v-bind="props" label="Uncategorized" v-model="uncategorized">
+                    </v-checkbox-btn>
+                </template>
+            </v-tooltip>
         </Actions>
 
         <!-- actions at the end of the actions bar -->
         <Actions>
             <!-- Open categorization wizard button -->
-            <div>
-                <ButtonWithTooltip tooltip="Categorization wizard" icon="mdi-wizard-hat"
-                    :disabled="!payees || payees.length === 0" @click="showCategorizationWizard = true" />
-            </div>
+            <ButtonWithTooltip tooltip="Categorization wizard" icon="mdi-wizard-hat"
+                :disabled="!payees || payees.length === 0" @click="showCategorizationWizard = true" />
         </Actions>
 
     </ActionsBar>

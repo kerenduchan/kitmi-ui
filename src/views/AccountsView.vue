@@ -180,24 +180,18 @@ onDeleteAccountError((e) => {
         <!-- actions at the start of the actions bar -->
         <Actions>
             <!-- Edit account button -->
-            <div>
-                <ButtonWithTooltip tooltip="Edit account" icon="mdi-pencil" :disabled="!selectedAccountId"
-                    @click="openCreateOrEditDialog(false)" />
-            </div>
+            <ButtonWithTooltip tooltip="Edit account" icon="mdi-pencil" :disabled="!selectedAccountId"
+                @click="openCreateOrEditDialog(false)" />
 
             <!-- Delete account button -->
-            <div>
-                <ButtonWithTooltip tooltip="Delete account" icon="mdi-delete" :disabled="isDeleteDisabled"
-                    @click="showDeleteDialog = true" />
-            </div>
+            <ButtonWithTooltip tooltip="Delete account" icon="mdi-delete" :disabled="isDeleteDisabled"
+                @click="showDeleteDialog = true" />
         </Actions>
 
         <!-- actions at the end of the actions bar -->
         <Actions>
             <!-- Create account button -->
-            <div>
-                <ButtonWithTooltip tooltip="Create account" icon="mdi-plus" @click="openCreateOrEditDialog(true)" />
-            </div>
+            <ButtonWithTooltip tooltip="Create account" icon="mdi-plus" @click="openCreateOrEditDialog(true)" />
         </Actions>
 
     </ActionsBar>

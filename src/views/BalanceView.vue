@@ -59,9 +59,7 @@ function handleFilter(filter) {
         <!-- actions at the start of the actions bar -->
         <Actions>
             <!-- Filter button -->
-            <div>
-                <ButtonWithTooltip tooltip="Filter" icon="mdi-filter" @click="showFilterDialog = true" />
-            </div>
+            <ButtonWithTooltip tooltip="Filter" icon="mdi-filter" @click="showFilterDialog = true" />
         </Actions>
 
     </ActionsBar>

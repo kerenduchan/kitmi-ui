@@ -422,75 +422,61 @@ function handleFindSubcategory(subcategoryId) {
         <!-- actions at the start of the actions bar -->
         <Actions>
             <!-- Edit category/subcategory button -->
-            <div>
-                <ButtonWithTooltip 
-                    :tooltip="'Edit ' + selectedItemTypeStr" 
-                    icon="mdi-pencil"
-                    :disabled="!selectedCategoryId && !selectedSubcategoryId"
-                    @click="handleEditClicked"
-                />
-            </div>
+            <ButtonWithTooltip 
+                :tooltip="'Edit ' + selectedItemTypeStr" 
+                icon="mdi-pencil"
+                :disabled="!selectedCategoryId && !selectedSubcategoryId"
+                @click="handleEditClicked"
+            />
 
             <!-- Create subcategory button -->
-            <div v-if="!isCreateSubcategoryHidden">
-                <ButtonWithTooltip 
-                    tooltip="Create subcategory" 
-                    icon="mdi-plus"
-                    :disabled="!selectedCategoryId && !selectedSubcategoryId"
-                    @click="openCreateOrEditSubcategoryDialog(true)"
-                />
-            </div>
+            <ButtonWithTooltip v-if="!isCreateSubcategoryHidden"
+                tooltip="Create subcategory" 
+                icon="mdi-plus"
+                :disabled="!selectedCategoryId && !selectedSubcategoryId"
+                @click="openCreateOrEditSubcategoryDialog(true)"
+            />
 
             <!-- Move category down button -->
-            <div v-if="isMoveCategoryButtonVisible">
-                <ButtonWithTooltip 
-                    tooltip="Move Category Down" 
-                    icon="mdi-arrow-down"
-                    :disabled="isMoveCategoryDownDisabled()"
-                    @click="doMoveCategoryDown"
-                />
-            </div>
+            <ButtonWithTooltip v-if="isMoveCategoryButtonVisible"
+                tooltip="Move Category Down" 
+                icon="mdi-arrow-down"
+                :disabled="isMoveCategoryDownDisabled()"
+                @click="doMoveCategoryDown"
+            />
 
             <!-- Move category up button -->
-            <div v-if="isMoveCategoryButtonVisible">
-                <ButtonWithTooltip 
-                    tooltip="Move Category Up" 
-                    icon="mdi-arrow-up"
-                    :disabled="isMoveCategoryUpDisabled()"
-                    @click="doMoveCategoryUp"
-                />
-            </div>
+            <ButtonWithTooltip v-if="isMoveCategoryButtonVisible"
+                tooltip="Move Category Up" 
+                icon="mdi-arrow-up"
+                :disabled="isMoveCategoryUpDisabled()"
+                @click="doMoveCategoryUp"
+            />
 
             <!-- Delete category/subcategory button -->
-            <div>
-                <ButtonWithTooltip 
-                    :tooltip="'Delete ' + selectedItemTypeStr"
-                    icon="mdi-delete"
-                    :disabled="isDeleteDisabled"
-                    @click="showDeleteDialog = true"
-                />
-            </div>
+            <ButtonWithTooltip 
+                :tooltip="'Delete ' + selectedItemTypeStr"
+                icon="mdi-delete"
+                :disabled="isDeleteDisabled"
+                @click="showDeleteDialog = true"
+            />
         </Actions>
 
         <!-- actions at the end of the actions bar -->
         <Actions>
             <!-- Find subcategory button -->
-            <div>
-                <ButtonWithTooltip 
-                    tooltip="Find subcategory" 
-                    icon="mdi-folder-search"
-                    @click="showFindSubcategoryDialog = true"
-                />
-            </div>
+            <ButtonWithTooltip 
+                tooltip="Find subcategory" 
+                icon="mdi-folder-search"
+                @click="showFindSubcategoryDialog = true"
+            />
 
             <!-- Create category button -->
-            <div>
-                <ButtonWithTooltip 
-                    tooltip="Create category" 
-                    icon="mdi-plus"
-                    @click="openCreateOrEditCategoryDialog(true)"
-                />
-            </div>
+            <ButtonWithTooltip 
+                tooltip="Create category" 
+                icon="mdi-plus"
+                @click="openCreateOrEditCategoryDialog(true)"
+            />
         </Actions>
 
     </ActionsBar>

@@ -16,7 +16,7 @@ function getClassForRow(subcategory) {
     if(!props.selectedSubcategoryId) {
         return ''
     }
-    return props.selectedSubcategoryId === subcategory.id ? 'selected-row' : ''
+    return props.selectedSubcategoryId === subcategory.id ? 'bg-secondary' : ''
 }
 
 function selectSubcategory(subcategoryId) {

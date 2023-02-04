@@ -6,10 +6,8 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
-import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 
 import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
-
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import WizardLoader from '@/components/payeesCategorizationWizard/WizardLoader.vue'
@@ -22,6 +20,7 @@ import getUpdatePayee from '@/composables/mutations/updatePayee'
 import getPayeesAndCategories from '@/composables/queries/getPayeesAndCategories'
 import Category from '@/composables/model/Category'
 import Payee from '@/composables/model/Payee'
+import getUpdatePayees from '@/composables/mutations/updatePayees'
 
 // ----------------------------------------------------------------------------
 
@@ -144,9 +143,31 @@ onUpdatePayeeError((e) => {
 
 const showCategorizationWizard = ref(false)
 
-function savePayees(payees) {
-    console.log('save payees')
+const { updatePayees, onDone: onUpdatePayeesDone, onError: onUpdatePayeesError } = getUpdatePayees()
+
+function savePayees(payeesDraft) {
+    let payeesToUpdate = payeesDraft.filter(payeeDraft => payeeDraft.subcategory !== null)
+        .map(payeeDraft => new Object({
+                id: payeeDraft.payee.id,
+                subcategoryId: payeeDraft.subcategory.id
+        }))
+    if(payeesToUpdate.length === 0) {
+        showCategorizationWizard.value = false
+        return
+    }
+    updatePayees({
+        payees: payeesToUpdate
+    })
 }
+
+onUpdatePayeesDone(() => {
+    showCategorizationWizard.value = false
+    refetch()
+})
+
+onUpdatePayeesError((e) => {
+    console.error(e)
+})
 
 </script>
 

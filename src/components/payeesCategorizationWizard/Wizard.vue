@@ -22,7 +22,7 @@ const emit = defineEmits([
 //--------------------------------------------------------------------------------------
 // a draft of uncategorized payees, with edits being made in this wizard session
 const payeesDraft = ref(props.payees.map(p => new PayeeDraft(p)))
-console.log(payeesDraft.value)
+
 //--------------------------------------------------------------------------------------
 // the current payee
 

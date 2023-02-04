@@ -37,7 +37,7 @@ function getClass(idx) {
                 <tbody>
                     <tr v-for="payeeDraft, idx in payeesDraft" @click="emit('select', idx)" :class="getClass(idx)">
                         <td class="ps-3">{{ idx + 1 }}</td>
-                        <td class="pe-3">{{ payeeDraft.payee.name }}</td>
+                        <td class="payee-name-cell pe-3">{{ payeeDraft.payee.name }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -57,6 +57,8 @@ th {
   height: 24px;
 }
 
-
+.payee-name-cell {
+    white-space: nowrap
+}
 
 </style>

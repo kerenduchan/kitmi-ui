@@ -48,6 +48,11 @@ function handleCategorySelected(category) {
 
 function handleSubcategorySelected(subcategory) {
     curPayeeDraft.value.subcategory = subcategory
+    if(hasNext.value) {
+        setTimeout(() => {
+            next()
+        }, 400)
+    }
 }
 
 // transactions of the current payee
@@ -95,7 +100,6 @@ const hasNext = computed(() => {
 
 function next() {
     handleLeavePayee(curPayeeIdx.value + 1)
-
 }
 
 //--------------------------------------------------------------------------------------

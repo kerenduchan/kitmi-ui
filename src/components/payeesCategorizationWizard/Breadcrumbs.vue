@@ -1,4 +1,6 @@
 <script setup>
+import TypeIcon from '../TypeIcon.vue'
+
 const props = defineProps({
     category: Object,
     subcategory: Object
@@ -18,7 +20,8 @@ const emit = defineEmits([
             <span class="text-excluded font-italic">Uncategorized</span>
         </span>
         <span v-else>
-            <a @click="emit('categoryClicked')" class="text-link font-weight-bold">{{ category.name }}</a>
+            <TypeIcon :type="category.type" :isExcluded="category.excludeFromReports" />
+            <a @click="emit('categoryClicked')" class="pl-1 text-link font-weight-bold">{{ category.name }}</a>
         </span>
         <span v-if="category">
             >

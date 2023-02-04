@@ -36,7 +36,7 @@ const categories = ref(null)
 const { onResult, refetch } = getCategories()
 
 onResult(res => {
-    categories.value = res.data.categories.map((p) => new Category(p))
+    categories.value = res.data.categories.map((p) => Category.fromGql(p))
 })
 
 // ----------------------------------------------------------------------------

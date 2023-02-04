@@ -8,12 +8,26 @@ import Subcategory from "./Subcategory"
 import Transaction from "./Transaction"
 
 class Payee {
-    constructor(gqlPayee) {
-        this.id = gqlPayee.id
-        this.name = gqlPayee.name
-        this.note = gqlPayee.note
-        this.subcategory = gqlPayee.subcategory ? new Subcategory(gqlPayee.subcategory) : null
-        this.transactions = gqlPayee.transactions ? gqlPayee.transactions.map(t => new Transaction(t)) : null
+
+    constructor(id, name, note) {
+        this.id = id
+        this.name = name
+        this.note = note
+
+        // nested objects (optional)
+        this.subcategory = null
+        this.transactions = null
+    }
+
+    static fromGql(gqlObj) {
+        let obj = new Payee(gqlObj.id, gqlObj.name, gqlObj.note)
+        if (gqlObj.subcategory) {
+            obj.subcategory = Subcategory.fromGql(gqlObj.subcategory)
+        }
+        if (gqlObj.transactions) {
+            obj.transactions = gqlObj.transactions.map(t => Transaction.fromGql(t))
+        }
+        return obj
     }
 
     get category() {

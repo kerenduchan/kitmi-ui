@@ -5,14 +5,23 @@ import Subcategory from "./Subcategory"
 // getters on it.
 
 class Category {
-    constructor(gqlCategory) {
-        this.id = gqlCategory.id
-        this.name = gqlCategory.name
-        this.isExpense = gqlCategory.isExpense
-        this.excludeFromReports = gqlCategory.excludeFromReports
+
+    constructor(id, name, isExpense, excludeFromReports) {
+        this.id = id
+        this.name = name
+        this.isExpense = isExpense
+        this.excludeFromReports = excludeFromReports
+
+        // nested objects (optional)
         this.subcategories = null
-        if (gqlCategory.subcategories)
-            this.subcategories = gqlCategory.subcategories.map(s => new Subcategory(s))
+    }
+
+    static fromGql(gqlObj) {
+        let obj = new Category(gqlObj.id, gqlObj.name, gqlObj.isExpense, gqlObj.excludeFromReports)
+        if (gqlObj.subcategories) {
+            obj.subcategories = gqlObj.subcategories.map(s => Subcategory.fromGql(s))
+        }
+        return obj
     }
 
     get type() {

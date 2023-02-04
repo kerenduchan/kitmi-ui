@@ -29,7 +29,7 @@ const categories = ref(null)
 const { onResult: onCategoriesResult, refetch: refetchCategories } = getCategories()
 
 onCategoriesResult(res => {
-    categories.value = res.data.categories.map((p) => new Category(p))
+    categories.value = res.data.categories.map((p) => Category.fromGql(p))
 })
 
 
@@ -62,7 +62,7 @@ const { onResult, refetch } = getTransactions(transactionsParams.value)
 
 onResult(res => {
     const data = res.data.transactions
-    transactions.value = data.items.map((p) => new Transaction(p))
+    transactions.value = data.items.map((p) => Transaction.fromGql(p))
     totalTransactionsCount.value = data.totalItemsCount
     if(scrollable.value) {
         scrollable.value.scrollTo(0, 0)

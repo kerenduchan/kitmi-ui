@@ -8,27 +8,52 @@ import { formatNumber, formatDate } from '@/composables/utils'
 
 class Transaction {
 
-    constructor(gqlTransaction) {
-        this.id = gqlTransaction.id
-        this.date = new Date(gqlTransaction.date)
-        this.amount = gqlTransaction.amount
-        this.payee = new Payee(gqlTransaction.payee)
-        this.accountId = gqlTransaction.account.id
-        this.account = gqlTransaction.account
-        this.overrideSubcategory = gqlTransaction.overrideSubcategory
-        this.note = gqlTransaction.note
+    constructor(params) {
+        this.id = params.id
+        this.date = params.date
+        this.amount = params.amount
+        this.accountId = params.accountId
+        this.overrideSubcategory = params.overrideSubcategory
+        this.note = params.note
+        this.payeeId = params.payeeId
 
+        // nested objects (optional)
+        this.payee = null
+        this.account = null
         this.overridingSubcategory = null
-        
-        if(this.overrideSubcategory && gqlTransaction.subcategoryId !== null) {
-            this.overridingSubcategory = new Subcategory(gqlTransaction.subcategory)
+    }
+
+    static fromGql(gqlObj) {
+        let obj = new Transaction({
+            id: gqlObj.id,
+            date: new Date(gqlObj.date),
+            amount: gqlObj.amount,
+            accountId: gqlObj.accountId,
+            overrideSubcategory: gqlObj.overrideSubcategory,
+            note: gqlObj.note,
+            payeeId: gqlObj.payeeId
+        })
+
+        obj.account = gqlObj.account
+
+        if(gqlObj.overrideSubcategory && gqlObj.subcategoryId !== null) {
+            obj.overridingSubcategory = Subcategory.fromGql(gqlObj.subcategory)
         }
 
+        if(gqlObj.payee) {
+            this.payee = Payee.fromGql(gqlObj.payee)
+        }
+
+        if (gqlObj.transactions) {
+            obj.transactions = gqlObj.transactions.map(t => Transaction.fromGql(t))
+        }
+        return obj
+    }
+
+    get subcategory() {
         // The actual subcategory for the transaction - 
         // either the payee's subcategory or the overriding subcategory
-        this.subcategory = this.overrideSubcategory ?
-            this.overridingSubcategory :
-            this.payee.subcategory;
+        return this.overrideSubcategory ? this.overridingSubcategory : this.payee.subcategory;
     }
 
     get payeeName() {

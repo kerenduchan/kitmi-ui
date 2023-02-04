@@ -12,7 +12,7 @@ import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithF
 
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
-import CategorizationWizard from '@/components/CategorizationWizard.vue'
+import WizardLoader from '@/components/payeesCategorizationWizard/WizardLoader.vue'
 import PayeesList from '@/components/PayeesList.vue'
 import EditPayee from '@/components/EditPayee.vue'
 
@@ -62,8 +62,8 @@ const { onResult, refetch } = getPayeesAndCategories(gqlParams.value)
 const scrollable = ref(null)
 
 onResult(res => {
-    categories.value = res.data.categories.map((p) => new Category(p))
-    payees.value = res.data.payees.items.map((p) => new Payee(p))
+    categories.value = res.data.categories.map((p) => Category.fromGql(p))
+    payees.value = res.data.payees.items.map((p) => Payee.fromGql(p))
     totalPayeesCount.value = res.data.payees.totalItemsCount
     // get categories only the first time
     getCategories.value = false
@@ -144,9 +144,8 @@ onUpdatePayeeError((e) => {
 
 const showCategorizationWizard = ref(false)
 
-function handleCloseCategorizationWizard() {
-    showCategorizationWizard.value = false
-    refresh()
+function savePayees(payees) {
+    console.log('save payees')
 }
 
 </script>
@@ -216,8 +215,8 @@ function handleCloseCategorizationWizard() {
     </v-dialog>
 
     <!-- Categorization wizard -->
-    <v-dialog fullscreen v-model="showCategorizationWizard">
-        <CategorizationWizard :categories="categories" @close="handleCloseCategorizationWizard" @change="refresh" />
+    <v-dialog persistent height="100%" v-model="showCategorizationWizard">
+        <WizardLoader :categories="categories" @save="savePayees" @cancel="showCategorizationWizard = false" />
     </v-dialog>
 
 </template>

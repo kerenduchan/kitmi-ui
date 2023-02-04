@@ -71,7 +71,6 @@ function handleFilter(filter) {
         <ViewContentTitle text="Balance" />
 
         <ViewContentMain>
-            <div class="ps-3"></div>
             <div class="text-h6 pt-0 pb-3">Income</div>
             <SummaryTable v-if="balanceSummary" :summary="balanceSummary.income" />
 

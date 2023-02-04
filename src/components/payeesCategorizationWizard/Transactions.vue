@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { formatNumber, formatDate } from '@/composables/utils'
 
 import IconWithTooltip from '@/components/IconWithTooltip.vue'
-import TransactionsListForPayee from '@/components/TransactionsListForPayee.vue'
+import TransactionsTable from './TransactionsTable.vue'
 
 const props = defineProps({
     transactions: Object,
@@ -41,7 +41,7 @@ const showAllTransactionsDialog = ref(false)
             <v-card-text class="flex-grow-1 d-flex flex-column overflow-y-hidden align-center py-1">
                 {{ payeeName }}
                 <div class="flex-grow-1 overflow-y-auto rounded w-100">
-                    <TransactionsListForPayee :transactions="transactions"/>
+                    <TransactionsTable :transactions="transactions"/>
                 </div>
             </v-card-text>
             <v-card-actions>

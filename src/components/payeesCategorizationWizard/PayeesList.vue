@@ -19,7 +19,7 @@ function getClass(idx) {
     if(props.payee.id === p.id) {
         classes.push('bg-secondary')
     }
-    if(p.subcategory !== null) {
+    if(p.subcategory === null) {
         classes.push('text-excluded')
     }
     return classes.join(' ');

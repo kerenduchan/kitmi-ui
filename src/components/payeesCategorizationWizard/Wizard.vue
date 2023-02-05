@@ -44,31 +44,37 @@ const selectedSubcategoryId = ref(null)
 
 function handleCategorySelected(categoryId) {
     selectedCategoryId.value = categoryId
+    updatePayeeIfNeeded()
 }
 
 function handleSubcategorySelected(subcategoryId) {
     selectedSubcategoryId.value = subcategoryId
-    if(subcategoryId === curPayee.value.subcategoryId || isPayeePartiallyCategorized.value) {
+    updatePayeeIfNeeded()
+}
+
+function updatePayeeIfNeeded() {
+    if (selectedSubcategoryId.value === curPayee.value.subcategoryId || isPayeePartiallyCategorized.value) {
         return
     }
     emit('updatePayee',
         curPayee.value,
         {
             payeeId: curPayee.value.id,
-            subcategoryId
+            subcategoryId: selectedSubcategoryId.value
         })
 
-    if (subcategoryId !== null) {
+    if (selectedSubcategoryId.value !== null) {
         const idx = findNextUncategorized()
         if (idx !== -1) {
             setTimeout(() => {
                 handleLeavePayee(idx)
-            }, 400)
+            }, 600)
         }
     }
 }
 
 function findNextUncategorized() {
+    console.log(props.payees)
     for (let i = curPayeeIdx.value + 1; i < props.payees.length; i++) {
         if (props.payees[i].subcategory === null) {
             return i
@@ -130,6 +136,7 @@ function done() {
 const showPartiallyCategorizedDialog = ref(false)
 
 function handlePartiallyCategorizedDialogYes() {
+    handleCategorySelected(null)
     showPartiallyCategorizedDialog.value = false
     curPayeeIdx.value = leavePayeeToIdx.value
     leavePayeeToIdx.value = null

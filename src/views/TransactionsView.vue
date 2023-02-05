@@ -12,6 +12,7 @@ import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import TransactionsList from '@/components/TransactionsList.vue'
 import EditTransaction from '@/components/EditTransaction.vue'
+import FilterTransactions from '../components/FilterTransactions.vue'
 
 // composables
 import snackbar from '@/composables/snackbar'
@@ -77,11 +78,6 @@ watch(page, () => {
     refetch(transactionsParams.value)
 })
 
-watch(uncategorized, () => {
-    page.value = 1
-    refetch(transactionsParams.value)
-})
-
 // ----------------------------------------------------------------------------
 // snackbar
 
@@ -136,9 +132,23 @@ onUpdateTransactionError((e) => {
     displaySnackbar("Failed to update transaction.")
 })
 
-const subtitle = computed(() => {
-    return uncategorized.value ? 'Uncategorized' : ''
+// ----------------------------------------------------------------------------
+// filter transactions
+
+const showFilterDialog = ref(false)
+
+const filterDefaults = computed(() => {
+    return {
+        uncategorized: uncategorized.value
+    }
 })
+
+function applyFilter(filter) {
+    showFilterDialog.value = false
+    uncategorized.value = filter.uncategorized
+    page.value = 1
+    refetch(transactionsParams.value)
+}
 
 </script> 
 
@@ -148,28 +158,25 @@ const subtitle = computed(() => {
 
         <!-- actions at the start of the actions bar -->
         <Actions>
-        <!-- Edit button -->
-        <ButtonWithTooltip 
-            tooltip="Edit transaction" 
-            icon="mdi-pencil"
-            :disabled="selectedTransaction === null"
-            @click="showEditDialog = true"
-        />
+            <!-- Edit button -->
+            <ButtonWithTooltip 
+                tooltip="Edit transaction" 
+                icon="mdi-pencil"
+                :disabled="selectedTransaction === null"
+                @click="showEditDialog = true"
+            />
+        </Actions>
 
-        <!-- divider -->
-        <v-divider vertical />
+        <!-- actions at the end of the actions bar -->
+        <Actions>
+            <!-- Filter -->
+            <ButtonWithTooltip 
+                tooltip="Filter"
+                icon="mdi-filter"
+                @click="showFilterDialog = true"
+            />
 
-        <!-- Uncategorized checkbox -->
-        <v-tooltip text="Toggle show only uncategorized" location="bottom">
-            <template v-slot:activator="{ props }">
-                <v-checkbox-btn 
-                    v-bind="props"
-                    label="Uncategorized" 
-                    v-model="uncategorized">
-                </v-checkbox-btn>
-            </template>
-        </v-tooltip>
-    </Actions>
+        </Actions>
 
     </ActionsBar>
 
@@ -207,5 +214,15 @@ const subtitle = computed(() => {
             @save="save" 
         />
     </v-dialog>
+
+    <!-- Filter transactions dialog -->
+    <v-dialog v-model="showFilterDialog" width="800">
+        <FilterTransactions
+            :defaults="filterDefaults"
+            @close="showFilterDialog = false"
+            @filter="applyFilter"
+        />
+    </v-dialog>
+
 
 </template>

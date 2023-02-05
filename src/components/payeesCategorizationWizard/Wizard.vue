@@ -74,7 +74,6 @@ function updatePayeeIfNeeded() {
 }
 
 function findNextUncategorized() {
-    console.log(props.payees)
     for (let i = curPayeeIdx.value + 1; i < props.payees.length; i++) {
         if (props.payees[i].subcategory === null) {
             return i

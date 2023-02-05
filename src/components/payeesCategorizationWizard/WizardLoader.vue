@@ -13,8 +13,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-    'save',
-    'cancel'
+    'updatePayee',
+    'done'
 ])
 
 // the uncategorized payees
@@ -34,17 +34,17 @@ onResult(res => {
     }
 })
 
-function handleSave(payees) {
-    emit('save', payees)
-}
-
-function cancel() {
-    emit('cancel')
+function handleUpdatePayee(payee, params) {
+    emit('updatePayee', payee, params)
 }
 
 function handleNoUncategorizedPayeesDialogOk() {
     showNoUncategorizedPayeesDialog.value = false
-    cancel()
+    done()
+}
+
+function done() {
+    emit('done')
 }
 
 </script>
@@ -58,7 +58,7 @@ function handleNoUncategorizedPayeesDialogOk() {
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <Wizard v-if="payees.length > 0" :payees="payees" :categories="categories" @save="handleSave" @cancel="cancel"/>
+        <Wizard v-if="payees.length > 0" :payees="payees" :categories="categories" @done="done" @updatePayee="handleUpdatePayee"/>
         
     </template>
 

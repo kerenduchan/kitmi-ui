@@ -3,7 +3,7 @@ import Transactions from './Transactions.vue'
 import Categorization from './Categorization.vue'
 
 const props = defineProps({
-    payeeDraft: Object,
+    payee: Object,
     categories: Object
 })
 
@@ -12,12 +12,12 @@ const emit = defineEmits([
     'subcategorySelected'
 ])
 
-function handleCategorySelected(category) {
-    emit('categorySelected', category)
+function handleCategorySelected(categoryId) {
+    emit('categorySelected', categoryId)
 }
 
-function handleSubcategorySelected(subcategory) {
-    emit('subcategorySelected', subcategory)
+function handleSubcategorySelected(subcategoryId) {
+    emit('subcategorySelected', subcategoryId)
 }
 
 </script>
@@ -25,11 +25,11 @@ function handleSubcategorySelected(subcategory) {
 <template>
     <v-card variant="outlined" class="flex-grow-1 d-flex flex-column">
         <v-card-title>
-            <div v-if="payeeDraft">{{ payeeDraft.payee.name }}</div>
+            <div v-if="payee">{{ payee.name }}</div>
         </v-card-title>
         <v-card-text class="d-flex flex-column overflow-y-hidden">
-            <Transactions :transactions="payeeDraft.payee.transactions" :payeeName="payeeDraft.payee.name"/>
-            <Categorization :payeeDraft="payeeDraft" :categories="categories"
+            <Transactions :transactions="payee.transactions" :payeeName="payee.name"/>
+            <Categorization :payee="payee" :categories="categories"
                 @categorySelected="handleCategorySelected" @subcategorySelected="handleSubcategorySelected" />
         </v-card-text>
     </v-card>

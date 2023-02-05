@@ -29,12 +29,12 @@ const isSaveDisabled = computed(() => {
 const note = ref(props.payee.note)
 
 function save() {
-    const payee = { 
+    const params = { 
         payeeId: props.payee.id,
         subcategoryId: selectedSubcategoryId.value,
         note: note.value
     }
-    emit('save', payee)
+    emit('save', props.payee, params)
 }
 
 </script>

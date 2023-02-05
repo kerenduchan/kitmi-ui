@@ -5,7 +5,7 @@ import SelectOneOfMany from '../SelectOneOfMany.vue'
 import TypeIcon from '../TypeIcon.vue'
 
 const props = defineProps({
-    payeeDraft: Object,
+    payee: Object,
     categories: Object
 })
 
@@ -47,7 +47,7 @@ const subcategory = computed(() => {
 })
 
 function clearCategory() {
-    clearSubcategory()
+    subcategoryIdx.value = null
     categoryIdx.value = null
     emit('categorySelected', null)
 }
@@ -71,33 +71,33 @@ const showSubcategorySelect = computed(() => {
 
 // get the index in the categories array of the payee's category
 function getCategoryIdx() {
-    if (props.payeeDraft.category === null) {
+    if (props.payee.category === null) {
         return null
     }
     const foundIdx = props.categories.findIndex(
-        c => c.id === props.payeeDraft.category.id)
+        c => c.id === props.payee.category.id)
     return foundIdx === -1 ? null : foundIdx
 }
 
 // get the index in the subcategories array of the payee's subcategory
 function getSubcategoryIdx() {
-    if (props.payeeDraft.subcategory === null) {
+    if (props.payee.subcategory === null) {
         return null
     }
-    console.log(props.payeeDraft)
+    console.log(props.payee)
     const foundIdx = subcategories.value.findIndex(
-        s => s.id === props.payeeDraft.subcategory.id)
+        s => s.id === props.payee.subcategory.id)
     return foundIdx === -1 ? null : foundIdx
 }
 
 function handleCategorySelected(idx) {
     categoryIdx.value = idx
-    emit('categorySelected', props.categories[idx])
+    emit('categorySelected', props.categories[idx].id)
 }
 
 function handleSubcategorySelected(idx) {
     subcategoryIdx.value = idx
-    emit('subcategorySelected', subcategories.value[idx])
+    emit('subcategorySelected', subcategories.value[idx].id)
 }
 
 </script>

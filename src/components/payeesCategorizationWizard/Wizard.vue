@@ -6,34 +6,25 @@ import PayeesList from './PayeesList.vue'
 import PayeeVue from './Payee.vue'
 import AreYouSure from '../AreYouSure.vue'
 
-// composables
-import PayeeDraft from '@/composables/model/PayeeDraft'
-
 const props = defineProps({
     payees: Object,
     categories: Object
 })
 
 const emit = defineEmits([
-    'save',
-    'cancel'
+    'updatePayee',
+    'done'
 ])
 
 //--------------------------------------------------------------------------------------
-// a draft of uncategorized payees, with edits being made in this wizard session
-const payeesDraft = ref(props.payees.map(p => new PayeeDraft(p)))
-
-//--------------------------------------------------------------------------------------
 // the current payee
 
-// index in the payeesDraft array of the current payee
+// index in the payees array of the current payee
 const curPayeeIdx = ref(0)
 
 // the current payee
-const curPayeeDraft = computed(() => {
-    if (payeesDraft !== null) {
-        return payeesDraft.value[curPayeeIdx.value]
-    }
+const curPayee = computed(() => {
+    return props.payees[curPayeeIdx.value]
 })
 
 const leavePayeeToIdx = ref(null)
@@ -42,13 +33,15 @@ function handlePayeeSelected(payeeIdx) {
     handleLeavePayee(payeeIdx)
 }
 
-function handleCategorySelected(category) {
-    curPayeeDraft.value.category = category
-}
+function handleSubcategorySelected(subcategoryId) {
+    emit('updatePayee',
+        curPayee.value,
+        {
+            payeeId: curPayee.value.id,
+            subcategoryId
+        })
 
-function handleSubcategorySelected(subcategory) {
-    curPayeeDraft.value.subcategory = subcategory
-    if (subcategory !== null) {
+    if (subcategoryId !== null) {
         const idx = findNextUncategorized()
         if (idx !== -1) {
             setTimeout(() => {
@@ -59,8 +52,8 @@ function handleSubcategorySelected(subcategory) {
 }
 
 function findNextUncategorized() {
-    for (let i = curPayeeIdx.value + 1; i < payeesDraft.value.length; i++) {
-        if (payeesDraft.value[i].subcategory === null) {
+    for (let i = curPayeeIdx.value + 1; i < props.payees.length; i++) {
+        if (props.payees[i].subcategory === null) {
             return i
         }
     }
@@ -68,7 +61,7 @@ function findNextUncategorized() {
 }
 
 const isPayeePartiallyCategorized = computed(() => {
-    return curPayeeDraft.value.category !== null && curPayeeDraft.value.subcategory === null
+    return curPayee.value.category !== null && curPayee.value.subcategory === null
 })
 
 function handleLeavePayee(toIdx) {
@@ -84,11 +77,8 @@ function handleLeavePayee(toIdx) {
 //--------------------------------------------------------------------------------------
 // title
 const title = computed(() => {
-    let res = 'Payees Categorization Wizard'
-    if (payeesDraft.value && payeesDraft.value.length > 0) {
-        res += ' (' + (curPayeeIdx.value + 1) + ' of ' + payeesDraft.value.length + ')'
-    }
-    return res
+    return 'Payees Categorization Wizard (' +
+        (curPayeeIdx.value + 1) + ' of ' + props.payees.length + ')'
 })
 
 //--------------------------------------------------------------------------------------
@@ -104,7 +94,7 @@ function prev() {
 //--------------------------------------------------------------------------------------
 // next
 const hasNext = computed(() => {
-    return payeesDraft.value !== null && curPayeeIdx.value < payeesDraft.value.length - 1
+    return curPayeeIdx.value < props.payees.length - 1
 })
 
 function next() {
@@ -112,28 +102,10 @@ function next() {
 }
 
 //--------------------------------------------------------------------------------------
-// save
-const showSaveDialog = ref(false)
+// done
 
-function save() {
-    showSaveDialog.value = true
-}
-
-function handleSaveDialogYes() {
-    emit('save', payeesDraft.value)
-}
-
-//--------------------------------------------------------------------------------------
-// discard changes
-const showDiscardChangesDialog = ref(false)
-
-function discardChanges() {
-    showDiscardChangesDialog.value = true
-}
-
-function handleDiscardChangesDialogYes() {
-    showDiscardChangesDialog.value = false
-    emit('cancel')
+function done() {
+    emit('done');
 }
 
 //--------------------------------------------------------------------------------------
@@ -141,7 +113,7 @@ function handleDiscardChangesDialogYes() {
 const showPartiallyCategorizedDialog = ref(false)
 
 function handlePartiallyCategorizedDialogYes() {
-    curPayeeDraft.value.category = null
+    curPayee.value.category = null
     showPartiallyCategorizedDialog.value = false
     curPayeeIdx.value = leavePayeeToIdx.value
     leavePayeeToIdx.value = null
@@ -164,21 +136,20 @@ function handlePartiallyCategorizedDialogCancel() {
         <v-card-text class="overflow-y-hidden d-flex">
 
             <!-- scrollable list of payees -->
-            <PayeesList :payeesDraft="payeesDraft" :payeeDraft="curPayeeDraft" @select="handlePayeeSelected" />
+            <PayeesList :payees="payees" :payee="curPayee" @select="handlePayeeSelected" />
 
             <!-- the current payee being categorized -->
             <!-- key forces the component to remount upon change -->
-            <PayeeVue :key="curPayeeIdx" :payeeDraft="curPayeeDraft" :categories="categories"
-                @categorySelected="handleCategorySelected" @subcategorySelected="handleSubcategorySelected" />
+            <PayeeVue :key="curPayeeIdx" :payee="curPayee" :categories="categories"
+                @subcategorySelected="handleSubcategorySelected" />
 
         </v-card-text>
 
-        <!-- Actions (prev, nex, save, discard) -->
+        <!-- Actions (prev, nex, done) -->
         <v-card-actions>
             <v-btn :disabled="!hasPrev" @click="prev">Previous</v-btn>
             <v-btn :disabled="!hasNext" @click="next">Next</v-btn>
-            <v-btn :disabled="isPayeePartiallyCategorized" @click="save">Save</v-btn>
-            <v-btn @click="discardChanges">Discard Changes</v-btn>
+            <v-btn :disabled="isPayeePartiallyCategorized" @click="done">Done</v-btn>
         </v-card-actions>
     </v-card>
 
@@ -186,21 +157,8 @@ function handlePartiallyCategorizedDialogCancel() {
 
     <!-- dialog for when a payee is not fully categorized and then clicked away from -->
     <v-dialog v-model="showPartiallyCategorizedDialog" width="600px">
-        <AreYouSure :title="curPayeeDraft.name"
-            :message="'A subcategory was not selected. Clear the selected category?'"
+        <AreYouSure :title="curPayee.name" :message="'A subcategory was not selected. Clear the selected category?'"
             @yes="handlePartiallyCategorizedDialogYes" @cancel="handlePartiallyCategorizedDialogCancel" />
-    </v-dialog>
-
-    <!-- dialog for when save is clicked -->
-    <v-dialog v-model="showSaveDialog" width="600px">
-        <AreYouSure title="Save" :message="'Save changes?'" @yes="handleSaveDialogYes"
-            @cancel="showSaveDialog = false" />
-    </v-dialog>
-
-    <!-- dialog for when discard changes is clicked -->
-    <v-dialog v-model="showDiscardChangesDialog" width="600px">
-        <AreYouSure title="Discard Changes" :message="'All changes will be lost! Proceed?'"
-            @yes="handleDiscardChangesDialogYes" @cancel="showDiscardChangesDialog = false" />
     </v-dialog>
 
 </template>

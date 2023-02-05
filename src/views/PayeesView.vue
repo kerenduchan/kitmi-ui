@@ -117,7 +117,7 @@ function handleSelect(id) {
 }
 
 // ----------------------------------------------------------------------------
-// edit payee
+// edit payee / update payee from wizard
 
 const showEditDialog = ref(false)
 
@@ -127,47 +127,30 @@ const {
     onError: onUpdatePayeeError
 } = getUpdatePayee()
 
-onUpdatePayeeDone((res) => {
+const payeeBeingUpdated = ref(null)
+
+function doUpdatePayee(payee, params) {
+    payeeBeingUpdated.value = payee
+    updatePayee(params)
+}
+
+onUpdatePayeeDone(() => {
     showEditDialog.value = false
     refresh()
-    displaySnackbar("Payee '" + selectedPayee.value.name + "' updated.")
+    displaySnackbar("Payee '" + payeeBeingUpdated.value.name + "' updated.")
+    payeeBeingUpdated.value = null
 })
 
 onUpdatePayeeError((e) => {
-    displaySnackbar("Failed to update payee '" + selectedPayee.value.name + "'.")
+    displaySnackbar("Failed to update payee '" + payeeBeingUpdated.value.name + "'.")
     console.error(e)
+    payeeBeingUpdated.value = null
 })
 
 // ----------------------------------------------------------------------------
 // categorization wizard
 
 const showCategorizationWizard = ref(false)
-
-const { updatePayees, onDone: onUpdatePayeesDone, onError: onUpdatePayeesError } = getUpdatePayees()
-
-function savePayees(payeesDraft) {
-    let payeesToUpdate = payeesDraft.filter(payeeDraft => payeeDraft.subcategory !== null)
-        .map(payeeDraft => new Object({
-                id: payeeDraft.payee.id,
-                subcategoryId: payeeDraft.subcategory.id
-        }))
-    if(payeesToUpdate.length === 0) {
-        showCategorizationWizard.value = false
-        return
-    }
-    updatePayees({
-        payees: payeesToUpdate
-    })
-}
-
-onUpdatePayeesDone(() => {
-    showCategorizationWizard.value = false
-    refetch()
-})
-
-onUpdatePayeesError((e) => {
-    console.error(e)
-})
 
 </script>
 
@@ -226,12 +209,12 @@ onUpdatePayeesError((e) => {
     <!-- Edit selected payee dialog -->
     <v-dialog v-model="showEditDialog" width="800">
         <EditPayee :payee="selectedPayee" :categories="categories" @close="showEditDialog = false"
-            @save="updatePayee" />
+            @save="doUpdatePayee" />
     </v-dialog>
 
     <!-- Categorization wizard -->
     <v-dialog persistent height="100%" v-model="showCategorizationWizard">
-        <WizardLoader :categories="categories" @save="savePayees" @cancel="showCategorizationWizard = false" />
+        <WizardLoader :categories="categories" @updatePayee="doUpdatePayee" @done="showCategorizationWizard = false" />
     </v-dialog>
 
 </template>

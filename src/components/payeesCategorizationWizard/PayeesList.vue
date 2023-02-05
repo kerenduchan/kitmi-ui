@@ -1,8 +1,8 @@
 <script setup>
 
 const props = defineProps({
-    payeesDraft: Object,
-    payeeDraft: Object
+    payees: Object,
+    payee: Object
 })
 
 const emit = defineEmits([
@@ -15,11 +15,11 @@ function getClass(idx) {
     }
 
     let classes = []
-    const payeeDraft = props.payeesDraft[idx]
-    if(props.payeeDraft.payee.id === payeeDraft.payee.id) {
+    const p = props.payees[idx]
+    if(props.payee.id === p.id) {
         classes.push('bg-secondary')
     }
-    if(payeeDraft.subcategory !== null) {
+    if(p.subcategory !== null) {
         classes.push('text-excluded')
     }
     return classes.join(' ');
@@ -35,9 +35,9 @@ function getClass(idx) {
         <v-card-text class="pa-0 mb-4 overflow-y-auto">
             <table class="ma-0 w-100">
                 <tbody>
-                    <tr v-for="payeeDraft, idx in payeesDraft" @click="emit('select', idx)" :class="getClass(idx)">
+                    <tr v-for="payee, idx in payees" @click="emit('select', idx)" :class="getClass(idx)">
                         <td class="ps-3">{{ idx + 1 }}</td>
-                        <td class="payee-name-cell pe-3">{{ payeeDraft.payee.name }}</td>
+                        <td class="payee-name-cell pe-3">{{ payee.name }}</td>
                     </tr>
                 </tbody>
             </table>

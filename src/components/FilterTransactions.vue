@@ -34,7 +34,7 @@ function handleFilterClicked() {
             <v-checkbox-btn v-bind="props" label="Uncategorized" v-model="uncategorized" />
 
             <!-- Payee autocomplete -->
-            <v-autocomplete label="Payee" :items="payees" item-title="name" item-value="id"
+            <v-autocomplete clearable label="Payee" :items="payees" item-title="name" item-value="id"
                 v-model="payeeId" />
 
         </v-card-text>

@@ -5,7 +5,7 @@ const props = defineProps({
 </script>
 
 <template>
-        <div id="view-content-title" class="text-h5 ps-5 pt-3 pb-1">
+        <div id="view-content-subtitle" class="ps-5 text-smaller">
             {{ text }}
         </div>
 </template>

@@ -6,6 +6,7 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ViewContentSubtitle from '@/components/layout/ViewContentSubtitle.vue'
 import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
 
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
@@ -150,6 +151,9 @@ function applyFilter(filter) {
     refetch(transactionsParams.value)
 }
 
+const subtitle = computed(() => {
+    return uncategorized.value ? 'Uncategorized transactions' : 'All transactions'
+})
 </script> 
 
 <template>
@@ -185,6 +189,8 @@ function applyFilter(filter) {
 
         <!-- content title -->
         <ViewContentTitle text="Transactions" />
+        <ViewContentSubtitle :text="subtitle" />
+
 
         <!-- content body -->
         <ScrollableContainerWithFooter>

@@ -47,9 +47,9 @@ const subcategory = computed(() => {
 })
 
 function clearCategory() {
-    subcategoryIdx.value = null
     categoryIdx.value = null
     emit('categorySelected', null)
+    clearSubcategory()
 }
 
 function clearSubcategory() {

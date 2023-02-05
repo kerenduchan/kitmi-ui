@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 // components
 import PayeesList from './PayeesList.vue'
@@ -27,13 +27,30 @@ const curPayee = computed(() => {
     return props.payees[curPayeeIdx.value]
 })
 
+watch(curPayee, () => {
+    selectedCategoryId.value = curPayee.value.categoryId
+    selectedSubcategoryId.value = curPayee.value.subcategoryId
+})
+
 const leavePayeeToIdx = ref(null)
 
 function handlePayeeSelected(payeeIdx) {
     handleLeavePayee(payeeIdx)
 }
 
+// needed in order to determine whether the payee is partially categorized
+const selectedCategoryId = ref(null)
+const selectedSubcategoryId = ref(null)
+
+function handleCategorySelected(categoryId) {
+    selectedCategoryId.value = categoryId
+}
+
 function handleSubcategorySelected(subcategoryId) {
+    selectedSubcategoryId.value = subcategoryId
+    if(subcategoryId === curPayee.value.subcategoryId || isPayeePartiallyCategorized.value) {
+        return
+    }
     emit('updatePayee',
         curPayee.value,
         {
@@ -61,7 +78,7 @@ function findNextUncategorized() {
 }
 
 const isPayeePartiallyCategorized = computed(() => {
-    return curPayee.value.category !== null && curPayee.value.subcategory === null
+    return selectedCategoryId.value !== null && selectedSubcategoryId.value === null
 })
 
 function handleLeavePayee(toIdx) {
@@ -113,7 +130,6 @@ function done() {
 const showPartiallyCategorizedDialog = ref(false)
 
 function handlePartiallyCategorizedDialogYes() {
-    curPayee.value.category = null
     showPartiallyCategorizedDialog.value = false
     curPayeeIdx.value = leavePayeeToIdx.value
     leavePayeeToIdx.value = null
@@ -141,7 +157,7 @@ function handlePartiallyCategorizedDialogCancel() {
             <!-- the current payee being categorized -->
             <!-- key forces the component to remount upon change -->
             <PayeeVue :key="curPayeeIdx" :payee="curPayee" :categories="categories"
-                @subcategorySelected="handleSubcategorySelected" />
+                @categorySelected="handleCategorySelected" @subcategorySelected="handleSubcategorySelected" />
 
         </v-card-text>
 

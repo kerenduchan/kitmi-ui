@@ -20,7 +20,9 @@ import FilterTransactions from '../components/FilterTransactions.vue'
 import snackbar from '@/composables/snackbar'
 import getTransactions from '@/composables/queries/getTransactions'
 import getCategories from '@/composables/queries/getCategories'
+import getAllPayeeNames from '@/composables/queries/getAllPayeeNames'
 import Category from '@/composables/model/Category'
+import Payee from '@/composables/model/Payee'
 import getUpdateTransaction from '@/composables/mutations/updateTransaction'
 import Transaction from '@/composables/model/Transaction'
 
@@ -35,9 +37,28 @@ onCategoriesResult(res => {
     categories.value = res.data.categories.map((p) => Category.fromGql(p))
 })
 
+// ----------------------------------------------------------------------------
 
-// Show only uncategorized filter (v-model for checkbox)
+// get payee names (for filter)
+const payees = ref(null)
+
+const { onResult: onPayeesResult } = getAllPayeeNames()
+
+onPayeesResult(res => {
+    payees.value = res.data.payees.items.map((p) => Payee.fromGql(p))
+})
+
+// Show only uncategorized filter
 const uncategorized = ref(false)
+
+// show only transactions of this payee ID
+const payeeId = ref(null)
+const payeeName = computed(() => {
+    if(payeeId.value) {
+        return payees.value.find(p => p.id === payeeId.value).name
+    }
+    return null;
+})
 
 // ----------------------------------------------------------------------------
 // get transactions with pagination
@@ -51,7 +72,8 @@ const transactionsParams = computed(() => {
     let params = {
         offset: (page.value - 1) * limit,
         limit,
-        categorized: uncategorized.value ? false : null
+        categorized: uncategorized.value ? false : null,
+        payeeId: payeeId.value
     }
     return params
 })
@@ -141,19 +163,26 @@ const showFilterDialog = ref(false)
 
 const filterDefaults = computed(() => {
     return {
-        uncategorized: uncategorized.value
+        uncategorized: uncategorized.value,
+        payeeId: payeeId.value
     }
 })
 
 function applyFilter(filter) {
     showFilterDialog.value = false
     uncategorized.value = filter.uncategorized
+    payeeId.value = filter.payeeId
     page.value = 1
+    console.log(transactionsParams.value)
     refetch(transactionsParams.value)
 }
 
 const subtitle = computed(() => {
-    return uncategorized.value ? 'Uncategorized transactions' : 'All transactions'
+    let res = uncategorized.value ? 'Uncategorized transactions' : 'All transactions'
+    if(payeeName.value) {
+        res += ' of payee ' + payeeName.value
+    }
+    return res
 })
 </script> 
 
@@ -227,6 +256,7 @@ const subtitle = computed(() => {
     <v-dialog v-model="showFilterDialog" width="800">
         <FilterTransactions
             :defaults="filterDefaults"
+            :payees="payees"
             @close="showFilterDialog = false"
             @filter="applyFilter"
         />

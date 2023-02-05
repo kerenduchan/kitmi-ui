@@ -6,13 +6,14 @@ function getTransactions(vars) {
         query getTransactions(
             $orderBy: String,
             $limit: Int,
-            $offset: Int
-            $categorized: Boolean) {
+            $offset: Int,
+            $categorized: Boolean,
+            $payeeId: ID) {
             transactions(
                 orderBy: $orderBy,
                 limit: $limit,
                 offset: $offset
-                filter: {categorized: $categorized}) {
+                filter: {categorized: $categorized, payeeId: $payeeId}) {
                 totalItemsCount
                 items {
                     id

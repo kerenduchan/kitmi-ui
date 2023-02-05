@@ -173,7 +173,6 @@ function applyFilter(filter) {
     uncategorized.value = filter.uncategorized
     payeeId.value = filter.payeeId
     page.value = 1
-    console.log(transactionsParams.value)
     refetch(transactionsParams.value)
 }
 

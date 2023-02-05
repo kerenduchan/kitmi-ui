@@ -9,7 +9,6 @@ import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
 import ViewContentSubtitle from '@/components/layout/ViewContentSubtitle.vue'
 import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 
-import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import WizardLoader from '@/components/payeesCategorizationWizard/WizardLoader.vue'
@@ -201,14 +200,15 @@ const subtitle = computed(() => {
 
         <!-- content body -->
         <ViewContentMain noscroll>
-            <ScrollableContainerWithFooter>
-                <template v-slot:main>
+            <div class="mb-5 flex-grow-1 d-flex flex-column overflow-y-hidden rounded">
+                <div class="flex-grow-1 overflow-y-auto" ref="scrollable">
+                    <!-- List (table) of payees -->
                     <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
-                </template>
-                <template v-slot:footer>
+                </div>
+                <div class="d-flex justify-center bg-primary">
                     <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
-                </template>
-            </ScrollableContainerWithFooter>
+                </div>
+            </div>
         </ViewContentMain>
     </ViewContent>
 

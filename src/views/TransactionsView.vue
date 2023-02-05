@@ -7,6 +7,7 @@ import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
 import ViewContentSubtitle from '@/components/layout/ViewContentSubtitle.vue'
+import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
 
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
@@ -193,16 +194,18 @@ const subtitle = computed(() => {
 
 
         <!-- content body -->
-        <ScrollableContainerWithFooter>
-            <template v-slot:main>
-                <!-- List (table) of transactions -->
-                <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
-            </template>
-            <template v-slot:footer>
-                <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" />
-            </template>
-        </ScrollableContainerWithFooter>
+        <ViewContentMain>
 
+            <ScrollableContainerWithFooter>
+                <template v-slot:main>
+                    <!-- List (table) of transactions -->
+                    <TransactionsList :selectedTransactionId="selectedTransactionId" :transactions="transactions" @select="handleSelect" />
+                </template>
+                <template v-slot:footer>
+                    <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" />
+                </template>
+            </ScrollableContainerWithFooter>
+        </ViewContentMain>
     </ViewContent>
 
     <!-- snackbar -->

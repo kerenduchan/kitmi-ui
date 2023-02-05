@@ -6,6 +6,7 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 
 import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
@@ -192,15 +193,16 @@ const showCategorizationWizard = ref(false)
         <ViewContentTitle text="Payees" />
 
         <!-- content body -->
-        
-        <ScrollableContainerWithFooter>
-            <template v-slot:main>
-                <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
-            </template>
-            <template v-slot:footer>
-                <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
-            </template>
-        </ScrollableContainerWithFooter>
+        <ViewContentMain>
+            <ScrollableContainerWithFooter>
+                <template v-slot:main>
+                    <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />
+                </template>
+                <template v-slot:footer>
+                    <v-pagination density="compact" v-model="page" :length="pagesCount" total-visible="10" circle />
+                </template>
+            </ScrollableContainerWithFooter>
+        </ViewContentMain>
     </ViewContent>
 
     <!-- snackbar -->

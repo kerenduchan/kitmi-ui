@@ -5,6 +5,7 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ViewContentMain from '../components/layout/ViewContentMain.vue'
 
 const theme = useTheme()
 
@@ -29,10 +30,12 @@ watch(appearance, () => {
         <ViewContentTitle text="Settings" />
 
         <!-- content body -->
-        Appearance: 
-        <v-radio-group v-model="appearance">
-            <v-radio label="Light" value="light" />
-            <v-radio label="Dark" value="dark" />
-        </v-radio-group>
+        <ViewContentMain>
+            Appearance
+            <v-radio-group v-model="appearance">
+                <v-radio label="Light" value="light" />
+                <v-radio label="Dark" value="dark" />
+            </v-radio-group>
+        </ViewContentMain>
     </ViewContent>
 </template>

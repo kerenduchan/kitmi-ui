@@ -194,7 +194,7 @@ const subtitle = computed(() => {
 
 
         <!-- content body -->
-        <ViewContentMain>
+        <ViewContentMain noscroll>
 
             <ScrollableContainerWithFooter>
                 <template v-slot:main>

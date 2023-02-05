@@ -193,7 +193,7 @@ const showCategorizationWizard = ref(false)
         <ViewContentTitle text="Payees" />
 
         <!-- content body -->
-        <ViewContentMain>
+        <ViewContentMain noscroll>
             <ScrollableContainerWithFooter>
                 <template v-slot:main>
                     <PayeesList :selectedPayeeId="selectedPayeeId" :payees="payees" @select="handleSelect" />

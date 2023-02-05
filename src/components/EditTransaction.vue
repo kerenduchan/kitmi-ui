@@ -80,7 +80,7 @@ const overrideSubcategoryLabel = computed(() => {
 <template>
     <v-card>
         <v-card-title>Transaction Details</v-card-title>
-        <v-card-text>
+        <v-card-text v-if="transaction">
 
             <!-- Read-only fields (ID, amount, etc)-->
             <v-table density="compact">

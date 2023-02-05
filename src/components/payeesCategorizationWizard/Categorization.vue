@@ -84,7 +84,6 @@ function getSubcategoryIdx() {
     if (props.payee.subcategory === null) {
         return null
     }
-    console.log(props.payee)
     const foundIdx = subcategories.value.findIndex(
         s => s.id === props.payee.subcategory.id)
     return foundIdx === -1 ? null : foundIdx

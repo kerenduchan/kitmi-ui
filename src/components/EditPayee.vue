@@ -40,7 +40,7 @@ function save() {
 </script>
 
 <template>
-    <v-card>
+    <v-card v-if="payee">
         <v-card-title>{{ props.payee.name }}</v-card-title>
         <v-card-text>
             <v-form>

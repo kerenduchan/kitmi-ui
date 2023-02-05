@@ -23,7 +23,7 @@ function handleFilterClicked() {
 
 <template>
     <v-card>
-        <v-card-title>Filter Transactions</v-card-title>
+        <v-card-title>Filter Payees</v-card-title>
         <v-card-text>
             <!-- Uncategorized checkbox -->
             <v-checkbox-btn v-bind="props" label="Uncategorized" v-model="uncategorized" />

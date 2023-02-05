@@ -6,6 +6,7 @@ import ActionsBar from '@/components/layout/ActionsBar.vue'
 import Actions from '@/components/layout/Actions.vue'
 import ViewContent from '@/components/layout/ViewContent.vue'
 import ViewContentTitle from '@/components/layout/ViewContentTitle.vue'
+import ViewContentSubtitle from '@/components/layout/ViewContentSubtitle.vue'
 import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 
 import ScrollableContainerWithFooter from '@/components/ScrollableContainerWithFooter.vue'
@@ -14,6 +15,7 @@ import Snackbar from '@/components/Snackbar.vue'
 import WizardLoader from '@/components/payeesCategorizationWizard/WizardLoader.vue'
 import PayeesList from '@/components/PayeesList.vue'
 import EditPayee from '@/components/EditPayee.vue'
+import FilterPayees from '@/components/FilterPayees.vue'
 
 // composables
 import snackbar from '@/composables/snackbar'
@@ -21,16 +23,11 @@ import getUpdatePayee from '@/composables/mutations/updatePayee'
 import getPayeesAndCategories from '@/composables/queries/getPayeesAndCategories'
 import Category from '@/composables/model/Category'
 import Payee from '@/composables/model/Payee'
-import getUpdatePayees from '@/composables/mutations/updatePayees'
 
 // ----------------------------------------------------------------------------
 
 // Show only uncategorized filter (v-model for checkbox)
 const uncategorized = ref(false)
-
-const subtitle = computed(() => {
-    return uncategorized.value ? 'Uncategorized' : ''
-})
 
 // ----------------------------------------------------------------------------
 // get payees with pagination
@@ -83,12 +80,6 @@ const pagesCount = computed(() => {
 
 watch(page, () => {
     // selected page changed
-    refresh()
-})
-
-watch(uncategorized, () => {
-    // uncategorized checkbox changed
-    page.value = 1
     refresh()
 })
 
@@ -153,6 +144,28 @@ onUpdatePayeeError((e) => {
 
 const showCategorizationWizard = ref(false)
 
+// ----------------------------------------------------------------------------
+// filter payees
+
+const showFilterDialog = ref(false)
+
+const filterDefaults = computed(() => {
+    return {
+        uncategorized: uncategorized.value
+    }
+})
+
+function applyFilter(filter) {
+    showFilterDialog.value = false
+    uncategorized.value = filter.uncategorized
+    page.value = 1
+    refresh()
+}
+
+const subtitle = computed(() => {
+    return uncategorized.value ? 'Uncategorized payees' : 'All payees'
+})
+
 </script>
 
 <template>
@@ -164,21 +177,14 @@ const showCategorizationWizard = ref(false)
             <!-- Edit button -->
             <ButtonWithTooltip tooltip="Edit payee" icon="mdi-pencil" :disabled="!selectedPayee"
                 @click="showEditDialog = true" />
-
-            <!-- divider -->
-            <v-divider vertical />
-
-            <!-- Uncategorized checkbox -->
-            <v-tooltip text="Toggle show only uncategorized" location="bottom">
-                <template v-slot:activator="{ props }">
-                    <v-checkbox-btn v-bind="props" label="Uncategorized" v-model="uncategorized">
-                    </v-checkbox-btn>
-                </template>
-            </v-tooltip>
         </Actions>
 
         <!-- actions at the end of the actions bar -->
         <Actions>
+
+            <!-- Filter -->
+            <ButtonWithTooltip tooltip="Filter" icon="mdi-filter" @click="showFilterDialog = true" />
+
             <!-- Open categorization wizard button -->
             <ButtonWithTooltip tooltip="Categorization wizard" icon="mdi-wizard-hat"
                 @click="showCategorizationWizard = true" />
@@ -191,6 +197,7 @@ const showCategorizationWizard = ref(false)
 
         <!-- content title -->
         <ViewContentTitle text="Payees" />
+        <ViewContentSubtitle :text="subtitle" @click="showFilterDialog = true"/>
 
         <!-- content body -->
         <ViewContentMain noscroll>
@@ -213,6 +220,16 @@ const showCategorizationWizard = ref(false)
         <EditPayee :payee="selectedPayee" :categories="categories" @close="showEditDialog = false"
             @save="doUpdatePayee" />
     </v-dialog>
+
+    <!-- Filter payees dialog -->
+    <v-dialog v-model="showFilterDialog" width="800">
+        <FilterPayees
+            :defaults="filterDefaults"
+            @close="showFilterDialog = false"
+            @filter="applyFilter"
+        />
+    </v-dialog>
+
 
     <!-- Categorization wizard -->
     <v-dialog persistent height="100%" v-model="showCategorizationWizard">

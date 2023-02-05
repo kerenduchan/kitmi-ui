@@ -192,7 +192,6 @@ const subtitle = computed(() => {
         <ViewContentTitle text="Transactions" />
         <ViewContentSubtitle :text="subtitle" @click="showFilterDialog = true"/>
 
-
         <!-- content body -->
         <ViewContentMain noscroll>
 

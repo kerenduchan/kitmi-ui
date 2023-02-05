@@ -180,7 +180,7 @@ const showCategorizationWizard = ref(false)
         <Actions>
             <!-- Open categorization wizard button -->
             <ButtonWithTooltip tooltip="Categorization wizard" icon="mdi-wizard-hat"
-                :disabled="!payees || payees.length === 0" @click="showCategorizationWizard = true" />
+                @click="showCategorizationWizard = true" />
         </Actions>
 
     </ActionsBar>

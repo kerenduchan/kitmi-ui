@@ -11,7 +11,7 @@ import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import StackedBarChart from '@/components/StackedBarChart.vue'
 import PieChart from '@/components/PieChart.vue'
-import Filter from '@/components/Filter.vue'
+import SummaryFilter from '@/components/SummaryFilter.vue'
 
 // composables
 import { formatDate, formatNumber, formatMonthAndYear } from '@/composables/utils'
@@ -172,7 +172,7 @@ const pieChartLabels = computed(() => {
 
     <!-- Filter dialog -->
     <v-dialog v-model="showFilterDialog" width="800">
-    <Filter
+    <SummaryFilter
         :defaults="filterParams"
         @close="showFilterDialog = false"
         @filter="handleFilter" />

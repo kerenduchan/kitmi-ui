@@ -11,7 +11,7 @@ import ViewContentMain from '@/components/layout/ViewContentMain.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import SummaryTable from '../components/balance/SummaryTable.vue'
 import SavingsTable from '../components/balance/SavingsTable.vue'
-import Filter from '@/components/Filter.vue'
+import SummaryFilter from '@/components/SummaryFilter.vue'
 
 // composables
 import { formatDate } from '@/composables/utils'
@@ -85,7 +85,7 @@ function handleFilter(filter) {
 
     <!-- Filter dialog -->
     <v-dialog v-model="showFilterDialog" width="800">
-        <Filter :defaults="filterParams" @close="showFilterDialog = false" @filter="handleFilter" />
+        <SummaryFilter :defaults="filterParams" @close="showFilterDialog = false" @filter="handleFilter" />
     </v-dialog>
 
 </template>

@@ -189,7 +189,7 @@ const subtitle = computed(() => {
 
         <!-- content title -->
         <ViewContentTitle text="Transactions" />
-        <ViewContentSubtitle :text="subtitle" />
+        <ViewContentSubtitle :text="subtitle" @click="showFilterDialog = true"/>
 
 
         <!-- content body -->
